@@ -18,12 +18,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.main.R
 
@@ -72,7 +72,7 @@ internal fun BaseGuideScreen(onGuideShown: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun BaseGuideScreenPreview() {
     WeQuizTheme {
