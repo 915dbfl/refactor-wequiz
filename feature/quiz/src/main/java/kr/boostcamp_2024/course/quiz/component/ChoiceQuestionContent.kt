@@ -2,7 +2,7 @@ package kr.boostcamp_2024.course.quiz.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 
@@ -36,7 +36,7 @@ internal fun ChoiceQuestionContent(
     }
 }
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun ChoiceQuestionContentPreview() {
     WeQuizTheme {
