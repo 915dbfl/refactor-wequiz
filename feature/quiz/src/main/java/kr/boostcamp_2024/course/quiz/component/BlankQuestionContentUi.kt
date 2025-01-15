@@ -23,8 +23,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 
@@ -79,7 +79,7 @@ internal fun ConsumeBlankContentUi(
 }
 
 @Composable
-fun ConsumeTextContentUi(
+internal fun ConsumeTextContentUi(
     word: String,
     index: Int = 0,
     onContentRemove: (Int) -> Unit,
@@ -133,7 +133,7 @@ fun ConsumeTextContentUi(
 
 }
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun ConsumeBlankContentUiPreview() {
     WeQuizTheme {
@@ -146,7 +146,7 @@ private fun ConsumeBlankContentUiPreview() {
     }
 }
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun ConsumeTextContentUiPreview() {
     WeQuizTheme {
