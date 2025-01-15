@@ -210,7 +210,7 @@ fun GeneralQuestionResultItem(
 
 @PreviewKoLightDark
 @Composable
-fun GeneralQuizResultScreenPreview() {
+private fun GeneralQuizResultScreenPreview() {
     val generalQuizResultPreviewUserOmrAnswers = listOf(0, 1, "")
     WeQuizTheme {
         GeneralQuizResultScreen(

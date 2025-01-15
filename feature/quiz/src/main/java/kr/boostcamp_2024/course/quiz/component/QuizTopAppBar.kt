@@ -135,7 +135,7 @@ internal fun QuizTopAppBar(
 @Preview(showBackground = true, locale = "ko")
 @Preview(uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "ko")
 @Composable
-fun QuizTopAppBarPreview() {
+private fun QuizTopAppBarPreview() {
     QuizTopAppBar(
         category = Category(id = "", name = "", description = "", categoryImageUrl = "", quizzes = emptyList()),
         quiz = RealTimeQuiz(

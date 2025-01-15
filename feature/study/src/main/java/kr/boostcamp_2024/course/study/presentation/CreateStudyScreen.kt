@@ -177,7 +177,7 @@ fun isValidateNumber(inputNumber: String): Boolean {
 
 @PreviewKoLightDark
 @Composable
-fun CreateStudyScreenPreview() {
+private fun CreateStudyScreenPreview() {
     WeQuizTheme {
         CreateStudyScreen(
             isEditMode = false,

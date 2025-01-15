@@ -39,7 +39,7 @@ internal fun QuizOwnerDialog(
 
 @PreviewKoLightDark
 @Composable
-fun QuizOwnerDialogPreview() {
+private fun QuizOwnerDialogPreview() {
     WeQuizTheme {
         QuizOwnerDialog(
             isQuit = true,

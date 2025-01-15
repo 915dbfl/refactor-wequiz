@@ -46,7 +46,7 @@ internal fun RadioTextButton(
 
 @Preview(showBackground = true, locale = "ko")
 @Composable
-fun RadioTextButtonPreview() {
+private fun RadioTextButtonPreview() {
     RadioTextButton(
         text = "문제",
         selected = true,

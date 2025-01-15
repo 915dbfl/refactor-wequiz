@@ -188,7 +188,7 @@ fun OwnerQuestionResultItem(
 
 @PreviewKoLightDark
 @Composable
-fun OwnerQuizResultScreenPreview() {
+private fun OwnerQuizResultScreenPreview() {
     WeQuizTheme {
         OwnerQuizResultScreen(
             onNavigationButtonClick = {},

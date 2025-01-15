@@ -309,7 +309,7 @@ fun CreateQuestionScreen(
 
 @PreviewKoLightDark
 @Composable
-fun CreateQuestionScreenPreview() {
+private fun CreateQuestionScreenPreview() {
     val previewCreateQuestionUiState = CreateQuestionUiState(
         isLoading = false,
         showDialog = false,

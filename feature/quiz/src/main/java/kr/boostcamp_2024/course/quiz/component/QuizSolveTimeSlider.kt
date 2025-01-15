@@ -53,7 +53,7 @@ internal fun QuizSolveTimeSlider(
 @Preview(showBackground = true, locale = "ko")
 @Preview(uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "ko")
 @Composable
-fun QuizSolveTimeSliderPreview() {
+private fun QuizSolveTimeSliderPreview() {
     QuizSolveTimeSlider(
         value = 0f,
         steps = 10,
