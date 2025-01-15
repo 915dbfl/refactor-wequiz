@@ -138,7 +138,7 @@ fun QuestionDetailScreen(
     }
 }
 
-class QuestionDetailScreenPreviewParameterProvider : PreviewParameterProvider<Question> {
+internal class QuestionDetailScreenPreviewParameterProvider : PreviewParameterProvider<Question> {
     override val values = sequenceOf(
         BlankQuestion(
             id = "1",
@@ -164,7 +164,7 @@ class QuestionDetailScreenPreviewParameterProvider : PreviewParameterProvider<Qu
 
 @PreviewKoLightDark
 @Composable
-fun QuestionDetailScreenPreview(
+private fun QuestionDetailScreenPreview(
     @PreviewParameter(QuestionDetailScreenPreviewParameterProvider::class) question: Question,
 ) {
     WeQuizTheme {
