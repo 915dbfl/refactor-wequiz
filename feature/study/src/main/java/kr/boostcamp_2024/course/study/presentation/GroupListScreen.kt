@@ -35,7 +35,7 @@ internal fun GroupListScreen(
     removeClick: (String, String) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    val isOwner: Boolean = owner?.id == curUserId
+    val isOwner: Boolean = owner.id == curUserId
 
     Column(
         modifier = Modifier

@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.study.component
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import kr.boostcamp_2024.course.domain.model.Category
@@ -136,6 +138,7 @@ private fun AuthorComponent(
 }
 
 @Preview(showBackground = true, locale = "ko")
+@Preview(showBackground = true, locale = "ko", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun CategoryItemPreview() {
     WeQuizTheme {
@@ -155,7 +158,7 @@ private fun CategoryItemPreview() {
     }
 }
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun QuizCountBadgePreview() {
     WeQuizTheme {
@@ -167,6 +170,7 @@ private fun QuizCountBadgePreview() {
 }
 
 @Preview(showBackground = true, locale = "ko")
+@Preview(showBackground = true, locale = "ko", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun DetailStudyDescriptionPreview() {
     WeQuizTheme {
@@ -180,6 +184,7 @@ private fun DetailStudyDescriptionPreview() {
 }
 
 @Preview(showBackground = true, locale = "ko")
+@Preview(showBackground = true, locale = "ko", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun AuthorComponentPreview() {
     WeQuizTheme {
