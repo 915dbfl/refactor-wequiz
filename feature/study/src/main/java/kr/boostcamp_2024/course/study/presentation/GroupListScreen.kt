@@ -26,7 +26,7 @@ import kr.boostcamp_2024.course.study.component.CustomPropertyTab
 import kr.boostcamp_2024.course.study.component.StudyGroupMemberItem
 
 @Composable
-fun GroupListScreen(
+internal fun GroupListScreen(
     currentGroup: StudyGroup,
     owner: User,
     curUserId: String?,
@@ -35,6 +35,7 @@ fun GroupListScreen(
     removeClick: (String, String) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val isOwner: Boolean = owner?.id == curUserId
 
     Column(
         modifier = Modifier
@@ -62,15 +63,17 @@ fun GroupListScreen(
             groupId = currentGroup.id,
             users = users,
             removeClick = removeClick,
+            isOwner = isOwner,
         )
     }
 }
 
 @Composable
-fun StudyGroupMemberLazyColumn(
+private fun StudyGroupMemberLazyColumn(
     owner: User,
     groupId: String?,
     users: List<User>,
+    isOwner: Boolean,
     removeClick: (String, String) -> Unit,
 ) {
     LazyColumn(
@@ -84,6 +87,7 @@ fun StudyGroupMemberLazyColumn(
                 groupId = groupId,
                 user = user,
                 removeButtonClick = removeClick,
+                isOwner = isOwner,
             )
             if (index < 9) {
                 HorizontalDivider()
@@ -94,7 +98,7 @@ fun StudyGroupMemberLazyColumn(
 
 @Preview(showBackground = true, locale = "ko")
 @Composable
-fun GroupListScreenPreview() {
+private fun GroupListScreenPreview() {
     WeQuizTheme {
         GroupListScreen(
             currentGroup = StudyGroup(

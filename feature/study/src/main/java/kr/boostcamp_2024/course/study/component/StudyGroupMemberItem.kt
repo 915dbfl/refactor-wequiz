@@ -26,6 +26,7 @@ internal fun StudyGroupMemberItem(
     ownerId: String?,
     groupId: String?,
     user: User,
+    isOwner: Boolean,
     removeButtonClick: (String, String) -> Unit,
 ) {
     Row(
@@ -46,7 +47,7 @@ internal fun StudyGroupMemberItem(
             text = user.name,
             style = MaterialTheme.typography.bodyLarge,
         )
-        if (ownerId != user.id) {
+        if (isOwner && ownerId != user.id) {
             Button(
                 onClick = {
                     if (groupId != null) {
@@ -76,6 +77,7 @@ private fun StudyGroupMemberItemPreview() {
             ownerId = "user1",
             groupId = "study1",
             removeButtonClick = { _, _ -> },
+            isOwner = true,
             user = User(
                 id = "user1",
                 name = "user1",
