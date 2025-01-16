@@ -269,7 +269,7 @@ fun MainScreen(
 }
 
 @Composable
-fun ArchiveTab() {
+private fun ArchiveTab() {
     // TODO: 보관함 기능 구현
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -283,7 +283,7 @@ fun ArchiveTab() {
 }
 
 @Composable
-fun StudyGroupTab(
+private fun StudyGroupTab(
     currentUser: User?,
     studyGroups: List<StudyGroup>,
     onStudyGroupClick: (String) -> Unit,
@@ -311,7 +311,7 @@ fun StudyGroupTab(
 
 @Preview(showBackground = true, locale = "ko")
 @Composable
-fun MainScreenPreview() {
+private fun MainScreenPreview() {
     WeQuizTheme {
         MainScreen(
             currentUser = User(
