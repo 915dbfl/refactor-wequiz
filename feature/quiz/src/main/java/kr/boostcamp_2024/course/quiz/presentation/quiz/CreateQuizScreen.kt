@@ -43,7 +43,7 @@ import kr.boostcamp_2024.course.quiz.component.QuizSolveTimeSlider
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuizViewModel
 
 @Composable
-fun CreateQuizScreen(
+internal fun CreateQuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizSuccess: () -> Unit,
     onEditQuizSuccess: () -> Unit,
@@ -101,7 +101,7 @@ fun CreateQuizScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateQuizScreen(
+private fun CreateQuizScreen(
     quizTitle: String,
     quizDescription: String,
     quizDate: String,
@@ -250,7 +250,7 @@ fun CreateQuizScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CreateQuizScreenPreview() {
+private fun CreateQuizScreenPreview() {
     WeQuizTheme {
         CreateQuizScreen(
             quizTitle = "",
