@@ -40,7 +40,7 @@ import kr.boostcamp_2024.course.quiz.component.QuizTopAppBar
 import kr.boostcamp_2024.course.quiz.viewmodel.QuizViewModel
 
 @Composable
-fun QuizScreen(
+internal fun QuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionButtonClick: (String) -> Unit,
     onStartQuizButtonClick: (String) -> Unit,
@@ -101,7 +101,7 @@ fun QuizScreen(
 }
 
 @Composable
-fun QuizScreen(
+private fun QuizScreen(
     category: Category?,
     quiz: BaseQuiz?,
     currentUserId: String?,
@@ -188,7 +188,7 @@ fun QuizScreen(
 
 @Preview(showBackground = true, locale = "ko")
 @Composable
-fun QuizStartScreenPreview() {
+private fun QuizStartScreenPreview() {
     WeQuizTheme {
         QuizScreen(
             category = Category(
