@@ -62,7 +62,7 @@ import kr.boostcamp_2024.course.main.component.StudyGroupItem
 import kr.boostcamp_2024.course.main.viewmodel.MainViewModel
 
 @Composable
-fun MainScreen(
+internal fun MainScreen(
     onNotificationButtonClick: () -> Unit,
     onCreateStudyButtonClick: () -> Unit,
     onStudyGroupClick: (String) -> Unit,
@@ -115,7 +115,7 @@ fun MainScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
+private fun MainScreen(
     currentUser: User?,
     studyGroups: List<StudyGroup>,
     notifications: Int,
