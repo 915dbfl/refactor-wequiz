@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.study.component
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -68,6 +69,7 @@ internal fun CustomPropertyTab(
 }
 
 @Preview(showBackground = true, locale = "ko")
+@Preview(showBackground = true, locale = "ko", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun CustomPropertyTabPreview() {
     WeQuizTheme {
