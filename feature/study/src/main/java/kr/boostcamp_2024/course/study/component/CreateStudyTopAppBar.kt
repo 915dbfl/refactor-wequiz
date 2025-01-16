@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.study.R
 
@@ -42,7 +42,7 @@ internal fun CreateStudyTopAppBar(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDark
 @Composable
 private fun CreateStudyTopAppBarPreview() {
     WeQuizTheme {
