@@ -6,3 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(locale = "ko")
 @Preview(locale = "ko", uiMode = UI_MODE_NIGHT_YES)
 annotation class PreviewKoLightDark
+
+@Preview(locale = "ko", showBackground = true)
+@Preview(locale = "ko", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+annotation class PreviewKoLightDarkBackground
