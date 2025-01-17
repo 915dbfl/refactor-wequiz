@@ -283,7 +283,7 @@ fun StudyDropDownMenu(
 @Preview
 @Composable
 private fun DetailStudyScreenPreview() {
-    WeQuizTheme{
+    WeQuizTheme {
         DetailStudyScreen(
             currentGroup = StudyGroup(
                 id = "1",
@@ -302,7 +302,7 @@ private fun DetailStudyScreenPreview() {
                     description = "카테고리 설명",
                     categoryImageUrl = "",
                     quizzes = listOf("1"),
-                )
+                ),
             ),
             users = listOf(
                 User(
@@ -311,7 +311,7 @@ private fun DetailStudyScreenPreview() {
                     email = "",
                     profileUrl = "",
                     studyGroups = listOf("1"),
-                )
+                ),
             ),
             owner = User(
                 id = "1",

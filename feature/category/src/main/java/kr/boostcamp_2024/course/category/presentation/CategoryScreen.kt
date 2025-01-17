@@ -232,7 +232,6 @@ private fun QuizItem(
 private fun CategoryScreenPreview() {
     WeQuizTheme {
         CategoryScreen(
-
             category = Category(
                 id = "1",
                 name = "Category Name",
