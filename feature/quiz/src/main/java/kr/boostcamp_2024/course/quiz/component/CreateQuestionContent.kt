@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 import kr.boostcamp_2024.course.quiz.R
@@ -75,17 +75,17 @@ internal fun CreateQuestionContent(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
 private fun CreateQuestionContentPreview() {
-    WeQuizTheme{
+    WeQuizTheme {
         CreateQuestionContent(
             focusRequester = FocusRequester(),
             keyboardOptions = KeyboardOptions.Default,
             keyboardActions = KeyboardActions.Default,
-            title = "Title",
-            description = "Description",
-            solution = "Solution",
+            title = "제목",
+            description = "내용",
+            solution = "해설",
             onTitleChanged = {},
             onDescriptionChanged = {},
             onSolutionChanged = {},

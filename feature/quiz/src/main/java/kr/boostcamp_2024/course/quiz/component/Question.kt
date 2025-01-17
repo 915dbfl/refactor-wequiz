@@ -12,8 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
@@ -54,12 +54,12 @@ internal fun Question(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDarkBackground
 @Composable
 private fun QuestionPreview() {
     WeQuizTheme {
         Question(
-            questions = listOf("A", "B", "C", "D"),
+            questions = listOf("1", "2", "3", "4"),
             selectedIndex = 0,
             onOptionSelected = { },
         )

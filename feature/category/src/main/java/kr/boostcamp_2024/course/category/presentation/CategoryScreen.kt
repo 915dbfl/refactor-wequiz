@@ -31,13 +31,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.boostcamp_2024.course.category.R
 import kr.boostcamp_2024.course.category.component.CategorySettingMenu
 import kr.boostcamp_2024.course.category.viewModel.CategoryViewModel
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
@@ -72,14 +72,11 @@ internal fun CategoryScreen(
     CategoryScreen(
         category = categoryUiState.value.category,
         quizList = categoryUiState.value.quizList,
-        isDropDownMenuExpanded = categoryUiState.value.isDropDownMenuExpanded,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateQuizButtonClick = onCreateQuizButtonClick,
         onQuizClick = onQuizClick,
         onCategoryDeleteClick = categoryViewModel::onCategoryDeleteClick,
         onCreateCategoryButtonClick = onCreateCategoryButtonClick,
-        onDropDownMenuClick = categoryViewModel::onDropDownMenuClick,
-        onDropDownMenuDismiss = categoryViewModel::onDropDownMenuDismiss,
     )
 }
 
@@ -88,14 +85,11 @@ internal fun CategoryScreen(
 internal fun CategoryScreen(
     category: Category?,
     quizList: List<BaseQuiz>?,
-    isDropDownMenuExpanded: Boolean,
     onNavigationButtonClick: () -> Unit,
     onCreateQuizButtonClick: (String) -> Unit,
     onQuizClick: (String, String) -> Unit,
     onCategoryDeleteClick: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
-    onDropDownMenuClick: () -> Unit,
-    onDropDownMenuDismiss: () -> Unit,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -133,9 +127,6 @@ internal fun CategoryScreen(
                             onCreateCategoryButtonClick(null, category?.id)
                         },
                         onDeleteClick = onCategoryDeleteClick,
-                        expanded = isDropDownMenuExpanded,
-                        onDropDownMenuClick = onDropDownMenuClick,
-                        onDropDownMenuDismiss = onDropDownMenuDismiss,
                     )
                 },
             )
@@ -173,7 +164,7 @@ internal fun CategoryScreen(
 }
 
 @Composable
-internal fun QuizList(
+private fun QuizList(
     modifier: Modifier = Modifier,
     categoryId: String,
     quizzes: List<BaseQuiz>?,
@@ -201,7 +192,7 @@ internal fun QuizList(
 }
 
 @Composable
-internal fun QuizItem(
+private fun QuizItem(
     quiz: BaseQuiz,
     onQuizClick: () -> Unit,
 ) {
@@ -236,9 +227,9 @@ internal fun QuizItem(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-internal fun CategoryScreenPreview() {
+private fun CategoryScreenPreview() {
     WeQuizTheme {
         CategoryScreen(
 
@@ -247,7 +238,7 @@ internal fun CategoryScreenPreview() {
                 name = "Category Name",
                 categoryImageUrl = "",
                 description = "카테고리 설명",
-                quizzes = listOf(" ", " ", " ")
+                quizzes = listOf(" ", " ", " "),
             ),
             quizList = listOf(
                 Quiz(
@@ -281,13 +272,11 @@ internal fun CategoryScreenPreview() {
                     quizImageUrl = "",
                 ),
             ),
-            isDropDownMenuExpanded = false,
             onCategoryDeleteClick = {},
             onNavigationButtonClick = {},
             onCreateQuizButtonClick = {},
             onQuizClick = { _, _ -> },
             onCreateCategoryButtonClick = { _, _ -> },
-            onDropDownMenuClick = {},
-        ) { }
+        )
     }
 }

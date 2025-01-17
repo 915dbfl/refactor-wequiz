@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
@@ -20,14 +20,14 @@ internal fun QuestionItems(choice: List<String>, answer: Int, onClick: () -> Uni
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDarkBackground
 @Composable
 private fun QuestionItemsPreview() {
     WeQuizTheme {
         QuestionItems(
             choice = listOf("A", "B", "C", "D"),
             answer = 0,
-            onClick = { }
+            onClick = { },
         )
     }
 }
