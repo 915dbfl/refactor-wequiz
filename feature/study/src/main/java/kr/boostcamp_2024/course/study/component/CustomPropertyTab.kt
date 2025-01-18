@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.study.component
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.StudyGroup
 import kr.boostcamp_2024.course.study.R
@@ -68,8 +67,7 @@ internal fun CustomPropertyTab(
     }
 }
 
-@Preview(showBackground = true, locale = "ko")
-@Preview(showBackground = true, locale = "ko", uiMode = UI_MODE_NIGHT_YES)
+@PreviewKoLightDarkBackground
 @Composable
 private fun CustomPropertyTabPreview() {
     WeQuizTheme {
