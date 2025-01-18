@@ -10,8 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
 
 @Composable
 internal fun RadioTextButton(
@@ -44,7 +44,7 @@ internal fun RadioTextButton(
 
 
 
-@Preview(showBackground = true, locale = "ko")
+@PreviewKoLightDarkBackground
 @Composable
 private fun RadioTextButtonPreview() {
     RadioTextButton(
