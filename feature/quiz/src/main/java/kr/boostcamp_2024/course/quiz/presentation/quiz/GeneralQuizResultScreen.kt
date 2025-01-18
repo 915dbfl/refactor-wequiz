@@ -47,7 +47,7 @@ import kr.boostcamp_2024.course.quiz.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GeneralQuizResultScreen(
+internal fun GeneralQuizResultScreen(
     quizTitle: String?,
     quizResult: QuizResult?,
     onNavigationButtonClick: () -> Unit,
@@ -101,7 +101,7 @@ fun GeneralQuizResultScreen(
 }
 
 @Composable
-fun GeneralQuizResultContent(
+private fun GeneralQuizResultContent(
     totalQuestions: Int,
     correctQuestions: Int,
 ) {
@@ -135,7 +135,7 @@ fun GeneralQuizResultContent(
 }
 
 @Composable
-fun GeneralQuestionResultListContent(
+private fun GeneralQuestionResultListContent(
     questionResults: List<QuestionResult>,
     onQuestionClick: (String) -> Unit,
 ) {
@@ -157,7 +157,7 @@ fun GeneralQuestionResultListContent(
 }
 
 @Composable
-fun GeneralQuestionResultItem(
+private fun GeneralQuestionResultItem(
     questionResult: QuestionResult,
     onQuestionClick: (String) -> Unit,
 ) {

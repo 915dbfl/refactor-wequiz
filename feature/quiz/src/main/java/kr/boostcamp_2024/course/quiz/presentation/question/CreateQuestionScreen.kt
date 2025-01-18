@@ -58,7 +58,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionUiState
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 
 @Composable
-fun CreateQuestionScreen(
+internal fun CreateQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionSuccess: () -> Unit,
     viewModel: CreateQuestionViewModel = hiltViewModel(),
@@ -118,7 +118,7 @@ fun CreateQuestionScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateQuestionScreen(
+private fun CreateQuestionScreen(
     uiState: CreateQuestionUiState,
     focusRequester: FocusRequester,
     snackBarHostState: SnackbarHostState,

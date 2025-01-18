@@ -45,7 +45,7 @@ import kr.boostcamp_2024.course.quiz.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OwnerQuizResultScreen(
+internal fun OwnerQuizResultScreen(
     questions: List<Question>? = null,
     quizTitle: String?,
     onQuestionClick: (String) -> Unit,
@@ -94,7 +94,7 @@ fun OwnerQuizResultScreen(
 }
 
 @Composable
-fun OwnerQuizResultContent() {
+private fun OwnerQuizResultContent() {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -118,7 +118,7 @@ fun OwnerQuizResultContent() {
 }
 
 @Composable
-fun OwnerQuestionResultListContent(
+private fun OwnerQuestionResultListContent(
     questions: List<Question>,
     onQuestionClick: (String) -> Unit,
 ) {
@@ -141,7 +141,7 @@ fun OwnerQuestionResultListContent(
 }
 
 @Composable
-fun OwnerQuestionResultItem(
+private fun OwnerQuestionResultItem(
     question: Question,
     onQuestionClick: (String) -> Unit,
 ) {

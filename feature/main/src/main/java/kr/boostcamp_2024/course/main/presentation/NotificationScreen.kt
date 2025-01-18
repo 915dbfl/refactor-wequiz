@@ -29,7 +29,7 @@ import kr.boostcamp_2024.course.main.component.NotificationTopAppBar
 import kr.boostcamp_2024.course.main.viewmodel.NotificationViewModel
 
 @Composable
-fun NotificationScreen(
+internal fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel<NotificationViewModel>(),
     onNavigationButtonClick: () -> Unit,
 ) {
@@ -54,7 +54,7 @@ fun NotificationScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationScreen(
+private fun NotificationScreen(
     notificationInfos: List<NotificationWithGroupInfo>,
     onRejectClick: (String) -> Unit,
     onAcceptClick: (Notification) -> Unit,

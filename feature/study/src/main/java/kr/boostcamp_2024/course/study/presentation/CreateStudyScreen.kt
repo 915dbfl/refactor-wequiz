@@ -36,7 +36,7 @@ import kr.boostcamp_2024.course.study.component.CreateStudyTopAppBar
 import kr.boostcamp_2024.course.study.component.StudySubmitButton
 
 @Composable
-fun CreateStudyScreen(
+internal fun CreateStudyScreen(
     viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
@@ -82,7 +82,7 @@ fun CreateStudyScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateStudyScreen(
+private fun CreateStudyScreen(
     isEditMode: Boolean,
     defaultStudyImageUri: String?,
     currentStudyImage: ByteArray?,
@@ -169,7 +169,7 @@ fun CreateStudyScreen(
     }
 }
 
-fun isValidateNumber(inputNumber: String): Boolean {
+private fun isValidateNumber(inputNumber: String): Boolean {
     if (inputNumber.isBlank()) return true
     val isValid = inputNumber.matches(Regex("^-?\\d+\$"))
     return isValid && inputNumber.toIntOrNull()?.let { it in 2..50 } == true
