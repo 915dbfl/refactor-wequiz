@@ -46,7 +46,6 @@ import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.domain.model.QuestionResult
 import kr.boostcamp_2024.course.domain.model.QuizResult
 import kr.boostcamp_2024.course.quiz.R
-import kr.boostcamp_2024.course.quiz.utils.QuestionParameterProvider
 import kr.boostcamp_2024.course.quiz.utils.QuizResultParameterProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
