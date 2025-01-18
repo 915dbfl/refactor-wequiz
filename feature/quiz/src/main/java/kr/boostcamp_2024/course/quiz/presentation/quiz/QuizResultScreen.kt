@@ -271,35 +271,6 @@ fun QuestionResultItem(
     }
 }
 
-val quizResultPreviewQuestions =
-    listOf(
-        ChoiceQuestion(
-            id = "1",
-            title = "1번 문제",
-            solution = null,
-            description = "1번 문제 설명",
-            answer = 1,
-            choices = listOf(),
-            userAnswers = listOf(),
-        ),
-        ChoiceQuestion(
-            id = "2",
-            title = "2번 문제",
-            solution = null,
-            description = "2번 문제 설명",
-            answer = 1,
-            choices = listOf(),
-            userAnswers = listOf(),
-        ),
-        BlankQuestion(
-            id = "3",
-            title = "3번 문제 (낱말 맞추기)",
-            solution = null,
-            userAnswers = emptyList(),
-            questionContent = emptyList(),
-        ),
-    )
-
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
