@@ -24,7 +24,7 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 
 @Composable
-fun PieChartScreen(userAnswers: List<Int>) {
+internal fun PieChartScreen(userAnswers: List<Int>) {
     val totalInfo = mutableListOf<PieEntry>()
     val pieChartStrings: List<String> = listOf(
         stringResource(R.string.txt_label_pie_chart_1),
