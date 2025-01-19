@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.category.presentation
 
-import WeQuizPhotoPickerAsyncImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -37,6 +36,7 @@ import kr.boostcamp_2024.course.category.R
 import kr.boostcamp_2024.course.category.viewModel.CreateCategoryViewModel
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 
 @Composable

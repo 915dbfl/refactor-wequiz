@@ -59,11 +59,11 @@ internal fun QuizTopAppBar(
         navigationIcon = {
             IconButton(
                 onClick =
-                if (quiz is RealTimeQuiz && quiz.waitingUsers.contains(currentUserId) && quiz.isStarted.not()) {
-                    { showDialog = true }
-                } else {
-                    { onNavigationButtonClick() }
-                },
+                    if (quiz is RealTimeQuiz && quiz.waitingUsers.contains(currentUserId) && quiz.isStarted.not()) {
+                        { showDialog = true }
+                    } else {
+                        { onNavigationButtonClick() }
+                    },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
@@ -129,7 +129,6 @@ internal fun QuizTopAppBar(
         )
     }
 }
-
 
 @PreviewKoLightDarkBackground
 @Composable

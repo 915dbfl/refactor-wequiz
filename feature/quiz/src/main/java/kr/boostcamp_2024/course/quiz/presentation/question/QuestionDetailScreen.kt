@@ -138,7 +138,6 @@ private fun QuestionDetailScreen(
     }
 }
 
-
 @PreviewKoLightDark
 @Composable
 private fun QuestionDetailScreenPreview(

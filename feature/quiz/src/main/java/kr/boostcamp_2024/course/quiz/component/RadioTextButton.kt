@@ -43,7 +43,6 @@ internal fun RadioTextButton(
     }
 }
 
-
 @PreviewKoLightDarkBackground
 @Composable
 private fun RadioTextButtonPreview() {

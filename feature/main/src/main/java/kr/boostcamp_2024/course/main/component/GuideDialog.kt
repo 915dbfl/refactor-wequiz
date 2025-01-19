@@ -13,6 +13,7 @@ import kr.boostcamp_2024.course.main.R
 
 @Composable
 internal fun GuideDialog(
+    guideUrl: String,
     onDismissButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -23,7 +24,7 @@ internal fun GuideDialog(
         dismissTitle = stringResource(R.string.txt_guide_dialog_cancel),
         content = {},
         onConfirm = {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://trite-ice-00b.notion.site/WeQuiz-1505bfe2c24f80b1ae39dc15026da991?pvs=4")))
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(guideUrl)))
             onDismissButtonClick()
         },
         onDismissRequest = {
@@ -36,6 +37,9 @@ internal fun GuideDialog(
 @Composable
 private fun CreateGroupScreenPreview() {
     WeQuizTheme {
-        GuideDialog { }
+        GuideDialog(
+            guideUrl = "",
+            onDismissButtonClick = {},
+        )
     }
 }
