@@ -35,18 +35,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
-import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.domain.model.QuestionResult
 import kr.boostcamp_2024.course.domain.model.QuizResult
 import kr.boostcamp_2024.course.quiz.R
-import kr.boostcamp_2024.course.quiz.utils.QuizResultParameterProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -213,15 +210,13 @@ private fun GeneralQuestionResultItem(
 
 @PreviewKoLightDark
 @Composable
-private fun GeneralQuizResultScreenPreview(
-    @PreviewParameter(QuizResultParameterProvider::class) questionResults: List<Question>,
-) {
+private fun GeneralQuizResultScreenPreview() {
     val generalQuizResultPreviewUserOmrAnswers = listOf(0, 1, "")
     WeQuizTheme {
         GeneralQuizResultScreen(
             quizTitle = "퀴즈 타이틀",
             quizResult = QuizResult(
-                questions = questionResults,
+                questions = quizResultPreviewQuestions,
                 userOmrAnswers = generalQuizResultPreviewUserOmrAnswers,
             ),
             onNavigationButtonClick = {},

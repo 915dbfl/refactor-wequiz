@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
@@ -43,7 +42,6 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatB
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.quiz.R
-import kr.boostcamp_2024.course.quiz.utils.QuizResultParameterProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -191,13 +189,12 @@ private fun OwnerQuestionResultItem(
 @PreviewKoLightDark
 @Composable
 private fun OwnerQuizResultScreenPreview(
-    @PreviewParameter(QuizResultParameterProvider::class) questionResults: List<Question>,
 ) {
     WeQuizTheme {
         OwnerQuizResultScreen(
             onNavigationButtonClick = {},
             onQuestionClick = {},
-            questions = questionResults,
+            questions = quizResultPreviewQuestions,
             quizTitle = "퀴즈 결과 프리뷰",
             snackbarHostState = remember { SnackbarHostState() },
         )
