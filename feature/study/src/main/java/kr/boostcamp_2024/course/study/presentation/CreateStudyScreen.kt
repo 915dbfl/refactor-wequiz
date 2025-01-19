@@ -23,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
@@ -36,7 +36,7 @@ import kr.boostcamp_2024.course.study.component.CreateStudyTopAppBar
 import kr.boostcamp_2024.course.study.component.StudySubmitButton
 
 @Composable
-fun CreateStudyScreen(
+internal fun CreateStudyScreen(
     viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
@@ -82,7 +82,7 @@ fun CreateStudyScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateStudyScreen(
+private fun CreateStudyScreen(
     isEditMode: Boolean,
     defaultStudyImageUri: String?,
     currentStudyImage: ByteArray?,
@@ -169,15 +169,15 @@ fun CreateStudyScreen(
     }
 }
 
-fun isValidateNumber(inputNumber: String): Boolean {
+private fun isValidateNumber(inputNumber: String): Boolean {
     if (inputNumber.isBlank()) return true
     val isValid = inputNumber.matches(Regex("^-?\\d+\$"))
     return isValid && inputNumber.toIntOrNull()?.let { it in 2..50 } == true
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CreateStudyScreenPreview() {
+private fun CreateStudyScreenPreview() {
     WeQuizTheme {
         CreateStudyScreen(
             isEditMode = false,

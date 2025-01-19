@@ -31,8 +31,12 @@ internal fun GroupListScreen(
     owner: User,
     curUserId: String?,
     users: List<User>,
+    email: String?,
+    isEmailValid: Boolean,
     inviteClick: (String, String) -> Unit,
     removeClick: (String, String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    resetEmail: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val isOwner: Boolean = owner.id == curUserId
@@ -56,6 +60,10 @@ internal fun GroupListScreen(
                     showDialog = false
                 },
                 groupId = currentGroup.id,
+                email = email ?: "",
+                onEmailChanged = onEmailChange,
+                isEmailValid = isEmailValid,
+                resetEmail = resetEmail,
             )
         }
         StudyGroupMemberLazyColumn(
@@ -144,6 +152,10 @@ private fun GroupListScreenPreview() {
             ),
             inviteClick = { _, _ -> },
             removeClick = { _, _ -> },
+            email = "",
+            isEmailValid = false,
+            onEmailChange = { _ -> },
+            resetEmail = { },
         )
     }
 }

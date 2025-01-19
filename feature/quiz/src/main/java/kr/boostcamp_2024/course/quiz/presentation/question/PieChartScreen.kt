@@ -19,10 +19,12 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate.VORDIPLOM_COLORS
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 
 @Composable
-fun PieChartScreen(userAnswers: List<Int>) {
+internal fun PieChartScreen(userAnswers: List<Int>) {
     val totalInfo = mutableListOf<PieEntry>()
     val pieChartStrings: List<String> = listOf(
         stringResource(R.string.txt_label_pie_chart_1),
@@ -76,5 +78,13 @@ fun PieChartScreen(userAnswers: List<Int>) {
                 .height(240.dp)
                 .padding(horizontal = 20.dp),
         )
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun PieChartScreenPreview() {
+    WeQuizTheme {
+        PieChartScreen(userAnswers = listOf(1, 2, 3, 4))
     }
 }
