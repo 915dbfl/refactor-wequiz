@@ -23,10 +23,12 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.main.R
 
 @Composable
-fun BaseGuideScreen(onGuideShown: () -> Unit) {
+internal fun BaseGuideScreen(onGuideShown: () -> Unit) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_arrow))
     val lottieAnimatable = rememberLottieAnimatable()
 
@@ -67,5 +69,13 @@ fun BaseGuideScreen(onGuideShown: () -> Unit) {
                 modifier = Modifier.fillMaxSize(),
             )
         }
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun BaseGuideScreenPreview() {
+    WeQuizTheme {
+        BaseGuideScreen { }
     }
 }
