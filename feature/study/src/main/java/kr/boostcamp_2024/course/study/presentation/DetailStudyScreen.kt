@@ -342,6 +342,10 @@ private fun DetailStudyScreenPreview() {
             onEditStudyGroupClick = {},
             onDeleteStudyGroupClick = {},
             onLeaveStudyGroupClick = {},
+            onEmailChange = {},
+            resetEmail = {},
+            email = "",
+            isEmailValid = true,
         )
     }
 }
