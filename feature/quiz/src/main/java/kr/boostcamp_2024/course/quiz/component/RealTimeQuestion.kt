@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
-fun RealTimeQuestion(
+internal fun RealTimeQuestion(
     isOwner: Boolean = false,
     questions: List<String>,
     selectedIndex: Int,
@@ -47,5 +49,16 @@ fun RealTimeQuestion(
                 )
             }
         }
+    }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun RealTimeQuestionPreview() {
+    WeQuizTheme {
+        RealTimeQuestion(
+            questions = listOf("문제1", "문제2", "문제3", "문제4", "문제5"),
+            selectedIndex = 0,
+        )
     }
 }
