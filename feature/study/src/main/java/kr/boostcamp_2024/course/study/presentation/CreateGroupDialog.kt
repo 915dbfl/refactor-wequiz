@@ -10,7 +10,7 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizTextField
 import kr.boostcamp_2024.course.study.R
 
 @Composable
-fun CreateGroupDialog(
+internal fun CreateGroupDialog(
     onDismissButtonClick: () -> Unit,
     onConfirmButtonClick: (String, String) -> Unit,
     groupId: String,
