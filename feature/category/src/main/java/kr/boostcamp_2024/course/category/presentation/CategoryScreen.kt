@@ -59,14 +59,19 @@ internal fun CategoryScreen(
 
     LaunchedEffect(Unit) {
         categoryViewModel.initViewmodel()
+    }
+
+    LaunchedEffect(categoryUiState.value.snackBarMessage) {
         categoryUiState.value.snackBarMessage?.let { message ->
             snackBarHostState.showSnackbar(message)
             categoryViewModel.setNewSnackBarMessage(null)
         }
     }
 
-    if (categoryUiState.value.isDeleteCategorySuccess) {
-        LaunchedEffect(Unit) { onNavigationButtonClick() }
+    LaunchedEffect(categoryUiState.value.isDeleteCategorySuccess) {
+        if (categoryUiState.value.isDeleteCategorySuccess) {
+            onNavigationButtonClick()
+        }
     }
 
     CategoryScreen(

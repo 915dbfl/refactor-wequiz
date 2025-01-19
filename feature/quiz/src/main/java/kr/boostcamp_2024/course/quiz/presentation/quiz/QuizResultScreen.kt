@@ -18,7 +18,7 @@ import kr.boostcamp_2024.course.domain.model.QuizResult
 import kr.boostcamp_2024.course.quiz.viewmodel.QuizResultViewModel
 
 @Composable
-fun QuizResultScreen(
+internal fun QuizResultScreen(
     onNavigationButtonClick: () -> Unit,
     onQuestionClick: (String) -> Unit,
     quizResultViewModel: QuizResultViewModel = hiltViewModel(),
@@ -45,7 +45,7 @@ fun QuizResultScreen(
 }
 
 @Composable
-fun QuizResultScreen(
+internal fun QuizResultScreen(
     isManager: Boolean,
     isLoading: Boolean,
     questions: List<Question>?,
