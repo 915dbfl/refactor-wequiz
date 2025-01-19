@@ -271,7 +271,7 @@ fun GeneralQuestionScreenPreview() {
         GeneralQuestionScreen(
             quizTitle = "Quiz Title",
             currentPage = 0,
-            questions = listOf(),
+            questions = emptyList(),
             countDownTime = 0,
             selectedIndexList = emptyList(),
             snackbarHostState = SnackbarHostState(),
