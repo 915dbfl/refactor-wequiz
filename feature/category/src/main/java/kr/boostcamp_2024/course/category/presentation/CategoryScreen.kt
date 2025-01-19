@@ -31,13 +31,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.boostcamp_2024.course.category.R
 import kr.boostcamp_2024.course.category.component.CategorySettingMenu
 import kr.boostcamp_2024.course.category.viewModel.CategoryViewModel
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
@@ -47,7 +47,7 @@ import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.Quiz
 
 @Composable
-fun CategoryScreen(
+internal fun CategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizButtonClick: (String) -> Unit,
     onQuizClick: (String, String) -> Unit,
@@ -61,15 +61,17 @@ fun CategoryScreen(
         categoryViewModel.initViewmodel()
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(categoryUiState.value.snackBarMessage) {
         categoryUiState.value.snackBarMessage?.let { message ->
             snackBarHostState.showSnackbar(message)
             categoryViewModel.setNewSnackBarMessage(null)
         }
     }
 
-    if (categoryUiState.value.isDeleteCategorySuccess) {
-        LaunchedEffect(Unit) { onNavigationButtonClick() }
+    LaunchedEffect(categoryUiState.value.isDeleteCategorySuccess) {
+        if (categoryUiState.value.isDeleteCategorySuccess) {
+            onNavigationButtonClick()
+        }
     }
 
     CategoryScreen(
@@ -85,7 +87,7 @@ fun CategoryScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CategoryScreen(
+internal fun CategoryScreen(
     category: Category?,
     quizList: List<BaseQuiz>?,
     onNavigationButtonClick: () -> Unit,
@@ -167,7 +169,7 @@ private fun CategoryScreen(
 }
 
 @Composable
-fun QuizList(
+private fun QuizList(
     modifier: Modifier = Modifier,
     categoryId: String,
     quizzes: List<BaseQuiz>?,
@@ -195,7 +197,7 @@ fun QuizList(
 }
 
 @Composable
-fun QuizItem(
+private fun QuizItem(
     quiz: BaseQuiz,
     onQuizClick: () -> Unit,
 ) {
@@ -230,11 +232,51 @@ fun QuizItem(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CategoryScreenPreview() {
+private fun CategoryScreenPreview() {
     WeQuizTheme {
         CategoryScreen(
+            category = Category(
+                id = "1",
+                name = "Category Name",
+                categoryImageUrl = "",
+                description = "카테고리 설명",
+                quizzes = listOf(" ", " ", " "),
+            ),
+            quizList = listOf(
+                Quiz(
+                    id = "1",
+                    title = "Quiz Title",
+                    description = "Quiz Description",
+                    startTime = "2021-09-01",
+                    solveTime = 10,
+                    questions = listOf(" ", " ", " "),
+                    userOmrs = listOf(" ", " ", " "),
+                    quizImageUrl = "",
+                ),
+                Quiz(
+                    id = "2",
+                    title = "Quiz Title",
+                    description = "Quiz Description",
+                    startTime = "2021-09-01",
+                    solveTime = 10,
+                    questions = listOf(" ", " ", " "),
+                    userOmrs = listOf(" ", " ", " "),
+                    quizImageUrl = "",
+                ),
+                Quiz(
+                    id = "3",
+                    title = "Quiz Title",
+                    description = "Quiz Description",
+                    startTime = "2021-09-01",
+                    solveTime = 10,
+                    questions = listOf(" ", " ", " "),
+                    userOmrs = listOf(" ", " ", " "),
+                    quizImageUrl = "",
+                ),
+            ),
+            onCategoryDeleteClick = {},
             onNavigationButtonClick = {},
             onCreateQuizButtonClick = {},
             onQuizClick = { _, _ -> },
