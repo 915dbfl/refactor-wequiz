@@ -20,7 +20,7 @@ import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.presentation.question.PieChartScreen
 
 @Composable
-fun QuizStatisticsDialog(
+internal fun QuizStatisticsDialog(
     onConfirmButtonClick: () -> Unit,
     onDismissRequest: () -> Unit,
     userAnswer: List<Int>,
