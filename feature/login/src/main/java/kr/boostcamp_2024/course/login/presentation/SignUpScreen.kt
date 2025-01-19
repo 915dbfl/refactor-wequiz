@@ -229,7 +229,7 @@ private fun SignUpButtons(
 
 @PreviewKoLightDark
 @Composable
-private fun PreviewSignUpScreen() {
+private fun SignUpScreenPreview() {
     WeQuizTheme {
         SignUpScreen(
             isLoading = false,
