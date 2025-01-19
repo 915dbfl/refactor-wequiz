@@ -21,7 +21,7 @@ import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
-fun BaseDialogDismissButton(dismissTitle: String, onDismissRequest: () -> Unit) {
+private fun BaseDialogDismissButton(dismissTitle: String, onDismissRequest: () -> Unit) {
     Button(onClick = onDismissRequest) {
         Text(dismissTitle)
     }

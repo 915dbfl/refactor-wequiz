@@ -80,7 +80,7 @@ fun WeQuizLeftChatBubble(
 
 @PreviewKoLightDark
 @Composable
-fun WeQuizChatBubblePreview() {
+private fun WeQuizChatBubblePreview() {
     WeQuizTheme {
         WeQuizChatBubble(
             text = "Hello, World!",
@@ -92,7 +92,7 @@ fun WeQuizChatBubblePreview() {
 
 @PreviewKoLightDark
 @Composable
-fun ChatBubbleRightPreview() {
+private fun ChatBubbleRightPreview() {
     WeQuizTheme {
         WeQuizRightChatBubble(
             text = "Hello, World!",
@@ -103,7 +103,7 @@ fun ChatBubbleRightPreview() {
 
 @PreviewKoLightDark
 @Composable
-fun WeQuizLeftChatBubblePreview() {
+private fun WeQuizLeftChatBubblePreview() {
     WeQuizTheme {
         WeQuizLeftChatBubble(
             text = "Hello, World!",

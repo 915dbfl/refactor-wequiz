@@ -28,7 +28,7 @@ fun WeQuizCircularProgressIndicator(
 
 @PreviewKoLightDark
 @Composable
-fun WeQuizCircularProgressIndicatorPreview() {
+private fun WeQuizCircularProgressIndicatorPreview() {
     WeQuizTheme {
         WeQuizCircularProgressIndicator()
     }

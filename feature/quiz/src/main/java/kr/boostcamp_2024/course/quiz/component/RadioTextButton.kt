@@ -11,14 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
-fun RadioTextButton(
+internal fun RadioTextButton(
     text: String,
     selected: Boolean,
     onclick: () -> Unit,
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,6 +39,18 @@ fun RadioTextButton(
                 .align(Alignment.CenterVertically)
                 .padding(top = 10.dp, bottom = 10.dp, end = 7.dp),
             style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun RadioTextButtonPreview() {
+    WeQuizTheme {
+        RadioTextButton(
+            text = "문제",
+            selected = true,
+            onclick = {},
         )
     }
 }

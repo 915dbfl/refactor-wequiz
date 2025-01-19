@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BlankQuestionDescription(questionContent: List<Map<String, String>>) {
+internal fun BlankQuestionDescription(questionContent: List<Map<String, String>>) {
     Text(text = stringResource(R.string.txt_blank_question_detail_description), modifier = Modifier, style = MaterialTheme.typography.bodyMedium)
     FlowRow(
         modifier = Modifier
@@ -50,5 +52,20 @@ fun BlankQuestionDescription(questionContent: List<Map<String, String>>) {
                 )
             }
         }
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun BlankQuestionDescriptionPreview() {
+    val questionContent = listOf(
+        mapOf("type" to "text", "text" to "WeQuiz팀은"),
+        mapOf("type" to "blank", "text" to "5명"),
+        mapOf("type" to "text", "text" to "입니다."),
+    )
+    WeQuizTheme {
+        BlankQuestionDescription(
+            questionContent = questionContent,
+        )
     }
 }

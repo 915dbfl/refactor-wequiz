@@ -1,3 +1,5 @@
+package kr.boostcamp_2024.course.designsystem.ui.theme.component
+
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -24,7 +26,6 @@ import kotlinx.coroutines.launch
 import kr.boostcamp_2024.course.designsystem.R
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
-import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import java.io.ByteArrayOutputStream
 
 @Composable

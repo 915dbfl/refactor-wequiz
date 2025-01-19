@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,12 +39,11 @@ import kr.boostcamp_2024.course.domain.model.Quiz
 import kr.boostcamp_2024.course.domain.model.RealTimeQuiz
 import kr.boostcamp_2024.course.quiz.component.QuizDataButton
 import kr.boostcamp_2024.course.quiz.component.QuizDataChip
-import kr.boostcamp_2024.course.quiz.component.QuizDataText
 import kr.boostcamp_2024.course.quiz.component.QuizTopAppBar
 import kr.boostcamp_2024.course.quiz.viewmodel.QuizViewModel
 
 @Composable
-fun QuizScreen(
+internal fun QuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionButtonClick: (String) -> Unit,
     onStartQuizButtonClick: (String) -> Unit,
@@ -101,7 +104,7 @@ fun QuizScreen(
 }
 
 @Composable
-fun QuizScreen(
+private fun QuizScreen(
     category: Category?,
     quiz: BaseQuiz?,
     currentUserId: String?,
@@ -186,25 +189,54 @@ fun QuizScreen(
     }
 }
 
+@Composable
+fun QuizDataText(
+    quiz: BaseQuiz?,
+) {
+    quiz?.let { quiz ->
+        // QuizTitle
+        Text(
+            text = quiz.title,
+            style = MaterialTheme.typography.displayMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+
+        // QuizDescription
+        quiz.description?.let { description ->
+            Text(
+                text = description,
+                color = Color.White,
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun QuizStartScreenPreview() {
+private fun QuizStartScreenPreview() {
     WeQuizTheme {
         QuizScreen(
             category = Category(
                 id = "id",
-                name = "name",
+                name = "카테고리 이름",
                 description = "description",
                 categoryImageUrl = "categoryImageUrl",
                 quizzes = emptyList(),
             ),
             quiz = Quiz(
                 id = "id",
-                title = "퀴즈 제목임",
-                description = "퀴즈 설명임",
-                startTime = "startTime",
+                title = "퀴즈 제목",
+                description = "퀴즈 설명",
+                startTime = "2024-12-12",
                 solveTime = 60,
-                questions = emptyList(),
+                questions = listOf(
+                    "문제1",
+                    "문제2",
+                    "문제3",
+                ),
                 userOmrs = emptyList(),
                 quizImageUrl = "quizImageUrl",
             ),

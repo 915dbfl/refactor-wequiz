@@ -6,13 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
 import kr.boostcamp_2024.course.main.R
 
 @Composable
-fun GuideDialog(
+internal fun GuideDialog(
+    guideUrl: String,
     onDismissButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -23,7 +24,7 @@ fun GuideDialog(
         dismissTitle = stringResource(R.string.txt_guide_dialog_cancel),
         content = {},
         onConfirm = {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://trite-ice-00b.notion.site/WeQuiz-1505bfe2c24f80b1ae39dc15026da991?pvs=4")))
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(guideUrl)))
             onDismissButtonClick()
         },
         onDismissRequest = {
@@ -32,10 +33,13 @@ fun GuideDialog(
     )
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
 private fun CreateGroupScreenPreview() {
     WeQuizTheme {
-        GuideDialog { }
+        GuideDialog(
+            guideUrl = "",
+            onDismissButtonClick = {},
+        )
     }
 }

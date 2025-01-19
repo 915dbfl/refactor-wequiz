@@ -93,7 +93,7 @@ fun WeQuizOutLinedTextField(
 
 @PreviewKoLightDark
 @Composable
-fun WeQuizTextFieldPreview() {
+private fun WeQuizTextFieldPreview() {
     WeQuizTheme {
         WeQuizTextField(
             label = "Label",
@@ -106,7 +106,7 @@ fun WeQuizTextFieldPreview() {
 
 @PreviewKoLightDark
 @Composable
-fun WeQuizOutLinedTextFieldPreview() {
+private fun WeQuizOutLinedTextFieldPreview() {
     WeQuizTheme {
         WeQuizOutLinedTextField(
             text = "Text",

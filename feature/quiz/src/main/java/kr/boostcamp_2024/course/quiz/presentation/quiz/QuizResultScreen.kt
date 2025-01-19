@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kr.boostcamp_2024.course.domain.model.Question
-import kr.boostcamp_2024.course.domain.model.QuizResult
+import kr.boostcamp_2024.course.domain.model.BlankQuestion
+import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.quiz.viewmodel.QuizResultViewModel
 
 @Composable
@@ -25,16 +25,34 @@ internal fun QuizResultScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by quizResultViewModel.uiState.collectAsStateWithLifecycle()
-    QuizResultScreen(
-        isManager = uiState.isManager,
-        isLoading = uiState.isLoading,
-        questions = uiState.questions,
-        quizTitle = uiState.quizTitle,
-        quizResult = uiState.quizResult,
-        snackbarHostState = snackbarHostState,
-        onNavigationButtonClick = onNavigationButtonClick,
-        onQuestionClick = onQuestionClick,
-    )
+
+    if (uiState.isManager) {
+        OwnerQuizResultScreen(
+            questions = uiState.questions,
+            quizTitle = uiState.quizTitle,
+            snackbarHostState = snackbarHostState,
+            onNavigationButtonClick = onNavigationButtonClick,
+            onQuestionClick = onQuestionClick,
+        )
+    } else {
+        GeneralQuizResultScreen(
+            quizTitle = uiState.quizTitle,
+            quizResult = uiState.quizResult,
+            onNavigationButtonClick = onNavigationButtonClick,
+            snackbarHostState = snackbarHostState,
+            onQuestionClick = onQuestionClick,
+        )
+    }
+
+    if (uiState.isLoading) {
+        Box {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(64.dp)
+                    .align(Alignment.Center),
+            )
+        }
+    }
 
     uiState.errorMessage?.let { errorMessage ->
         LaunchedEffect(errorMessage) {
@@ -44,42 +62,31 @@ internal fun QuizResultScreen(
     }
 }
 
-@Composable
-internal fun QuizResultScreen(
-    isManager: Boolean,
-    isLoading: Boolean,
-    questions: List<Question>?,
-    quizTitle: String?,
-    quizResult: QuizResult?,
-    snackbarHostState: SnackbarHostState,
-    onNavigationButtonClick: () -> Unit,
-    onQuestionClick: (String) -> Unit,
-) {
-    if (isManager) {
-        OwnerQuizResultScreen(
-            questions = questions,
-            quizTitle = quizTitle,
-            snackbarHostState = snackbarHostState,
-            onNavigationButtonClick = onNavigationButtonClick,
-            onQuestionClick = onQuestionClick,
-        )
-    } else {
-        GeneralQuizResultScreen(
-            quizTitle = quizTitle,
-            quizResult = quizResult,
-            onNavigationButtonClick = onNavigationButtonClick,
-            snackbarHostState = snackbarHostState,
-            onQuestionClick = onQuestionClick,
-        )
-    }
-
-    if (isLoading) {
-        Box {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(Alignment.Center),
-            )
-        }
-    }
-}
+val quizResultPreviewQuestions =
+    listOf(
+        ChoiceQuestion(
+            id = "1",
+            title = "1번 문제",
+            solution = null,
+            description = "1번 문제 설명",
+            answer = 1,
+            choices = listOf(),
+            userAnswers = listOf(),
+        ),
+        ChoiceQuestion(
+            id = "2",
+            title = "2번 문제",
+            solution = null,
+            description = "2번 문제 설명",
+            answer = 1,
+            choices = listOf(),
+            userAnswers = listOf(),
+        ),
+        BlankQuestion(
+            id = "3",
+            title = "3번 문제 (낱말 맞추기)",
+            solution = null,
+            userAnswers = emptyList(),
+            questionContent = emptyList(),
+        ),
+    )

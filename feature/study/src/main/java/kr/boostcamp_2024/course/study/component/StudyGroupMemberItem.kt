@@ -15,19 +15,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import kr.boostcamp_2024.course.domain.model.User
 import kr.boostcamp_2024.course.study.R
 
 @Composable
-fun GroupItem(
+internal fun StudyGroupMemberItem(
     ownerId: String?,
     groupId: String?,
+    user: User,
     isOwner: Boolean,
     removeButtonClick: (String, String) -> Unit,
-    user: User,
 ) {
-    Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier.padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         WeQuizAsyncImage(
             modifier = Modifier
                 .clip(CircleShape)
@@ -61,5 +66,25 @@ fun GroupItem(
                 )
             }
         }
+    }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun StudyGroupMemberItemPreview() {
+    WeQuizTheme {
+        StudyGroupMemberItem(
+            ownerId = "user1",
+            groupId = "study1",
+            removeButtonClick = { _, _ -> },
+            isOwner = true,
+            user = User(
+                id = "user1",
+                name = "user1",
+                email = "email1",
+                profileUrl = "",
+                studyGroups = emptyList(),
+            ),
+        )
     }
 }

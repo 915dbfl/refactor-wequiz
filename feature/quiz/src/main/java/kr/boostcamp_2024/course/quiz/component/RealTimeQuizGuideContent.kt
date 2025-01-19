@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
 import kr.boostcamp_2024.course.quiz.R
 
 @Composable
-fun RealTimeQuizGuideContent(
+internal fun RealTimeQuizGuideContent(
     ownerName: String,
     totalParticipants: Int,
     submittedParticipants: Int,
@@ -49,6 +51,18 @@ fun RealTimeQuizGuideContent(
                 .align(Alignment.CenterVertically),
             imagePainter = painterResource(id = R.drawable.quiz_system_profile),
             contentDescription = stringResource(R.string.des_image_question),
+        )
+    }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun RealTimeQuizGuideContentPreview() {
+    WeQuizTheme {
+        RealTimeQuizGuideContent(
+            ownerName = "이훈",
+            totalParticipants = 10,
+            submittedParticipants = 5,
         )
     }
 }
