@@ -34,7 +34,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -167,7 +166,7 @@ internal fun GeneralQuestionScreen(
 }
 
 @Composable
-fun GeneralQuizGuide(
+private fun GeneralQuizGuide(
     countDownTime: Int,
 ) {
     Row(
@@ -192,7 +191,7 @@ fun GeneralQuizGuide(
 }
 
 @Composable
-fun GeneralQuizButtons(
+private fun GeneralQuizButtons(
     modifier: Modifier = Modifier,
     setButtonsHeight: (IntSize) -> Unit,
     nextButtonText: String,
@@ -230,7 +229,7 @@ fun GeneralQuizButtons(
 }
 
 @Composable
-fun GeneralQuizDialog(
+private fun GeneralQuizDialog(
     currentPage: Int,
     questions: List<Question>,
     closeDialog: () -> Unit,
@@ -263,10 +262,9 @@ fun GeneralQuizDialog(
     )
 }
 
-@Preview(locale = "ko")
 @PreviewLightDark
 @Composable
-fun GeneralQuestionScreenPreview() {
+private fun GeneralQuestionScreenPreview() {
     WeQuizTheme {
         GeneralQuestionScreen(
             quizTitle = "Quiz Title",

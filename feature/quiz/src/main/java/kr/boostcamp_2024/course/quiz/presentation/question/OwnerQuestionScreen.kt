@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntSize
@@ -96,7 +95,7 @@ internal fun OwnerQuestionScreen(
 }
 
 @Composable
-fun OwnerQuestionScreen(
+private fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     isNextButtonEnabled: Boolean,
     currentPage: Int,
@@ -269,10 +268,9 @@ fun RealTimeQuizWithOwnerButtons(
     }
 }
 
-@Preview(locale = "ko")
 @PreviewLightDark
 @Composable
-fun OwnerQuestionScreenPreview(
+private fun OwnerQuestionScreenPreview(
     @PreviewParameter(QuizParameterProvider::class, 1) quiz: RealTimeQuiz,
 ) {
     WeQuizTheme {
