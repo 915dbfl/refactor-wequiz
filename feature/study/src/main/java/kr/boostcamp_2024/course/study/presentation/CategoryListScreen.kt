@@ -23,7 +23,7 @@ import kr.boostcamp_2024.course.study.component.CategoryItem
 import kr.boostcamp_2024.course.study.component.CustomPropertyTab
 
 @Composable
-fun CategoryListScreen(
+internal fun CategoryListScreen(
     owner: User?,
     currentGroup: StudyGroup,
     categories: List<Category>,
