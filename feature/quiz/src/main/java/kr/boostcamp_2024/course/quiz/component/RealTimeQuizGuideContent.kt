@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
 import kr.boostcamp_2024.course.quiz.R
@@ -57,9 +58,11 @@ internal fun RealTimeQuizGuideContent(
 @PreviewKoLightDarkBackground
 @Composable
 private fun RealTimeQuizGuideContentPreview() {
-    RealTimeQuizGuideContent(
-        ownerName = "이훈",
-        totalParticipants = 10,
-        submittedParticipants = 5,
-    )
+    WeQuizTheme {
+        RealTimeQuizGuideContent(
+            ownerName = "이훈",
+            totalParticipants = 10,
+            submittedParticipants = 5,
+        )
+    }
 }

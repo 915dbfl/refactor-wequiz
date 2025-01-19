@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
 internal fun RadioTextButton(
@@ -43,13 +44,14 @@ internal fun RadioTextButton(
 }
 
 
-
 @PreviewKoLightDarkBackground
 @Composable
 private fun RadioTextButtonPreview() {
-    RadioTextButton(
-        text = "문제",
-        selected = true,
-        onclick = {},
-    )
+    WeQuizTheme {
+        RadioTextButton(
+            text = "문제",
+            selected = true,
+            onclick = {},
+        )
+    }
 }

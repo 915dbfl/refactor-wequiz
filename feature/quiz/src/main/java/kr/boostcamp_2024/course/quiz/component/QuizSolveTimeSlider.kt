@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,10 +52,12 @@ internal fun QuizSolveTimeSlider(
 @PreviewKoLightDarkBackground
 @Composable
 private fun QuizSolveTimeSliderPreview() {
-    QuizSolveTimeSlider(
-        value = 0f,
-        steps = 10,
-        valueRange = 0f..10f,
-        onValueChange = {},
-    )
+    WeQuizTheme {
+        QuizSolveTimeSlider(
+            value = 0f,
+            steps = 10,
+            valueRange = 0f..10f,
+            onValueChange = {},
+        )
+    }
 }
