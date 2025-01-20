@@ -13,6 +13,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import kr.boostcamp_2024.course.designsystem.R
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
 fun WeQuizLocalRoundedImage(
@@ -49,4 +51,26 @@ fun WeQuizAsyncImage(
         contentScale = ContentScale.Crop,
         fallback = fallback,
     )
+}
+
+@PreviewKoLightDark
+@Composable
+private fun WeQuizLocalRoundedImagePreview() {
+    WeQuizTheme {
+        WeQuizLocalRoundedImage(
+            imagePainter = painterResource(id = R.drawable.img_error),
+            contentDescription = null,
+        )
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun WeQuizAsyncImagePreview() {
+    WeQuizTheme {
+        WeQuizAsyncImage(
+            imgUrl = null,
+            contentDescription = null,
+        )
+    }
 }
