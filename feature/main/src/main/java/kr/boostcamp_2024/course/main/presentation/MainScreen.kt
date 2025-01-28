@@ -23,8 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -69,8 +67,8 @@ internal fun MainScreen(
     onEditStudyButtonClick: (String) -> Unit,
     onEditUserClick: (String?) -> Unit,
     onLogOutClick: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: MainViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -78,7 +76,6 @@ internal fun MainScreen(
         currentUser = uiState.currentUser,
         studyGroups = uiState.studyGroups,
         notifications = uiState.notificationNumber,
-        snackBarHostState = snackBarHostState,
         onNotificationButtonClick = onNotificationButtonClick,
         onCreateStudyButtonClick = onCreateStudyButtonClick,
         onEditStudyGroupClick = onEditStudyButtonClick,
@@ -103,7 +100,7 @@ internal fun MainScreen(
 
     uiState.errorMessage?.let { errorMessage ->
         LaunchedEffect(errorMessage) {
-            snackBarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -119,7 +116,6 @@ private fun MainScreen(
     currentUser: User?,
     studyGroups: List<StudyGroup>,
     notifications: Int,
-    snackBarHostState: SnackbarHostState,
     onNotificationButtonClick: () -> Unit,
     onCreateStudyButtonClick: () -> Unit,
     onEditStudyGroupClick: (String) -> Unit,
@@ -220,9 +216,6 @@ private fun MainScreen(
                     contentDescription = stringResource(R.string.des_fab_create_study),
                 )
             }
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
         },
     ) { innerPadding ->
 
@@ -333,7 +326,6 @@ private fun MainScreenPreview() {
                     categories = emptyList(),
                 ),
             ),
-            snackBarHostState = SnackbarHostState(),
             onEditStudyGroupClick = {},
             onLeaveStudyGroupClick = {},
             onNotificationButtonClick = {},

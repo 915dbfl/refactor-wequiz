@@ -18,8 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -57,10 +55,10 @@ fun DetailStudyScreen(
     onDeleteStudyGroupSuccess: () -> Unit,
     onLeaveStudyGroupSuccess: () -> Unit,
     onEditStudyGroupButtonClick: (String) -> Unit,
-    viewModel: DetailStudyViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewModel: DetailStudyViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -74,7 +72,6 @@ fun DetailStudyScreen(
         currentUserId = uiState.userId,
         email = uiState.email,
         isEmailValid = uiState.isEmailValid,
-        snackBarHostState = snackBarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateCategoryButtonClick = onCreateCategoryButtonClick,
         onCategoryClick = onCategoryClick,
@@ -100,7 +97,7 @@ fun DetailStudyScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackBarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -128,7 +125,6 @@ fun DetailStudyScreen(
     currentUserId: String?,
     email: String?,
     isEmailValid: Boolean,
-    snackBarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
@@ -201,9 +197,6 @@ fun DetailStudyScreen(
                     )
                 }
             }
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
         },
     ) { innerPadding ->
         if (currentGroup != null && owner != null) {
@@ -333,7 +326,6 @@ private fun DetailStudyScreenPreview() {
                 studyGroups = listOf("1"),
             ),
             currentUserId = "1",
-            snackBarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onCreateCategoryButtonClick = { _, _ -> },
             onCategoryClick = { _, _ -> },

@@ -47,6 +47,7 @@ fun WeQuizNavHost(
             },
             onSignUp = navController::navigationSignUp,
             onSignUpSuccess = navController::navigateUp,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
         mainNavGraph(
@@ -57,6 +58,7 @@ fun WeQuizNavHost(
             onEditStudyButtonClick = navController::navigateCreateStudy,
             onEditUserClick = { userId -> navController.navigationSignUp(null, userId) },
             onLoginOutClick = navController::navigationLogin,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
         studyNavGraph(
@@ -67,6 +69,7 @@ fun WeQuizNavHost(
             onDeleteStudyGroupSuccess = navController::navigateUp,
             onLeaveStudyGroupSuccess = navController::navigateUp,
             onEditStudyGroupButtonClick = navController::navigateCreateStudy,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
         categoryNavGraph(
@@ -75,6 +78,7 @@ fun WeQuizNavHost(
             onQuizClick = navController::navigateQuiz,
             onCreateCategorySuccess = navController::navigateUp,
             onCreateCategoryButtonClick = navController::navigateCreateCategory,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
         quizNavGraph(
@@ -88,6 +92,7 @@ fun WeQuizNavHost(
             onSettingMenuClick = navController::navigateCreateQuiz,
             onEditQuizSuccess = navController::navigateUp,
             onQuizDeleteSuccess = navController::navigateUp,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

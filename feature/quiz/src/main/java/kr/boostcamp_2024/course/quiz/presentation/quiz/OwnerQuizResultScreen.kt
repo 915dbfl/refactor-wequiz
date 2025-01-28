@@ -23,11 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +47,6 @@ internal fun OwnerQuizResultScreen(
     quizTitle: String?,
     onQuestionClick: (String) -> Unit,
     onNavigationButtonClick: () -> Unit,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -73,7 +69,6 @@ internal fun OwnerQuizResultScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
 
         Column(
@@ -194,7 +189,6 @@ private fun OwnerQuizResultScreenPreview() {
             onQuestionClick = {},
             questions = quizResultPreviewQuestions,
             quizTitle = "퀴즈 결과 프리뷰",
-            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

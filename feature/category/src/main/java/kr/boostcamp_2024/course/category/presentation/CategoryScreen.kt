@@ -19,13 +19,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -51,11 +49,11 @@ internal fun CategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizButtonClick: (String) -> Unit,
     onQuizClick: (String, String) -> Unit,
-    categoryViewModel: CategoryViewModel = hiltViewModel(),
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
 ) {
     val categoryUiState = categoryViewModel.categoryUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         categoryViewModel.initViewmodel()
@@ -63,7 +61,7 @@ internal fun CategoryScreen(
 
     LaunchedEffect(categoryUiState.value.snackBarMessage) {
         categoryUiState.value.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             categoryViewModel.setNewSnackBarMessage(null)
         }
     }

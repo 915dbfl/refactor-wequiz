@@ -29,6 +29,7 @@ fun NavGraphBuilder.mainNavGraph(
     onStudyGroupClick: (String) -> Unit,
     onEditUserClick: (String?) -> Unit,
     onLoginOutClick: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<MainRoute> {
         MainScreen(
@@ -38,11 +39,13 @@ fun NavGraphBuilder.mainNavGraph(
             onEditStudyButtonClick = onEditStudyButtonClick,
             onEditUserClick = onEditUserClick,
             onLogOutClick = onLoginOutClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<NotificationRoute> {
         NotificationScreen(
             onNavigationButtonClick = onNavigationButtonClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

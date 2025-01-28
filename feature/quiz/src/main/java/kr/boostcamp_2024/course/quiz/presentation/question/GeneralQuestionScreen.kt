@@ -18,8 +18,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,7 +52,6 @@ internal fun GeneralQuestionScreen(
     questions: List<Question>,
     countDownTime: Int,
     selectedIndexList: List<Any>,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
@@ -85,9 +82,6 @@ internal fun GeneralQuestionScreen(
                     onShowDialog = { showDialog = true },
                 )
             }
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
         },
     ) { innerPadding ->
         LinearProgressIndicator(
@@ -272,7 +266,6 @@ private fun GeneralQuestionScreenPreview() {
             questions = emptyList(),
             countDownTime = 0,
             selectedIndexList = emptyList(),
-            snackbarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onOptionSelected = { _, _ -> },
             onNextButtonClick = {},

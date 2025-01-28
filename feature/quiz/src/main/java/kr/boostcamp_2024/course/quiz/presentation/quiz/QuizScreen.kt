@@ -12,13 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -49,7 +46,7 @@ internal fun QuizScreen(
     onStartQuizButtonClick: (String) -> Unit,
     onSettingMenuClick: (String, String) -> Unit,
     onQuizDeleteSuccess: () -> Unit,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: QuizViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,7 +61,6 @@ internal fun QuizScreen(
         category = uiState.category,
         quiz = uiState.quiz,
         currentUserId = uiState.currentUserId,
-        snackbarHostState = snackbarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateQuestionButtonClick = onCreateQuestionButtonClick,
         onStartQuizButtonClick = onStartQuizButtonClick,
@@ -97,7 +93,7 @@ internal fun QuizScreen(
 
     uiState.errorMessage?.let { errorMessage ->
         LaunchedEffect(errorMessage) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -108,7 +104,6 @@ private fun QuizScreen(
     category: Category?,
     quiz: BaseQuiz?,
     currentUserId: String?,
-    snackbarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionButtonClick: (String) -> Unit,
     onStartQuizButtonClick: (String) -> Unit,
@@ -129,9 +124,6 @@ private fun QuizScreen(
                 onDeleteMenuClick = onDeleteMenuClick,
                 onWaitingRealTimeQuizButtonClick = onWaitingRealTimeQuizButtonClick,
             )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
         },
     ) { innerPadding ->
         Box(
@@ -240,7 +232,6 @@ private fun QuizStartScreenPreview() {
                 userOmrs = emptyList(),
                 quizImageUrl = "quizImageUrl",
             ),
-            snackbarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onCreateQuestionButtonClick = {},
             onStartQuizButtonClick = {},

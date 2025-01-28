@@ -10,14 +10,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -45,11 +42,11 @@ import kr.boostcamp_2024.course.quiz.viewmodel.UserQuestionViewModel
 internal fun UserQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     userQuestionViewModel: UserQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by userQuestionViewModel.uiState.collectAsStateWithLifecycle()
     var quizFinishDialog by rememberSaveable { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
 
     UserQuestionScreen(
         quiz = uiState.quiz,
@@ -59,7 +56,6 @@ internal fun UserQuestionScreen(
         quizFinishDialog = quizFinishDialog,
         onQuizFinishDialogDismissButtonClick = { quizFinishDialog = false },
         selectedIndexList = uiState.selectedIndexList,
-        snackbarHostState = snackbarHostState,
         onOptionSelected = userQuestionViewModel::selectOption,
         onBlanksSelected = userQuestionViewModel::selectBlanks,
         onSubmitButtonClick = userQuestionViewModel::submitQuestion,
@@ -76,7 +72,7 @@ internal fun UserQuestionScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             userQuestionViewModel.shownErrorMessage()
         }
     }
@@ -107,7 +103,6 @@ private fun UserQuestionScreen(
     quizFinishDialog: Boolean,
     onQuizFinishDialogDismissButtonClick: () -> Unit,
     selectedIndexList: List<Any?>,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
     onSubmitButtonClick: (String) -> Unit,
@@ -136,9 +131,6 @@ private fun UserQuestionScreen(
                     onShowDialog = { showExitDialog = true },
                 )
             }
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
         },
     ) { innerPadding ->
         Box(

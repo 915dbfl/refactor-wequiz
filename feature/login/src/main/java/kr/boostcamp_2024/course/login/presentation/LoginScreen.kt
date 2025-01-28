@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,10 +47,10 @@ import java.util.UUID
 internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginUiState by loginViewModel.loginUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(loginUiState) {
@@ -61,7 +58,7 @@ internal fun LoginScreen(
             onLoginSuccess()
         }
         loginUiState.snackBarMessage?.let { messageId ->
-            snackBarHostState.showSnackbar(context.getString(messageId))
+            onShowErrorSnackbar(Exception(context.getString(messageId)))
             loginViewModel.setNewSnackBarMessage(null)
         }
         if (loginUiState.isNewUser) {
@@ -72,7 +69,6 @@ internal fun LoginScreen(
     }
 
     LoginScreen(
-        snackBarHostState,
         loginViewModel::loginForExperience,
         handleSignIn = loginViewModel::handleSignIn,
         setNewSnackBarMessage = loginViewModel::setNewSnackBarMessage,
@@ -81,14 +77,11 @@ internal fun LoginScreen(
 
 @Composable
 private fun LoginScreen(
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onLoginSuccess: () -> Unit,
     handleSignIn: (GetCredentialResponse, Int) -> Unit,
     setNewSnackBarMessage: (Int?) -> Unit,
 ) {
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

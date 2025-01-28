@@ -36,6 +36,7 @@ fun NavGraphBuilder.categoryNavGraph(
     onQuizClick: (String, String) -> Unit,
     onCreateCategorySuccess: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<CategoryRoute> {
         CategoryScreen(
@@ -43,12 +44,14 @@ fun NavGraphBuilder.categoryNavGraph(
             onCreateQuizButtonClick = onCreateQuizButtonClick,
             onQuizClick = onQuizClick,
             onCreateCategoryButtonClick = onCreateCategoryButtonClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<CreateCategoryRoute> {
         CreateCategoryScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateCategorySuccess = onCreateCategorySuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

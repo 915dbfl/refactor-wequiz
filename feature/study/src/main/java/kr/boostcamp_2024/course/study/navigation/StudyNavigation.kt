@@ -33,11 +33,13 @@ fun NavGraphBuilder.studyNavGraph(
     onEditStudyGroupButtonClick: (String) -> Unit,
     onCategoryClick: (String, String) -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<CreateStudyRoute> {
         CreateStudyScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onSubmitStudySuccess = onSubmitStudySuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 
@@ -49,6 +51,7 @@ fun NavGraphBuilder.studyNavGraph(
             onCategoryClick = onCategoryClick,
             onDeleteStudyGroupSuccess = onDeleteStudyGroupSuccess,
             onLeaveStudyGroupSuccess = onLeaveStudyGroupSuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

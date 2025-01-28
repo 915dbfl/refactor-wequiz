@@ -26,8 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,10 +59,10 @@ import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 internal fun CreateQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionSuccess: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createQuestionUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
     val options = listOf(
         stringResource(R.string.txt_create_general_question),
@@ -75,7 +73,7 @@ internal fun CreateQuestionScreen(
             onCreateQuestionSuccess()
         }
         uiState.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setNewSnackBarMessage(null)
         }
     }
@@ -91,7 +89,6 @@ internal fun CreateQuestionScreen(
 
     CreateQuestionScreen(
         uiState = uiState,
-        snackBarHostState = snackBarHostState,
         focusRequester = focusRequester,
         onTitleChanged = viewModel::onTitleChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
@@ -121,7 +118,6 @@ internal fun CreateQuestionScreen(
 private fun CreateQuestionScreen(
     uiState: CreateQuestionUiState,
     focusRequester: FocusRequester,
-    snackBarHostState: SnackbarHostState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSolutionChanged: (String) -> Unit,
@@ -146,7 +142,6 @@ private fun CreateQuestionScreen(
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -326,7 +321,6 @@ private fun CreateQuestionScreenPreview() {
         CreateQuestionScreen(
             uiState = previewCreateQuestionUiState,
             focusRequester = remember { FocusRequester() },
-            snackBarHostState = remember { SnackbarHostState() },
             onTitleChanged = {},
             onDescriptionChanged = {},
             onSolutionChanged = {},

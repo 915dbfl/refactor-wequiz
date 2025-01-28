@@ -17,8 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,10 +41,10 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTe
 internal fun CreateCategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateCategorySuccess: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateCategoryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createCategoryUiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.fetchCategoryInfo()
@@ -57,7 +55,7 @@ internal fun CreateCategoryScreen(
             onCreateCategorySuccess()
         }
         uiState.errorMessage?.let { message ->
-            snackbarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setErrorMessage(null)
         }
     }
@@ -79,7 +77,6 @@ internal fun CreateCategoryScreen(
         currentCategoryImage = uiState.currentImage,
         defaultCategoryImageUri = uiState.defaultImageUri,
         isCategoryCreationValid = uiState.isCategoryCreationValid,
-        snackbarHostState = snackbarHostState,
         onNameChanged = viewModel::onNameChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         onNavigationButtonClick = onNavigationButtonClick,
@@ -98,7 +95,6 @@ internal fun CreateCategoryScreen(
     currentCategoryImage: ByteArray?,
     defaultCategoryImageUri: String?,
     isCategoryCreationValid: Boolean,
-    snackbarHostState: SnackbarHostState,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onNavigationButtonClick: () -> Unit,
@@ -122,9 +118,6 @@ internal fun CreateCategoryScreen(
                     }
                 },
             )
-        },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
         },
     ) { innerPadding ->
         Column(
@@ -190,7 +183,6 @@ private fun CreateCategoryScreenPreview() {
             currentCategoryImage = null,
             defaultCategoryImageUri = null,
             isCategoryCreationValid = true,
-            snackbarHostState = SnackbarHostState(),
             onNameChanged = {},
             onDescriptionChanged = {},
             onNavigationButtonClick = {},

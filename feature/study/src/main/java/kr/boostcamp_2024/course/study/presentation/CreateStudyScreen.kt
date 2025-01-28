@@ -12,12 +12,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -37,10 +34,10 @@ import kr.boostcamp_2024.course.study.component.StudySubmitButton
 
 @Composable
 internal fun CreateStudyScreen(
-    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
     onSubmitStudySuccess: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
 ) {
     val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
 
@@ -52,7 +49,6 @@ internal fun CreateStudyScreen(
         descriptionText = uiState.description,
         groupMemberNumber = uiState.maxUserNum,
         canSubmitStudy = uiState.canSubmitStudy && !uiState.isLoading,
-        snackBarHostState = snackBarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onTitleTextChange = viewmodel::onNameChanged,
         onDescriptionTextChange = viewmodel::onDescriptionChanged,
@@ -74,7 +70,7 @@ internal fun CreateStudyScreen(
 
     uiState.snackBarMessage?.let { message ->
         LaunchedEffect(message) {
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewmodel.onSnackBarShown()
         }
     }
@@ -90,7 +86,6 @@ private fun CreateStudyScreen(
     descriptionText: String,
     groupMemberNumber: String,
     canSubmitStudy: Boolean,
-    snackBarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onTitleTextChange: (String) -> Unit,
     onDescriptionTextChange: (String) -> Unit,
@@ -108,7 +103,6 @@ private fun CreateStudyScreen(
                 onNavigationButtonClick = onNavigationButtonClick,
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -187,7 +181,6 @@ private fun CreateStudyScreenPreview() {
             descriptionText = "",
             groupMemberNumber = "",
             canSubmitStudy = false,
-            snackBarHostState = remember { SnackbarHostState() },
             onNavigationButtonClick = {},
             onTitleTextChange = {},
             onDescriptionTextChange = {},

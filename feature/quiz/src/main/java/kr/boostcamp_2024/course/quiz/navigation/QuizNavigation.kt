@@ -80,22 +80,26 @@ fun NavGraphBuilder.quizNavGraph(
     onSettingMenuClick: (String, String) -> Unit,
     onEditQuizSuccess: () -> Unit,
     onQuizDeleteSuccess: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<CreateQuestionRoute> {
         CreateQuestionScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateQuestionSuccess = onCreateQuestionSuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuestionDetailRoute> {
         QuestionDetailScreen(
             onNavigationButtonClick = onNavigationButtonClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuestionRoute> {
         QuestionScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onQuizFinished = onQuizFinished,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuizRoute> {
@@ -105,12 +109,14 @@ fun NavGraphBuilder.quizNavGraph(
             onStartQuizButtonClick = onStartQuizButtonClick,
             onSettingMenuClick = onSettingMenuClick,
             onQuizDeleteSuccess = onQuizDeleteSuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuizResultRoute> {
         QuizResultScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onQuestionClick = onQuestionClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<CreateQuizRoute> {
@@ -118,6 +124,7 @@ fun NavGraphBuilder.quizNavGraph(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateQuizSuccess = onCreateQuizSuccess,
             onEditQuizSuccess = onEditQuizSuccess,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

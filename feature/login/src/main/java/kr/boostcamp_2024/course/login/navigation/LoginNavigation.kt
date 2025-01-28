@@ -43,11 +43,13 @@ fun NavGraphBuilder.loginNavGraph(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
     onSignUpSuccess: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<LoginRoute> {
         LoginScreen(
             onLoginSuccess = onLoginSuccess,
             onSignUp = onSignUp,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 
@@ -57,6 +59,7 @@ fun NavGraphBuilder.loginNavGraph(
         SignUpScreen(
             onSignUpSuccess = onSignUpSuccess,
             onNavigationButtonClick = onNavigationButtonClick,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

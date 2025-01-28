@@ -15,14 +15,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -43,15 +40,15 @@ import kr.boostcamp_2024.course.login.viewmodel.SignUpViewModel
 internal fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigationButtonClick: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(uiState) {
         uiState.snackBarMessage?.let {
-            snackBarHostState.showSnackbar(context.getString(it))
+            onShowErrorSnackbar(Exception(context.getString(it)))
             viewModel.setNewSnackBarMessage(null)
         }
         if (uiState.isSignUpSuccess) {
@@ -65,7 +62,6 @@ internal fun SignUpScreen(
         isSignUpButtonEnabled = uiState.isSignUpButtonEnabled,
         isEditMode = uiState.isEditMode,
         profileImageByteArray = uiState.profileImageByteArray,
-        snackBarHostState = snackBarHostState,
         onNameChanged = viewModel::onNameChanged,
         onNavigationButtonClick = onNavigationButtonClick,
         onSignUpButtonClick = viewModel::signUp,
@@ -88,7 +84,6 @@ private fun SignUpScreen(
     isSignUpButtonEnabled: Boolean,
     isEditMode: Boolean,
     profileImageByteArray: ByteArray?,
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNameChanged: (String) -> Unit,
     onProfileByteArrayChanged: (ByteArray) -> Unit,
     onNavigationButtonClick: () -> Unit,
@@ -118,7 +113,6 @@ private fun SignUpScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(

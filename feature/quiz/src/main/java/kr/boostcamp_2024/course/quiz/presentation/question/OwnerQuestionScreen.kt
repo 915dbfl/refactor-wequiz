@@ -15,8 +15,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,8 +52,8 @@ internal fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     currentUserId: String?,
     onQuizFinished: (String?, String?) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     questionViewModel: OwnerQuestionViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by questionViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,7 +67,6 @@ internal fun OwnerQuestionScreen(
         currentPage = uiState.currentPage,
         choiceQuestions = uiState.questions,
         ownerName = uiState.ownerName ?: "",
-        snackbarHostState = snackbarHostState,
         onNextButtonClick = questionViewModel::nextPage,
         onPreviousButtonClick = questionViewModel::previousPage,
         onQuizFinishButtonClick = questionViewModel::setQuizFinished,
@@ -88,7 +85,7 @@ internal fun OwnerQuestionScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             questionViewModel.shownErrorMessage()
         }
     }
@@ -101,7 +98,6 @@ private fun OwnerQuestionScreen(
     currentPage: Int,
     choiceQuestions: List<Question?>,
     ownerName: String,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNextButtonClick: () -> Unit,
     onPreviousButtonClick: () -> Unit,
     onQuizFinishButtonClick: () -> Unit,
@@ -130,9 +126,6 @@ private fun OwnerQuestionScreen(
                     onShowDialog = { showQuitQuizDialog = true },
                 )
             }
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
         },
     ) { innerPadding ->
         Box(

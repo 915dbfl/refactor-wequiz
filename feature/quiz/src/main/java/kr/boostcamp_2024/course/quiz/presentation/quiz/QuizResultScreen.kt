@@ -3,11 +3,9 @@ package kr.boostcamp_2024.course.quiz.presentation.quiz
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,8 +19,8 @@ import kr.boostcamp_2024.course.quiz.viewmodel.QuizResultViewModel
 internal fun QuizResultScreen(
     onNavigationButtonClick: () -> Unit,
     onQuestionClick: (String) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     quizResultViewModel: QuizResultViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by quizResultViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -30,7 +28,6 @@ internal fun QuizResultScreen(
         OwnerQuizResultScreen(
             questions = uiState.questions,
             quizTitle = uiState.quizTitle,
-            snackbarHostState = snackbarHostState,
             onNavigationButtonClick = onNavigationButtonClick,
             onQuestionClick = onQuestionClick,
         )
@@ -39,7 +36,6 @@ internal fun QuizResultScreen(
             quizTitle = uiState.quizTitle,
             quizResult = uiState.quizResult,
             onNavigationButtonClick = onNavigationButtonClick,
-            snackbarHostState = snackbarHostState,
             onQuestionClick = onQuestionClick,
         )
     }
@@ -56,7 +52,7 @@ internal fun QuizResultScreen(
 
     uiState.errorMessage?.let { errorMessage ->
         LaunchedEffect(errorMessage) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             quizResultViewModel.shownErrorMessage()
         }
     }
