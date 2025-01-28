@@ -32,6 +32,7 @@ fun WeQuizNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: KClass<*> = LoginRoute::class,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
