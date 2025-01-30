@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -42,6 +44,9 @@ class LoginViewModel @Inject constructor(
             LoginUiState(),
         )
 
+    private val _errorFlow = MutableSharedFlow<Throwable>()
+    val errorFlow = _errorFlow.asSharedFlow()
+
     fun loginForExperience() {
         viewModelScope.launch {
             val defaultUserKey = "M2PzD8bxVaDAwNrLhr6E"
@@ -51,14 +56,14 @@ class LoginViewModel @Inject constructor(
 
     private fun checkExistedUser() {
         viewModelScope.launch {
-            authRepository.getUserKey()
-                .onSuccess {
-                    _loginUiState.update { currentState ->
-                        currentState.copy(isLoginSuccess = true)
-                    }
-                }.onFailure {
-                    Log.e("LoginViewModel", "Failed to get user key")
+            try {
+                authRepository.getUserKey()
+                _loginUiState.update { currentState ->
+                    currentState.copy(isLoginSuccess = true)
                 }
+            } catch (e: Exception) {
+                _errorFlow.emit(e)
+            }
         }
     }
 
@@ -91,38 +96,34 @@ class LoginViewModel @Inject constructor(
 
     private fun checkUser(googleIdTokenCredential: GoogleIdTokenCredential) {
         viewModelScope.launch {
-            userRepository.findUserByEmail(googleIdTokenCredential.id)
-                .onSuccess { user ->
-                    // 이미 회원가입된 유저
-                    saveUserKey(user.id)
-                    _loginUiState.update { currentState ->
-                        currentState.copy(isLoginSuccess = true)
-                    }
+            try {
+                val user = userRepository.findUserByEmail(googleIdTokenCredential.id)
+                // 이미 회원가입된 유저
+                saveUserKey(user.id)
+                _loginUiState.update { currentState ->
+                    currentState.copy(isLoginSuccess = true)
                 }
-                .onFailure {
-                    // 회원 가입 필요
-                    _loginUiState.update { currentState ->
-                        currentState.copy(
-                            userInfo = UserUiModel(
-                                id = googleIdTokenCredential.idToken,
-                                email = googleIdTokenCredential.id,
-                                name = googleIdTokenCredential.familyName + googleIdTokenCredential.givenName,
-                                profileImageUrl = googleIdTokenCredential.profilePictureUri.toString(),
-                            ),
-                            isNewUser = true,
-                        )
-                    }
+            } catch (e: Exception) {
+                // 회원 가입 필요
+                _loginUiState.update { currentState ->
+                    currentState.copy(
+                        userInfo = UserUiModel(
+                            id = googleIdTokenCredential.idToken,
+                            email = googleIdTokenCredential.id,
+                            name = googleIdTokenCredential.familyName + googleIdTokenCredential.givenName,
+                            profileImageUrl = googleIdTokenCredential.profilePictureUri.toString(),
+                        ),
+                        isNewUser = true,
+                    )
                 }
+            }
         }
     }
 
     private suspend fun saveUserKey(userKey: String) {
-        authRepository.storeUserKey(userKey).onSuccess {
-            _loginUiState.update { currentState ->
-                currentState.copy(isLoginSuccess = true)
-            }
-        }.onFailure {
-            Log.e("LoginViewModel", "Failed to store user key")
+        authRepository.storeUserKey(userKey)
+        _loginUiState.update { currentState ->
+            currentState.copy(isLoginSuccess = true)
         }
     }
 
