@@ -71,7 +71,7 @@ class CreateStudyViewModel @Inject constructor(
         }
     }
 
-    fun loadStudyGroup() {
+    private fun loadStudyGroup() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
