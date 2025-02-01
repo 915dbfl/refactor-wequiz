@@ -23,6 +23,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -67,6 +69,7 @@ internal fun MainScreen(
     onEditStudyButtonClick: (String) -> Unit,
     onEditUserClick: (String?) -> Unit,
     onLogOutClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: MainViewModel = hiltViewModel(),
 ) {
@@ -84,6 +87,7 @@ internal fun MainScreen(
         onStudyGroupClick = onStudyGroupClick,
         onEditUserClick = onEditUserClick,
         onLogOutClick = viewModel::logout,
+        snackbarHostState = snackbarHostState,
     )
 
     if (!uiState.isGuideShown) {
@@ -124,6 +128,7 @@ private fun MainScreen(
     onStudyGroupClick: (String) -> Unit,
     onEditUserClick: (String?) -> Unit,
     onLogOutClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var userMenuIsExpanded by remember { mutableStateOf(false) }
@@ -217,6 +222,7 @@ private fun MainScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
 
         Column(

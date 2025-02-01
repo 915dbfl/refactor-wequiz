@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.quiz.presentation.question
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.QuestionViewModel
 internal fun QuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     questionViewModel: QuestionViewModel = hiltViewModel(),
 ) {
@@ -27,6 +29,7 @@ internal fun QuestionScreen(
                 quiz = quiz,
                 currentUserId = uiState.currentUserId,
                 onQuizFinished = { _, quizId -> onQuizFinished(null, quizId) },
+                snackbarHostState = snackbarHostState,
                 onShowErrorSnackbar = onShowErrorSnackbar,
             )
         } else {
@@ -35,6 +38,7 @@ internal fun QuestionScreen(
                 onQuizFinished = { userOmrId, _ ->
                     onQuizFinished(userOmrId, null)
                 },
+                snackbarHostState = snackbarHostState,
                 onShowErrorSnackbar = onShowErrorSnackbar,
             )
         }
@@ -59,6 +63,7 @@ internal fun QuestionScreen(
                 addBlankContent = questionViewModel.blankQuestionManager::addBlankContent,
                 getBlankQuestionAnswer = questionViewModel.blankQuestionManager::getAnswer,
                 isLoading = uiState.isLoading,
+                snackbarHostState = snackbarHostState,
             )
         }
     }

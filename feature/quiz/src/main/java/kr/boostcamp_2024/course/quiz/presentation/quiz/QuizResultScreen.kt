@@ -3,6 +3,7 @@ package kr.boostcamp_2024.course.quiz.presentation.quiz
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.QuizResultViewModel
 internal fun QuizResultScreen(
     onNavigationButtonClick: () -> Unit,
     onQuestionClick: (String) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     quizResultViewModel: QuizResultViewModel = hiltViewModel(),
 ) {
@@ -30,6 +32,7 @@ internal fun QuizResultScreen(
             quizTitle = uiState.quizTitle,
             onNavigationButtonClick = onNavigationButtonClick,
             onQuestionClick = onQuestionClick,
+            snackbarHostState = snackbarHostState,
         )
     } else {
         GeneralQuizResultScreen(
@@ -37,6 +40,7 @@ internal fun QuizResultScreen(
             quizResult = uiState.quizResult,
             onNavigationButtonClick = onNavigationButtonClick,
             onQuestionClick = onQuestionClick,
+            snackbarHostState = snackbarHostState,
         )
     }
 

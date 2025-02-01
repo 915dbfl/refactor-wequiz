@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.main.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -29,6 +30,7 @@ fun NavGraphBuilder.mainNavGraph(
     onStudyGroupClick: (String) -> Unit,
     onEditUserClick: (String?) -> Unit,
     onLoginOutClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<MainRoute> {
@@ -39,12 +41,14 @@ fun NavGraphBuilder.mainNavGraph(
             onEditStudyButtonClick = onEditStudyButtonClick,
             onEditUserClick = onEditUserClick,
             onLogOutClick = onLoginOutClick,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<NotificationRoute> {
         NotificationScreen(
             onNavigationButtonClick = onNavigationButtonClick,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }

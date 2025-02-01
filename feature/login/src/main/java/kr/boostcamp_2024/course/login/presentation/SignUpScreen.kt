@@ -15,11 +15,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +43,7 @@ import kr.boostcamp_2024.course.login.viewmodel.SignUpViewModel
 internal fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
@@ -67,6 +71,7 @@ internal fun SignUpScreen(
         onSignUpButtonClick = viewModel::signUp,
         onEditButtonClick = viewModel::updateUser,
         onProfileByteArrayChanged = viewModel::onProfileByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 
     LaunchedEffect(uiState.isSubmitSuccess) {
@@ -89,6 +94,7 @@ private fun SignUpScreen(
     onNavigationButtonClick: () -> Unit,
     onSignUpButtonClick: () -> Unit,
     onEditButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
@@ -113,6 +119,7 @@ private fun SignUpScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(

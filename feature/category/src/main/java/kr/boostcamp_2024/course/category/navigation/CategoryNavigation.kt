@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.category.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -36,6 +37,7 @@ fun NavGraphBuilder.categoryNavGraph(
     onQuizClick: (String, String) -> Unit,
     onCreateCategorySuccess: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<CategoryRoute> {
@@ -44,6 +46,7 @@ fun NavGraphBuilder.categoryNavGraph(
             onCreateQuizButtonClick = onCreateQuizButtonClick,
             onQuizClick = onQuizClick,
             onCreateCategoryButtonClick = onCreateCategoryButtonClick,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
@@ -51,6 +54,7 @@ fun NavGraphBuilder.categoryNavGraph(
         CreateCategoryScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateCategorySuccess = onCreateCategorySuccess,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }

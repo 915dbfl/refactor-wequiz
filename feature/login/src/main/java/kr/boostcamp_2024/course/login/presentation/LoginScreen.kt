@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +50,7 @@ import java.util.UUID
 internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -71,6 +75,7 @@ internal fun LoginScreen(
     LoginScreen(
         loginViewModel::loginForExperience,
         handleSignIn = loginViewModel::handleSignIn,
+        snackbarHostState = snackbarHostState,
         setNewSnackBarMessage = loginViewModel::setNewSnackBarMessage,
     )
 }
@@ -79,9 +84,12 @@ internal fun LoginScreen(
 private fun LoginScreen(
     onLoginSuccess: () -> Unit,
     handleSignIn: (GetCredentialResponse, Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     setNewSnackBarMessage: (Int?) -> Unit,
 ) {
-    Scaffold { innerPadding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -20,9 +20,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -44,6 +47,7 @@ internal fun CreateQuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizSuccess: () -> Unit,
     onEditQuizSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuizViewModel = hiltViewModel(),
 ) {
@@ -69,6 +73,7 @@ internal fun CreateQuizScreen(
         onCurrentStudyImageChanged = viewModel::changeCurrentStudyImage,
         isRealtimeQuiz = uiState.value.isRealtimeQuiz,
         onQuizTypeIndexChange = viewModel::setSelectedQuizTypeIndex,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.value.isCreateQuizSuccess) {
@@ -117,6 +122,7 @@ private fun CreateQuizScreen(
     onEditButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
     onQuizTypeIndexChange: (Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val options = listOf(stringResource(R.string.txt_create_quiz_general), stringResource(R.string.txt_create_quiz_realtime))
 
@@ -140,6 +146,7 @@ private fun CreateQuizScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier

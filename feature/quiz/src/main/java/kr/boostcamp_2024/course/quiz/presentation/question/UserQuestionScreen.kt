@@ -10,11 +10,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -42,6 +45,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.UserQuestionViewModel
 internal fun UserQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     userQuestionViewModel: UserQuestionViewModel = hiltViewModel(),
 ) {
@@ -67,6 +71,7 @@ internal fun UserQuestionScreen(
         addBlankContent = userQuestionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = userQuestionViewModel.blankQuestionManager::getAnswer,
         onExitButtonClick = userQuestionViewModel::exitRealTimeQuiz,
+        snackbarHostState = snackbarHostState,
     )
 
     uiState.errorMessageId?.let { errorMessageId ->
@@ -114,6 +119,7 @@ private fun UserQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     onExitButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
     val currentQuestion = choiceQuestions.getOrNull(currentPage)
@@ -132,6 +138,7 @@ private fun UserQuestionScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier

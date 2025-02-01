@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.wequiz.ui
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -32,6 +33,7 @@ fun WeQuizNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: KClass<*> = LoginRoute::class,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     NavHost(
@@ -47,6 +49,7 @@ fun WeQuizNavHost(
             },
             onSignUp = navController::navigationSignUp,
             onSignUpSuccess = navController::navigateUp,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
@@ -58,6 +61,7 @@ fun WeQuizNavHost(
             onEditStudyButtonClick = navController::navigateCreateStudy,
             onEditUserClick = { userId -> navController.navigationSignUp(null, userId) },
             onLoginOutClick = navController::navigationLogin,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
@@ -69,6 +73,7 @@ fun WeQuizNavHost(
             onDeleteStudyGroupSuccess = navController::navigateUp,
             onLeaveStudyGroupSuccess = navController::navigateUp,
             onEditStudyGroupButtonClick = navController::navigateCreateStudy,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
@@ -78,6 +83,7 @@ fun WeQuizNavHost(
             onQuizClick = navController::navigateQuiz,
             onCreateCategorySuccess = navController::navigateUp,
             onCreateCategoryButtonClick = navController::navigateCreateCategory,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
 
@@ -92,6 +98,7 @@ fun WeQuizNavHost(
             onSettingMenuClick = navController::navigateCreateQuiz,
             onEditQuizSuccess = navController::navigateUp,
             onQuizDeleteSuccess = navController::navigateUp,
+            snackbarHostState = snackbarHostState,
             onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }

@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -57,6 +59,7 @@ fun DetailStudyScreen(
     onEditStudyGroupButtonClick: (String) -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: DetailStudyViewModel = hiltViewModel(),
 ) {
@@ -82,6 +85,7 @@ fun DetailStudyScreen(
         onLeaveStudyGroupClick = viewModel::deleteUserFromStudyGroup,
         onEmailChange = viewModel::onEmailChange,
         resetEmail = viewModel::resetEmail,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -135,6 +139,7 @@ fun DetailStudyScreen(
     onLeaveStudyGroupClick: () -> Unit,
     onEmailChange: (String) -> Unit,
     resetEmail: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var selectedScreenIndex by remember { mutableIntStateOf(0) }
     val screenList = listOf(DetailScreenRoute, GroupScreenRoute)
@@ -198,6 +203,7 @@ fun DetailStudyScreen(
                 }
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         if (currentGroup != null && owner != null) {
             Box(

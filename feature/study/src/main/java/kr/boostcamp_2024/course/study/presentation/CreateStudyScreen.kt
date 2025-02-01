@@ -12,9 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -36,6 +39,7 @@ import kr.boostcamp_2024.course.study.component.StudySubmitButton
 internal fun CreateStudyScreen(
     onNavigationButtonClick: () -> Unit,
     onSubmitStudySuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
 ) {
@@ -56,6 +60,7 @@ internal fun CreateStudyScreen(
         onStudyEditButtonClick = viewmodel::updateStudyGroup,
         onCreationButtonClick = viewmodel::createStudyGroupClick,
         onCurrentStudyImageChanged = viewmodel::onImageByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -93,6 +98,7 @@ private fun CreateStudyScreen(
     onStudyEditButtonClick: () -> Unit,
     onCreationButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollState = rememberScrollState()
 
@@ -103,6 +109,7 @@ private fun CreateStudyScreen(
                 onNavigationButtonClick = onNavigationButtonClick,
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Column(
             modifier = Modifier

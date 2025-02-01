@@ -26,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,6 +61,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 internal fun CreateQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuestionViewModel = hiltViewModel(),
 ) {
@@ -110,6 +113,7 @@ internal fun CreateQuestionScreen(
         isCreateBlankButtonValid = uiState.isCreateBlankButtonValid,
         isCreateTextButtonValid = uiState.isCreateTextButtonValid,
         onShowDialog = viewModel::showDialog,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -138,6 +142,7 @@ private fun CreateQuestionScreen(
     isCreateBlankButtonValid: Boolean,
     isCreateTextButtonValid: Boolean,
     onShowDialog: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -161,6 +166,7 @@ private fun CreateQuestionScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         val imeInsets = WindowInsets.ime
         val density = LocalDensity.current

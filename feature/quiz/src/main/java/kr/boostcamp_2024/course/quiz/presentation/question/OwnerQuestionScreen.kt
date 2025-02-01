@@ -15,6 +15,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +54,7 @@ internal fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     currentUserId: String?,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onShowErrorSnackbar: (Throwable) -> Unit,
     questionViewModel: OwnerQuestionViewModel = hiltViewModel(),
 ) {
@@ -76,6 +79,7 @@ internal fun OwnerQuestionScreen(
         removeBlankWord = questionViewModel.blankQuestionManager::removeBlankContent,
         addBlankWord = questionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = questionViewModel.blankQuestionManager::getAnswer,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isQuizFinished) {
@@ -107,6 +111,7 @@ private fun OwnerQuestionScreen(
     removeBlankWord: (Int) -> Unit,
     addBlankWord: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showQuitQuizDialog by rememberSaveable { mutableStateOf(false) }
     var showFinishQuizDialog by rememberSaveable { mutableStateOf(false) }
@@ -127,6 +132,7 @@ private fun OwnerQuestionScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
