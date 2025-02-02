@@ -43,15 +43,16 @@ import kr.boostcamp_2024.course.login.viewmodel.SignUpViewModel
 internal fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(uiState) {
         uiState.snackBarMessage?.let {
-            snackBarHostState.showSnackbar(context.getString(it))
+            onShowErrorSnackbar(Exception(context.getString(it)))
             viewModel.setNewSnackBarMessage(null)
         }
         if (uiState.isSignUpSuccess) {
@@ -65,12 +66,12 @@ internal fun SignUpScreen(
         isSignUpButtonEnabled = uiState.isSignUpButtonEnabled,
         isEditMode = uiState.isEditMode,
         profileImageByteArray = uiState.profileImageByteArray,
-        snackBarHostState = snackBarHostState,
         onNameChanged = viewModel::onNameChanged,
         onNavigationButtonClick = onNavigationButtonClick,
         onSignUpButtonClick = viewModel::signUp,
         onEditButtonClick = viewModel::updateUser,
         onProfileByteArrayChanged = viewModel::onProfileByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 
     LaunchedEffect(uiState.isSubmitSuccess) {
@@ -88,12 +89,12 @@ private fun SignUpScreen(
     isSignUpButtonEnabled: Boolean,
     isEditMode: Boolean,
     profileImageByteArray: ByteArray?,
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNameChanged: (String) -> Unit,
     onProfileByteArrayChanged: (ByteArray) -> Unit,
     onNavigationButtonClick: () -> Unit,
     onSignUpButtonClick: () -> Unit,
     onEditButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
@@ -118,7 +119,7 @@ private fun SignUpScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(

@@ -61,10 +61,11 @@ import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 internal fun CreateQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createQuestionUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
     val options = listOf(
         stringResource(R.string.txt_create_general_question),
@@ -75,7 +76,7 @@ internal fun CreateQuestionScreen(
             onCreateQuestionSuccess()
         }
         uiState.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setNewSnackBarMessage(null)
         }
     }
@@ -91,7 +92,6 @@ internal fun CreateQuestionScreen(
 
     CreateQuestionScreen(
         uiState = uiState,
-        snackBarHostState = snackBarHostState,
         focusRequester = focusRequester,
         onTitleChanged = viewModel::onTitleChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
@@ -113,6 +113,7 @@ internal fun CreateQuestionScreen(
         isCreateBlankButtonValid = uiState.isCreateBlankButtonValid,
         isCreateTextButtonValid = uiState.isCreateTextButtonValid,
         onShowDialog = viewModel::showDialog,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -121,7 +122,6 @@ internal fun CreateQuestionScreen(
 private fun CreateQuestionScreen(
     uiState: CreateQuestionUiState,
     focusRequester: FocusRequester,
-    snackBarHostState: SnackbarHostState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSolutionChanged: (String) -> Unit,
@@ -142,11 +142,11 @@ private fun CreateQuestionScreen(
     isCreateBlankButtonValid: Boolean,
     isCreateTextButtonValid: Boolean,
     onShowDialog: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -166,6 +166,7 @@ private fun CreateQuestionScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         val imeInsets = WindowInsets.ime
         val density = LocalDensity.current
@@ -326,7 +327,6 @@ private fun CreateQuestionScreenPreview() {
         CreateQuestionScreen(
             uiState = previewCreateQuestionUiState,
             focusRequester = remember { FocusRequester() },
-            snackBarHostState = remember { SnackbarHostState() },
             onTitleChanged = {},
             onDescriptionChanged = {},
             onSolutionChanged = {},

@@ -47,8 +47,9 @@ internal fun CreateQuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizSuccess: () -> Unit,
     onEditQuizSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuizViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -60,7 +61,6 @@ internal fun CreateQuizScreen(
         createQuizButtonEnabled = uiState.value.isCreateQuizButtonEnabled && !uiState.value.isLoading,
         isEditing = uiState.value.isEditing,
         selectedQuizTypeIndex = uiState.value.selectedQuizTypeIndex,
-        snackBarHostState = snackBarHostState,
         defaultImageUrl = uiState.value.defaultImageUrl,
         onQuizTitleChange = viewModel::setQuizTitle,
         onQuizDescriptionChange = viewModel::setQuizDescription,
@@ -73,6 +73,7 @@ internal fun CreateQuizScreen(
         onCurrentStudyImageChanged = viewModel::changeCurrentStudyImage,
         isRealtimeQuiz = uiState.value.isRealtimeQuiz,
         onQuizTypeIndexChange = viewModel::setSelectedQuizTypeIndex,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.value.isCreateQuizSuccess) {
@@ -93,7 +94,7 @@ internal fun CreateQuizScreen(
 
     LaunchedEffect(uiState.value.snackBarMessage) {
         uiState.value.snackBarMessage?.let { snackBarMessage ->
-            snackBarHostState.showSnackbar(snackBarMessage)
+            onShowErrorSnackbar(Exception(snackBarMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -111,7 +112,6 @@ private fun CreateQuizScreen(
     selectedQuizTypeIndex: Int,
     isRealtimeQuiz: Boolean,
     currentImage: ByteArray?,
-    snackBarHostState: SnackbarHostState,
     defaultImageUrl: String?,
     onQuizTitleChange: (String) -> Unit,
     onQuizDescriptionChange: (String) -> Unit,
@@ -122,6 +122,7 @@ private fun CreateQuizScreen(
     onEditButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
     onQuizTypeIndexChange: (Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val options = listOf(stringResource(R.string.txt_create_quiz_general), stringResource(R.string.txt_create_quiz_realtime))
 
@@ -145,9 +146,7 @@ private fun CreateQuizScreen(
                 },
             )
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -261,7 +260,6 @@ private fun CreateQuizScreenPreview() {
             isEditing = false,
             isRealtimeQuiz = false,
             currentImage = null,
-            snackBarHostState = remember { SnackbarHostState() },
             defaultImageUrl = null,
             onQuizTitleChange = {},
             onQuizDescriptionChange = {},

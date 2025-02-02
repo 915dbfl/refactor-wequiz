@@ -50,10 +50,11 @@ import java.util.UUID
 internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginUiState by loginViewModel.loginUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(loginUiState) {
@@ -61,7 +62,7 @@ internal fun LoginScreen(
             onLoginSuccess()
         }
         loginUiState.snackBarMessage?.let { messageId ->
-            snackBarHostState.showSnackbar(context.getString(messageId))
+            onShowErrorSnackbar(Exception(context.getString(messageId)))
             loginViewModel.setNewSnackBarMessage(null)
         }
         if (loginUiState.isNewUser) {
@@ -72,22 +73,22 @@ internal fun LoginScreen(
     }
 
     LoginScreen(
-        snackBarHostState,
         loginViewModel::loginForExperience,
         handleSignIn = loginViewModel::handleSignIn,
+        snackbarHostState = snackbarHostState,
         setNewSnackBarMessage = loginViewModel::setNewSnackBarMessage,
     )
 }
 
 @Composable
 private fun LoginScreen(
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onLoginSuccess: () -> Unit,
     handleSignIn: (GetCredentialResponse, Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     setNewSnackBarMessage: (Int?) -> Unit,
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier

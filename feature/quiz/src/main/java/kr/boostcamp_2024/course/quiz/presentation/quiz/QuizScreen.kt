@@ -49,7 +49,8 @@ internal fun QuizScreen(
     onStartQuizButtonClick: (String) -> Unit,
     onSettingMenuClick: (String, String) -> Unit,
     onQuizDeleteSuccess: () -> Unit,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: QuizViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,7 +65,6 @@ internal fun QuizScreen(
         category = uiState.category,
         quiz = uiState.quiz,
         currentUserId = uiState.currentUserId,
-        snackbarHostState = snackbarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateQuestionButtonClick = onCreateQuestionButtonClick,
         onStartQuizButtonClick = onStartQuizButtonClick,
@@ -72,6 +72,7 @@ internal fun QuizScreen(
         onDeleteMenuClick = viewModel::deleteQuiz,
         onStartRealTimeQuizButtonClick = viewModel::startRealTimeQuiz,
         onWaitingRealTimeQuizButtonClick = viewModel::waitingRealTimeQuiz,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -97,7 +98,7 @@ internal fun QuizScreen(
 
     uiState.errorMessage?.let { errorMessage ->
         LaunchedEffect(errorMessage) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -108,7 +109,6 @@ private fun QuizScreen(
     category: Category?,
     quiz: BaseQuiz?,
     currentUserId: String?,
-    snackbarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionButtonClick: (String) -> Unit,
     onStartQuizButtonClick: (String) -> Unit,
@@ -116,6 +116,7 @@ private fun QuizScreen(
     onDeleteMenuClick: (String, BaseQuiz) -> Unit,
     onStartRealTimeQuizButtonClick: () -> Unit,
     onWaitingRealTimeQuizButtonClick: (Boolean) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -130,9 +131,7 @@ private fun QuizScreen(
                 onWaitingRealTimeQuizButtonClick = onWaitingRealTimeQuizButtonClick,
             )
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -240,7 +239,6 @@ private fun QuizStartScreenPreview() {
                 userOmrs = emptyList(),
                 quizImageUrl = "quizImageUrl",
             ),
-            snackbarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onCreateQuestionButtonClick = {},
             onStartQuizButtonClick = {},

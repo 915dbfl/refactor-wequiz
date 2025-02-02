@@ -57,10 +57,11 @@ fun DetailStudyScreen(
     onDeleteStudyGroupSuccess: () -> Unit,
     onLeaveStudyGroupSuccess: () -> Unit,
     onEditStudyGroupButtonClick: (String) -> Unit,
-    viewModel: DetailStudyViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewModel: DetailStudyViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -74,7 +75,6 @@ fun DetailStudyScreen(
         currentUserId = uiState.userId,
         email = uiState.email,
         isEmailValid = uiState.isEmailValid,
-        snackBarHostState = snackBarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateCategoryButtonClick = onCreateCategoryButtonClick,
         onCategoryClick = onCategoryClick,
@@ -85,6 +85,7 @@ fun DetailStudyScreen(
         onLeaveStudyGroupClick = viewModel::deleteUserFromStudyGroup,
         onEmailChange = viewModel::onEmailChange,
         resetEmail = viewModel::resetEmail,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -100,7 +101,7 @@ fun DetailStudyScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackBarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -128,7 +129,6 @@ fun DetailStudyScreen(
     currentUserId: String?,
     email: String?,
     isEmailValid: Boolean,
-    snackBarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
@@ -139,6 +139,7 @@ fun DetailStudyScreen(
     onLeaveStudyGroupClick: () -> Unit,
     onEmailChange: (String) -> Unit,
     resetEmail: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var selectedScreenIndex by remember { mutableIntStateOf(0) }
     val screenList = listOf(DetailScreenRoute, GroupScreenRoute)
@@ -202,9 +203,7 @@ fun DetailStudyScreen(
                 }
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         if (currentGroup != null && owner != null) {
             Box(
@@ -333,7 +332,6 @@ private fun DetailStudyScreenPreview() {
                 studyGroups = listOf("1"),
             ),
             currentUserId = "1",
-            snackBarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onCreateCategoryButtonClick = { _, _ -> },
             onCategoryClick = { _, _ -> },

@@ -73,7 +73,7 @@ internal fun OwnerQuizResultScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
 
         Column(
@@ -194,7 +194,6 @@ private fun OwnerQuizResultScreenPreview() {
             onQuestionClick = {},
             questions = quizResultPreviewQuestions,
             quizTitle = "퀴즈 결과 프리뷰",
-            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

@@ -54,7 +54,6 @@ internal fun GeneralQuestionScreen(
     questions: List<Question>,
     countDownTime: Int,
     selectedIndexList: List<Any>,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
@@ -68,6 +67,7 @@ internal fun GeneralQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     isLoading: Boolean,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var buttonsHeight by remember { mutableStateOf(IntSize.Zero) }
@@ -86,9 +86,7 @@ internal fun GeneralQuestionScreen(
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         LinearProgressIndicator(
             progress = { (currentPage + 1) / questions.size.toFloat() },
@@ -272,7 +270,6 @@ private fun GeneralQuestionScreenPreview() {
             questions = emptyList(),
             countDownTime = 0,
             selectedIndexList = emptyList(),
-            snackbarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onOptionSelected = { _, _ -> },
             onNextButtonClick = {},

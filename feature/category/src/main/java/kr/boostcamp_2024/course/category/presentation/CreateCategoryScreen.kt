@@ -43,10 +43,11 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTe
 internal fun CreateCategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateCategorySuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateCategoryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createCategoryUiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.fetchCategoryInfo()
@@ -57,7 +58,7 @@ internal fun CreateCategoryScreen(
             onCreateCategorySuccess()
         }
         uiState.errorMessage?.let { message ->
-            snackbarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setErrorMessage(null)
         }
     }
@@ -79,7 +80,6 @@ internal fun CreateCategoryScreen(
         currentCategoryImage = uiState.currentImage,
         defaultCategoryImageUri = uiState.defaultImageUri,
         isCategoryCreationValid = uiState.isCategoryCreationValid,
-        snackbarHostState = snackbarHostState,
         onNameChanged = viewModel::onNameChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         onNavigationButtonClick = onNavigationButtonClick,
@@ -87,6 +87,7 @@ internal fun CreateCategoryScreen(
         isLoading = uiState.isLoading,
         guideText = stringResource(guideText),
         onCurrentCategoryImageChanged = viewModel::onImageByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -98,7 +99,6 @@ internal fun CreateCategoryScreen(
     currentCategoryImage: ByteArray?,
     defaultCategoryImageUri: String?,
     isCategoryCreationValid: Boolean,
-    snackbarHostState: SnackbarHostState,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onNavigationButtonClick: () -> Unit,
@@ -106,6 +106,7 @@ internal fun CreateCategoryScreen(
     isLoading: Boolean,
     guideText: String,
     onCurrentCategoryImageChanged: (ByteArray) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
@@ -123,9 +124,7 @@ internal fun CreateCategoryScreen(
                 },
             )
         },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -190,7 +189,6 @@ private fun CreateCategoryScreenPreview() {
             currentCategoryImage = null,
             defaultCategoryImageUri = null,
             isCategoryCreationValid = true,
-            snackbarHostState = SnackbarHostState(),
             onNameChanged = {},
             onDescriptionChanged = {},
             onNavigationButtonClick = {},

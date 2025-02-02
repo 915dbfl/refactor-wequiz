@@ -45,11 +45,12 @@ import kr.boostcamp_2024.course.quiz.viewmodel.UserQuestionViewModel
 internal fun UserQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     userQuestionViewModel: UserQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by userQuestionViewModel.uiState.collectAsStateWithLifecycle()
     var quizFinishDialog by rememberSaveable { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
 
     UserQuestionScreen(
         quiz = uiState.quiz,
@@ -59,7 +60,6 @@ internal fun UserQuestionScreen(
         quizFinishDialog = quizFinishDialog,
         onQuizFinishDialogDismissButtonClick = { quizFinishDialog = false },
         selectedIndexList = uiState.selectedIndexList,
-        snackbarHostState = snackbarHostState,
         onOptionSelected = userQuestionViewModel::selectOption,
         onBlanksSelected = userQuestionViewModel::selectBlanks,
         onSubmitButtonClick = userQuestionViewModel::submitQuestion,
@@ -71,12 +71,13 @@ internal fun UserQuestionScreen(
         addBlankContent = userQuestionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = userQuestionViewModel.blankQuestionManager::getAnswer,
         onExitButtonClick = userQuestionViewModel::exitRealTimeQuiz,
+        snackbarHostState = snackbarHostState,
     )
 
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             userQuestionViewModel.shownErrorMessage()
         }
     }
@@ -107,7 +108,6 @@ private fun UserQuestionScreen(
     quizFinishDialog: Boolean,
     onQuizFinishDialogDismissButtonClick: () -> Unit,
     selectedIndexList: List<Any?>,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
     onSubmitButtonClick: (String) -> Unit,
@@ -119,6 +119,7 @@ private fun UserQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     onExitButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
     val currentQuestion = choiceQuestions.getOrNull(currentPage)
@@ -137,9 +138,7 @@ private fun UserQuestionScreen(
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier

@@ -75,7 +75,7 @@ internal fun GeneralQuizResultScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
 
         quizResult?.let { quizResult ->
@@ -221,7 +221,6 @@ private fun GeneralQuizResultScreenPreview() {
             ),
             onNavigationButtonClick = {},
             onQuestionClick = { _ -> },
-            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

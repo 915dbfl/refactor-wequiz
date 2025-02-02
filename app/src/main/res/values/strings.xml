@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">wequiz</string>
+    <string name="app_name" translatable="false">wequiz</string>
+    <string name="default_error_message">An Error occured.\nPlease try again.</string>
 </resources>

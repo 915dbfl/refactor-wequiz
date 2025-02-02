@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,11 +52,12 @@ internal fun CategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizButtonClick: (String) -> Unit,
     onQuizClick: (String, String) -> Unit,
-    categoryViewModel: CategoryViewModel = hiltViewModel(),
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
 ) {
     val categoryUiState = categoryViewModel.categoryUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         categoryViewModel.initViewmodel()
@@ -63,7 +65,7 @@ internal fun CategoryScreen(
 
     LaunchedEffect(categoryUiState.value.snackBarMessage) {
         categoryUiState.value.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             categoryViewModel.setNewSnackBarMessage(null)
         }
     }
@@ -82,6 +84,7 @@ internal fun CategoryScreen(
         onQuizClick = onQuizClick,
         onCategoryDeleteClick = categoryViewModel::onCategoryDeleteClick,
         onCreateCategoryButtonClick = onCreateCategoryButtonClick,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -95,6 +98,7 @@ internal fun CategoryScreen(
     onQuizClick: (String, String) -> Unit,
     onCategoryDeleteClick: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -150,6 +154,7 @@ internal fun CategoryScreen(
                 }
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         if (category != null) {
             Column(

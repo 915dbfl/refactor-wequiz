@@ -54,8 +54,9 @@ internal fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     currentUserId: String?,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     questionViewModel: OwnerQuestionViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by questionViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,7 +70,6 @@ internal fun OwnerQuestionScreen(
         currentPage = uiState.currentPage,
         choiceQuestions = uiState.questions,
         ownerName = uiState.ownerName ?: "",
-        snackbarHostState = snackbarHostState,
         onNextButtonClick = questionViewModel::nextPage,
         onPreviousButtonClick = questionViewModel::previousPage,
         onQuizFinishButtonClick = questionViewModel::setQuizFinished,
@@ -79,6 +79,7 @@ internal fun OwnerQuestionScreen(
         removeBlankWord = questionViewModel.blankQuestionManager::removeBlankContent,
         addBlankWord = questionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = questionViewModel.blankQuestionManager::getAnswer,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isQuizFinished) {
@@ -88,7 +89,7 @@ internal fun OwnerQuestionScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             questionViewModel.shownErrorMessage()
         }
     }
@@ -101,7 +102,6 @@ private fun OwnerQuestionScreen(
     currentPage: Int,
     choiceQuestions: List<Question?>,
     ownerName: String,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNextButtonClick: () -> Unit,
     onPreviousButtonClick: () -> Unit,
     onQuizFinishButtonClick: () -> Unit,
@@ -111,6 +111,7 @@ private fun OwnerQuestionScreen(
     removeBlankWord: (Int) -> Unit,
     addBlankWord: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showQuitQuizDialog by rememberSaveable { mutableStateOf(false) }
     var showFinishQuizDialog by rememberSaveable { mutableStateOf(false) }
@@ -131,9 +132,7 @@ private fun OwnerQuestionScreen(
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier

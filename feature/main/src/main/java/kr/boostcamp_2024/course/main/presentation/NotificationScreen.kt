@@ -32,13 +32,14 @@ import kr.boostcamp_2024.course.main.viewmodel.NotificationViewModel
 internal fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel<NotificationViewModel>(),
     onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationInfos = uiState.notificationWithGroupInfoList
-    val snackBarHostState = remember { SnackbarHostState() }
     LaunchedEffect(uiState) {
         uiState.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.onSnackBarShown()
         }
     }
@@ -48,7 +49,7 @@ internal fun NotificationScreen(
         onRejectClick = viewModel::deleteInvitation,
         onAcceptClick = viewModel::acceptInvitation,
         onNavigationButtonClick = onNavigationButtonClick,
-        snackBarHostState = snackBarHostState,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -59,13 +60,13 @@ private fun NotificationScreen(
     onRejectClick: (String) -> Unit,
     onAcceptClick: (Notification) -> Unit,
     onNavigationButtonClick: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             NotificationTopAppBar(onNavigationButtonClick = onNavigationButtonClick)
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         if (notificationInfos.isEmpty()) {
             Box(
@@ -117,7 +118,6 @@ private fun NotificationScreenPreview() {
             onRejectClick = {},
             onAcceptClick = {},
             onNavigationButtonClick = {},
-            snackBarHostState = SnackbarHostState(),
         )
     }
 }

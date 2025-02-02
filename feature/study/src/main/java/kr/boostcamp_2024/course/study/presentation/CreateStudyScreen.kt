@@ -37,10 +37,11 @@ import kr.boostcamp_2024.course.study.component.StudySubmitButton
 
 @Composable
 internal fun CreateStudyScreen(
-    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onNavigationButtonClick: () -> Unit,
     onSubmitStudySuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
 ) {
     val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
 
@@ -52,7 +53,6 @@ internal fun CreateStudyScreen(
         descriptionText = uiState.description,
         groupMemberNumber = uiState.maxUserNum,
         canSubmitStudy = uiState.canSubmitStudy && !uiState.isLoading,
-        snackBarHostState = snackBarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onTitleTextChange = viewmodel::onNameChanged,
         onDescriptionTextChange = viewmodel::onDescriptionChanged,
@@ -60,6 +60,7 @@ internal fun CreateStudyScreen(
         onStudyEditButtonClick = viewmodel::updateStudyGroup,
         onCreationButtonClick = viewmodel::createStudyGroupClick,
         onCurrentStudyImageChanged = viewmodel::onImageByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -74,7 +75,7 @@ internal fun CreateStudyScreen(
 
     uiState.snackBarMessage?.let { message ->
         LaunchedEffect(message) {
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewmodel.onSnackBarShown()
         }
     }
@@ -90,7 +91,6 @@ private fun CreateStudyScreen(
     descriptionText: String,
     groupMemberNumber: String,
     canSubmitStudy: Boolean,
-    snackBarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onTitleTextChange: (String) -> Unit,
     onDescriptionTextChange: (String) -> Unit,
@@ -98,6 +98,7 @@ private fun CreateStudyScreen(
     onStudyEditButtonClick: () -> Unit,
     onCreationButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollState = rememberScrollState()
 
@@ -108,7 +109,7 @@ private fun CreateStudyScreen(
                 onNavigationButtonClick = onNavigationButtonClick,
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -187,7 +188,6 @@ private fun CreateStudyScreenPreview() {
             descriptionText = "",
             groupMemberNumber = "",
             canSubmitStudy = false,
-            snackBarHostState = remember { SnackbarHostState() },
             onNavigationButtonClick = {},
             onTitleTextChange = {},
             onDescriptionTextChange = {},

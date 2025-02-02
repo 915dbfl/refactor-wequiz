@@ -45,36 +45,41 @@ import kr.boostcamp_2024.course.quiz.viewmodel.QuestionDetailViewModel
 
 @Composable
 internal fun QuestionDetailScreen(
-    viewModel: QuestionDetailViewModel = hiltViewModel<QuestionDetailViewModel>(),
     onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewModel: QuestionDetailViewModel = hiltViewModel<QuestionDetailViewModel>(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     QuestionDetailScreen(
         question = uiState.question,
-        errorMessage = uiState.errorMessage,
-        onNavigationButtonClick = onNavigationButtonClick,
-        onErrorMessageShown = viewModel::shownErrorMessage,
         userAnswer = uiState.userAnswer,
+        onNavigationButtonClick = onNavigationButtonClick,
+        snackbarHostState = snackbarHostState,
     )
+
+    uiState.errorMessage?.let { message ->
+        LaunchedEffect(message) {
+            onShowErrorSnackbar(Exception(message))
+            viewModel.shownErrorMessage()
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun QuestionDetailScreen(
     question: Question?,
-    errorMessage: String?,
-    onNavigationButtonClick: () -> Unit,
-    onErrorMessageShown: () -> Unit = {},
     userAnswer: List<Int>,
+    onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { QuestionDetailTopAppBar(onNavigationButtonClick = onNavigationButtonClick) },
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         floatingActionButton = {
             if (question is ChoiceQuestion) {
                 ExtendedFloatingActionButton(
@@ -98,6 +103,7 @@ private fun QuestionDetailScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -129,12 +135,6 @@ private fun QuestionDetailScreen(
                 )
             }
         }
-        if (errorMessage != null) {
-            LaunchedEffect(errorMessage) {
-                snackBarHostState.showSnackbar(errorMessage)
-                onErrorMessageShown()
-            }
-        }
     }
 }
 
@@ -147,7 +147,6 @@ private fun QuestionDetailScreenPreview(
         QuestionDetailScreen(
             onNavigationButtonClick = {},
             question = question,
-            errorMessage = null,
             userAnswer = listOf(0, 0, 0, 0),
         )
     }

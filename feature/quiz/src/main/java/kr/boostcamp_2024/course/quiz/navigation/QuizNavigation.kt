@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.quiz.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -80,22 +81,30 @@ fun NavGraphBuilder.quizNavGraph(
     onSettingMenuClick: (String, String) -> Unit,
     onEditQuizSuccess: () -> Unit,
     onQuizDeleteSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<CreateQuestionRoute> {
         CreateQuestionScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateQuestionSuccess = onCreateQuestionSuccess,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuestionDetailRoute> {
         QuestionDetailScreen(
             onNavigationButtonClick = onNavigationButtonClick,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuestionRoute> {
         QuestionScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onQuizFinished = onQuizFinished,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuizRoute> {
@@ -105,12 +114,16 @@ fun NavGraphBuilder.quizNavGraph(
             onStartQuizButtonClick = onStartQuizButtonClick,
             onSettingMenuClick = onSettingMenuClick,
             onQuizDeleteSuccess = onQuizDeleteSuccess,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<QuizResultRoute> {
         QuizResultScreen(
             onNavigationButtonClick = onNavigationButtonClick,
             onQuestionClick = onQuestionClick,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
     composable<CreateQuizRoute> {
@@ -118,6 +131,8 @@ fun NavGraphBuilder.quizNavGraph(
             onNavigationButtonClick = onNavigationButtonClick,
             onCreateQuizSuccess = onCreateQuizSuccess,
             onEditQuizSuccess = onEditQuizSuccess,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }
