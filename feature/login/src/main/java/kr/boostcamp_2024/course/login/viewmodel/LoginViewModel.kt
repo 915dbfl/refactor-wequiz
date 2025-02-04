@@ -100,9 +100,6 @@ class LoginViewModel @Inject constructor(
                 val user = userRepository.findUserByEmail(googleIdTokenCredential.id)
                 // 이미 회원가입된 유저
                 saveUserKey(user.id)
-                _loginUiState.update { currentState ->
-                    currentState.copy(isLoginSuccess = true)
-                }
             } catch (e: Exception) {
                 // 회원 가입 필요
                 _loginUiState.update { currentState ->

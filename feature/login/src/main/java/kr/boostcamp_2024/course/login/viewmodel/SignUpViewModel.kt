@@ -33,7 +33,6 @@ data class SignUpUiState(
         studyGroups = emptyList(),
     ),
     val profileImageByteArray: ByteArray? = null,
-    val isSignUpSuccess: Boolean = false,
     val isEditMode: Boolean = false,
     val isSubmitSuccess: Boolean = false,
     val snackBarMessage: Int? = null,
@@ -166,7 +165,7 @@ class SignUpViewModel @Inject constructor(
         authRepository.storeUserKey(userKey)
         _signUpUiState.update {
             it.copy(
-                isSignUpSuccess = true,
+                isSubmitSuccess = true,
                 isLoading = false,
             )
         }
