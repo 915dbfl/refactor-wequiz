@@ -5,10 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,6 +35,8 @@ data class DetailStudyUiState(
     val userId: String? = null,
     val isDeleteStudyGroupSuccess: Boolean = false,
     val isLeaveStudyGroupSuccess: Boolean = false,
+    val email: String? = null,
+    val isEmailValid: Boolean = false,
 )
 
 @HiltViewModel
@@ -185,5 +185,13 @@ class DetailStudyViewModel @Inject constructor(
 
     fun shownErrorMessage() {
         _uiState.update { it.copy(errorMessageId = null) }
+    }
+
+    fun onEmailChange(email: String) {
+        _uiState.update { it.copy(email = email, isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()) }
+    }
+
+    fun resetEmail() {
+        _uiState.update { it.copy(email = null, isEmailValid = false) }
     }
 }

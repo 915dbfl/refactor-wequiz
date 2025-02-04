@@ -17,12 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.viewmodel.BlankQuestionItem
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-fun CreateBlankQuestionContent(
+internal fun CreateBlankQuestionContent(
     blankQuestionItems: List<BlankQuestionItem>,
     onContentRemove: (Int) -> Unit,
     onBlankQuestionItemValueChanged: (String, Int) -> Unit,
@@ -91,4 +93,24 @@ fun CreateBlankQuestionContent(
             }
         }
     }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun CreateBlankQuestionContentPreview() {
+    WeQuizTheme {
+        CreateBlankQuestionContent(
+            blankQuestionItems = listOf(
+                BlankQuestionItem.Blank(""),
+                BlankQuestionItem.Text(""),
+            ),
+            onContentRemove = {},
+            onBlankQuestionItemValueChanged = { _, _ -> },
+            onAddTextItemButtonClick = {},
+            isCreateTextButtonValid = true,
+            onAddBlankItemButtonClick = {},
+            isCreateBlankButtonValid = true,
+        )
+    }
+
 }

@@ -1,5 +1,6 @@
 package kr.boostcamp_2024.course.login.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -43,11 +44,15 @@ fun NavGraphBuilder.loginNavGraph(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
     onSignUpSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     composable<LoginRoute> {
         LoginScreen(
             onLoginSuccess = onLoginSuccess,
             onSignUp = onSignUp,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 
@@ -57,6 +62,8 @@ fun NavGraphBuilder.loginNavGraph(
         SignUpScreen(
             onSignUpSuccess = onSignUpSuccess,
             onNavigationButtonClick = onNavigationButtonClick,
+            snackbarHostState = snackbarHostState,
+            onShowErrorSnackbar = onShowErrorSnackbar,
         )
     }
 }

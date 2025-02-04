@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizChatBubble
 import kr.boostcamp_2024.course.quiz.R
 
 @Composable
-fun QuestionDescription(description: String) {
+internal fun QuestionDescription(description: String) {
     Column(
         modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -22,4 +24,12 @@ fun QuestionDescription(description: String) {
         WeQuizChatBubble(text = description)
     }
     HorizontalDivider(modifier = Modifier)
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun QuestionDescriptionPreview() {
+    WeQuizTheme {
+        QuestionDescription("This is a question description.")
+    }
 }

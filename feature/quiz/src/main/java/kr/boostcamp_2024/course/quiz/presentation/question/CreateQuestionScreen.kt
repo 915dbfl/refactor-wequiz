@@ -43,10 +43,10 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.CreateBlankQuestionContent
@@ -58,13 +58,14 @@ import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionUiState
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 
 @Composable
-fun CreateQuestionScreen(
+internal fun CreateQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuestionSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createQuestionUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
     val options = listOf(
         stringResource(R.string.txt_create_general_question),
@@ -75,7 +76,7 @@ fun CreateQuestionScreen(
             onCreateQuestionSuccess()
         }
         uiState.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setNewSnackBarMessage(null)
         }
     }
@@ -91,7 +92,6 @@ fun CreateQuestionScreen(
 
     CreateQuestionScreen(
         uiState = uiState,
-        snackBarHostState = snackBarHostState,
         focusRequester = focusRequester,
         onTitleChanged = viewModel::onTitleChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
@@ -113,15 +113,15 @@ fun CreateQuestionScreen(
         isCreateBlankButtonValid = uiState.isCreateBlankButtonValid,
         isCreateTextButtonValid = uiState.isCreateTextButtonValid,
         onShowDialog = viewModel::showDialog,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateQuestionScreen(
+private fun CreateQuestionScreen(
     uiState: CreateQuestionUiState,
     focusRequester: FocusRequester,
-    snackBarHostState: SnackbarHostState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSolutionChanged: (String) -> Unit,
@@ -142,11 +142,11 @@ fun CreateQuestionScreen(
     isCreateBlankButtonValid: Boolean,
     isCreateTextButtonValid: Boolean,
     onShowDialog: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -166,6 +166,7 @@ fun CreateQuestionScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         val imeInsets = WindowInsets.ime
         val density = LocalDensity.current
@@ -307,13 +308,45 @@ fun CreateQuestionScreen(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CreateQuestionScreenPreview() {
+private fun CreateQuestionScreenPreview() {
+    val previewCreateQuestionUiState = CreateQuestionUiState(
+        isLoading = false,
+        showDialog = false,
+        snackBarMessage = null,
+        creationSuccess = false,
+        selectedQuestionTypeIndex = 0,
+    )
+    val previewOption = listOf(
+        stringResource(R.string.txt_create_general_question),
+        stringResource(R.string.txt_blank_question),
+    )
+
     WeQuizTheme {
         CreateQuestionScreen(
+            uiState = previewCreateQuestionUiState,
+            focusRequester = remember { FocusRequester() },
+            onTitleChanged = {},
+            onDescriptionChanged = {},
+            onSolutionChanged = {},
             onNavigationButtonClick = {},
-            onCreateQuestionSuccess = {},
+            onChoiceTextChanged = { _, _ -> },
+            onSelectedChoiceNumChanged = {},
+            onCreateQuestionButtonClick = {},
+            onQuestionTypeIndexChange = {},
+            selectedQuestionTypeIndex = 0,
+            options = previewOption,
+            isBlankQuestion = false,
+            blankQuestionItems = listOf(),
+            onAddBlankItemButtonClick = {},
+            onAddTextItemButtonClick = {},
+            onBlankQuestionItemValueChanged = { _, _ -> },
+            onContentRemove = {},
+            onCreateBlankQuestionButtonClick = {},
+            isCreateBlankButtonValid = true,
+            isCreateTextButtonValid = true,
+            onShowDialog = {},
         )
     }
 }

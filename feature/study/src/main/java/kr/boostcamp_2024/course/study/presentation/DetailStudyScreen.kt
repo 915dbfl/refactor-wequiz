@@ -37,9 +37,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizImageLargeTopAppBar
 import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.StudyGroup
@@ -55,10 +57,11 @@ fun DetailStudyScreen(
     onDeleteStudyGroupSuccess: () -> Unit,
     onLeaveStudyGroupSuccess: () -> Unit,
     onEditStudyGroupButtonClick: (String) -> Unit,
-    viewModel: DetailStudyViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewModel: DetailStudyViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -70,7 +73,8 @@ fun DetailStudyScreen(
         users = uiState.users,
         owner = uiState.owner,
         currentUserId = uiState.userId,
-        snackBarHostState = snackBarHostState,
+        email = uiState.email,
+        isEmailValid = uiState.isEmailValid,
         onNavigationButtonClick = onNavigationButtonClick,
         onCreateCategoryButtonClick = onCreateCategoryButtonClick,
         onCategoryClick = onCategoryClick,
@@ -79,6 +83,9 @@ fun DetailStudyScreen(
         onEditStudyGroupClick = onEditStudyGroupButtonClick,
         onDeleteStudyGroupClick = viewModel::deleteStudyGroup,
         onLeaveStudyGroupClick = viewModel::deleteUserFromStudyGroup,
+        onEmailChange = viewModel::onEmailChange,
+        resetEmail = viewModel::resetEmail,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -94,7 +101,7 @@ fun DetailStudyScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackBarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -120,7 +127,8 @@ fun DetailStudyScreen(
     users: List<User>,
     owner: User?,
     currentUserId: String?,
-    snackBarHostState: SnackbarHostState,
+    email: String?,
+    isEmailValid: Boolean,
     onNavigationButtonClick: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     onCategoryClick: (String, String) -> Unit,
@@ -129,6 +137,9 @@ fun DetailStudyScreen(
     onEditStudyGroupClick: (String) -> Unit,
     onDeleteStudyGroupClick: () -> Unit,
     onLeaveStudyGroupClick: () -> Unit,
+    onEmailChange: (String) -> Unit,
+    resetEmail: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var selectedScreenIndex by remember { mutableIntStateOf(0) }
     val screenList = listOf(DetailScreenRoute, GroupScreenRoute)
@@ -192,11 +203,9 @@ fun DetailStudyScreen(
                 }
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
-        if (currentGroup != null) {
+        if (currentGroup != null && owner != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -216,8 +225,12 @@ fun DetailStudyScreen(
                         owner,
                         currentUserId,
                         users,
+                        email,
+                        isEmailValid,
                         onInviteConfirmButtonClick,
                         onRemoveStudyGroupMemberButtonClick,
+                        onEmailChange,
+                        resetEmail,
                     )
                 }
             }
@@ -275,5 +288,62 @@ fun StudyDropDownMenu(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DetailStudyScreenPreview() {
+    WeQuizTheme {
+        DetailStudyScreen(
+            currentGroup = StudyGroup(
+                id = "1",
+                name = "스터디 그룹 이름",
+                studyGroupImageUrl = "",
+                description = "스터디 그룹 설명",
+                maxUserNum = 5,
+                ownerId = "1",
+                users = listOf("1"),
+                categories = listOf("1"),
+            ),
+            categories = listOf(
+                Category(
+                    id = "1",
+                    name = "카테고리 이름",
+                    description = "카테고리 설명",
+                    categoryImageUrl = "",
+                    quizzes = listOf("1"),
+                ),
+            ),
+            users = listOf(
+                User(
+                    id = "1",
+                    name = "유저 이름",
+                    email = "",
+                    profileUrl = "",
+                    studyGroups = listOf("1"),
+                ),
+            ),
+            owner = User(
+                id = "1",
+                name = "유저 이름",
+                email = "",
+                profileUrl = "",
+                studyGroups = listOf("1"),
+            ),
+            currentUserId = "1",
+            onNavigationButtonClick = {},
+            onCreateCategoryButtonClick = { _, _ -> },
+            onCategoryClick = { _, _ -> },
+            onRemoveStudyGroupMemberButtonClick = { _, _ -> },
+            onInviteConfirmButtonClick = { _, _ -> },
+            onEditStudyGroupClick = {},
+            onDeleteStudyGroupClick = {},
+            onLeaveStudyGroupClick = {},
+            onEmailChange = {},
+            resetEmail = {},
+            email = "",
+            isEmailValid = true,
+        )
     }
 }

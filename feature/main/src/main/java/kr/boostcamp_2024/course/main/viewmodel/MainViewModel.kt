@@ -31,7 +31,6 @@ data class MainUiState(
     val errorMessage: String? = null,
     val isLogout: Boolean = false,
     val notificationNumber: Int = 0,
-    val isDialog: Boolean = false,
     val isGuideShown: Boolean = true,
 )
 
@@ -163,13 +162,4 @@ class MainViewModel @Inject constructor(
     fun shownErrorMessage() {
         _uiState.update { it.copy(errorMessage = null) }
     }
-
-    fun showDialog() {
-        _uiState.update { it.copy(isDialog = true) }
-    }
-
-    fun closeDialog() {
-        _uiState.update { it.copy(isDialog = false) }
-    }
-
 }

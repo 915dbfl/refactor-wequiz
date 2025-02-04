@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
@@ -78,9 +78,9 @@ fun WeQuizLeftChatBubble(
     )
 }
 
-@Preview
+@PreviewKoLightDark
 @Composable
-fun WeQuizChatBubblePreview() {
+private fun WeQuizChatBubblePreview() {
     WeQuizTheme {
         WeQuizChatBubble(
             text = "Hello, World!",
@@ -90,9 +90,9 @@ fun WeQuizChatBubblePreview() {
     }
 }
 
-@Preview
+@PreviewKoLightDark
 @Composable
-fun ChatBubbleRightPreview() {
+private fun ChatBubbleRightPreview() {
     WeQuizTheme {
         WeQuizRightChatBubble(
             text = "Hello, World!",
@@ -101,9 +101,9 @@ fun ChatBubbleRightPreview() {
     }
 }
 
-@Preview
+@PreviewKoLightDark
 @Composable
-fun WeQuizLeftChatBubblePreview() {
+private fun WeQuizLeftChatBubblePreview() {
     WeQuizTheme {
         WeQuizLeftChatBubble(
             text = "Hello, World!",

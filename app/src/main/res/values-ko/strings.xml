@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_error_message">오류가 발생했습니다.\n다시 시도해 주세요.</string>
+</resources>

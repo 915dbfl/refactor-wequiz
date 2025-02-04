@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.Category
@@ -31,7 +33,7 @@ import kr.boostcamp_2024.course.quiz.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun QuizTopAppBar(
+internal fun QuizTopAppBar(
     category: Category?,
     quiz: BaseQuiz?,
     currentUserId: String?,
@@ -124,6 +126,34 @@ fun QuizTopAppBar(
             },
             onDismissRequest = { showDialog = false },
             content = { /* no-op */ },
+        )
+    }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun QuizTopAppBarPreview() {
+    WeQuizTheme {
+        QuizTopAppBar(
+            category = Category(id = "", name = "", description = "", categoryImageUrl = "", quizzes = emptyList()),
+            quiz = RealTimeQuiz(
+                id = "",
+                title = "",
+                isStarted = false,
+                questions = emptyList(),
+                userOmrs = emptyList(),
+                currentQuestion = 0,
+                ownerId = "",
+                isFinished = false,
+                waitingUsers = emptyList(),
+                description = "",
+                quizImageUrl = null,
+            ),
+            currentUserId = "",
+            onWaitingRealTimeQuizButtonClick = {},
+            onNavigationButtonClick = {},
+            onSettingMenuClick = { _, _ -> },
+            onDeleteMenuClick = { _, _ -> },
         )
     }
 }

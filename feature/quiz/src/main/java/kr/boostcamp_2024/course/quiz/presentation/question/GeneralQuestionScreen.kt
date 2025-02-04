@@ -34,14 +34,13 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
-import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.QuestionTopBar
@@ -49,13 +48,12 @@ import kr.boostcamp_2024.course.quiz.component.QuizContent
 import kr.boostcamp_2024.course.quiz.utils.timerFormat
 
 @Composable
-fun GeneralQuestionScreen(
-    quiz: BaseQuiz?,
+internal fun GeneralQuestionScreen(
+    quizTitle: String?,
     currentPage: Int,
     questions: List<Question>,
     countDownTime: Int,
     selectedIndexList: List<Any>,
-    snackbarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
@@ -69,6 +67,7 @@ fun GeneralQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     isLoading: Boolean,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var buttonsHeight by remember { mutableStateOf(IntSize.Zero) }
@@ -80,16 +79,14 @@ fun GeneralQuestionScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            quiz?.let {
+            quizTitle?.let {
                 QuestionTopBar(
-                    title = it.title,
+                    title = it,
                     onShowDialog = { showDialog = true },
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         LinearProgressIndicator(
             progress = { (currentPage + 1) / questions.size.toFloat() },
@@ -167,7 +164,7 @@ fun GeneralQuestionScreen(
 }
 
 @Composable
-fun GeneralQuizGuide(
+private fun GeneralQuizGuide(
     countDownTime: Int,
 ) {
     Row(
@@ -192,7 +189,7 @@ fun GeneralQuizGuide(
 }
 
 @Composable
-fun GeneralQuizButtons(
+private fun GeneralQuizButtons(
     modifier: Modifier = Modifier,
     setButtonsHeight: (IntSize) -> Unit,
     nextButtonText: String,
@@ -230,7 +227,7 @@ fun GeneralQuizButtons(
 }
 
 @Composable
-fun GeneralQuizDialog(
+private fun GeneralQuizDialog(
     currentPage: Int,
     questions: List<Question>,
     closeDialog: () -> Unit,
@@ -263,17 +260,16 @@ fun GeneralQuizDialog(
     )
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
-fun GeneralQuestionScreenPreview() {
+private fun GeneralQuestionScreenPreview() {
     WeQuizTheme {
         GeneralQuestionScreen(
-            quiz = null,
+            quizTitle = "Quiz Title",
             currentPage = 0,
             questions = emptyList(),
             countDownTime = 0,
             selectedIndexList = emptyList(),
-            snackbarHostState = SnackbarHostState(),
             onNavigationButtonClick = {},
             onOptionSelected = { _, _ -> },
             onNextButtonClick = {},

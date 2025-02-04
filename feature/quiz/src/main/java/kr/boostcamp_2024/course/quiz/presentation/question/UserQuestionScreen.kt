@@ -23,10 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
@@ -36,14 +38,16 @@ import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.QuestionTopBar
 import kr.boostcamp_2024.course.quiz.component.QuizContent
 import kr.boostcamp_2024.course.quiz.component.RealTimeQuizGuideContent
+import kr.boostcamp_2024.course.quiz.utils.QuizParameterProvider
 import kr.boostcamp_2024.course.quiz.viewmodel.UserQuestionViewModel
 
 @Composable
-fun UserQuestionScreen(
+internal fun UserQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     userQuestionViewModel: UserQuestionViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by userQuestionViewModel.uiState.collectAsStateWithLifecycle()
     var quizFinishDialog by rememberSaveable { mutableStateOf(false) }
@@ -56,7 +60,6 @@ fun UserQuestionScreen(
         quizFinishDialog = quizFinishDialog,
         onQuizFinishDialogDismissButtonClick = { quizFinishDialog = false },
         selectedIndexList = uiState.selectedIndexList,
-        snackbarHostState = snackbarHostState,
         onOptionSelected = userQuestionViewModel::selectOption,
         onBlanksSelected = userQuestionViewModel::selectBlanks,
         onSubmitButtonClick = userQuestionViewModel::submitQuestion,
@@ -68,12 +71,13 @@ fun UserQuestionScreen(
         addBlankContent = userQuestionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = userQuestionViewModel.blankQuestionManager::getAnswer,
         onExitButtonClick = userQuestionViewModel::exitRealTimeQuiz,
+        snackbarHostState = snackbarHostState,
     )
 
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             userQuestionViewModel.shownErrorMessage()
         }
     }
@@ -96,7 +100,7 @@ fun UserQuestionScreen(
 }
 
 @Composable
-fun UserQuestionScreen(
+private fun UserQuestionScreen(
     quiz: BaseQuiz?,
     currentPage: Int,
     choiceQuestions: List<Question>,
@@ -104,7 +108,6 @@ fun UserQuestionScreen(
     quizFinishDialog: Boolean,
     onQuizFinishDialogDismissButtonClick: () -> Unit,
     selectedIndexList: List<Any?>,
-    snackbarHostState: SnackbarHostState,
     onOptionSelected: (Int, Int) -> Unit,
     onBlanksSelected: (Int, Map<String, String?>) -> Unit,
     onSubmitButtonClick: (String) -> Unit,
@@ -116,6 +119,7 @@ fun UserQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     onExitButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
     val currentQuestion = choiceQuestions.getOrNull(currentPage)
@@ -134,9 +138,7 @@ fun UserQuestionScreen(
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -243,11 +245,31 @@ fun UserQuestionScreen(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
-fun UserQuestionScreenPreview() {
-    UserQuestionScreen(
-        onNavigationButtonClick = {},
-        onQuizFinished = { _, _ -> },
-    )
+private fun UserQuestionScreenPreview(
+    @PreviewParameter(QuizParameterProvider::class) quiz: BaseQuiz,
+) {
+    WeQuizTheme {
+        UserQuestionScreen(
+            quiz = quiz,
+            currentPage = 0,
+            choiceQuestions = emptyList(),
+            ownerName = "Owner Name",
+            quizFinishDialog = false,
+            onQuizFinishDialogDismissButtonClick = {},
+            selectedIndexList = emptyList(),
+            onOptionSelected = { _, _ -> },
+            onBlanksSelected = { _, _ -> },
+            onSubmitButtonClick = {},
+            isSubmitted = false,
+            onQuizFinishButtonClick = {},
+            blankQuestionContents = emptyList(),
+            blankWords = emptyList(),
+            removeBlankContent = {},
+            addBlankContent = {},
+            getBlankQuestionAnswer = { emptyMap() },
+            onExitButtonClick = {},
+        )
+    }
 }

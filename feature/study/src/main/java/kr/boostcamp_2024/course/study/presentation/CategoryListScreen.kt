@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.StudyGroup
 import kr.boostcamp_2024.course.domain.model.User
@@ -21,7 +23,7 @@ import kr.boostcamp_2024.course.study.component.CategoryItem
 import kr.boostcamp_2024.course.study.component.CustomPropertyTab
 
 @Composable
-fun CategoryListScreen(
+internal fun CategoryListScreen(
     owner: User?,
     currentGroup: StudyGroup,
     categories: List<Category>,
@@ -34,11 +36,10 @@ fun CategoryListScreen(
             .padding(start = 16.dp, end = 16.dp, top = 8.dp),
     ) {
         CustomPropertyTab(
-            studyGroupId = currentGroup.id,
-            onClicked = createCategoryClick,
             imageVector = Icons.Outlined.AddCircle,
-            title = R.string.property_tab_category_text,
             currentGroup = currentGroup,
+            title = stringResource(R.string.property_tab_category_text),
+            onTabClick = createCategoryClick,
         )
         CategoryLazyColumn(owner, categories, categoryItemClick, currentGroup.id)
     }
@@ -54,16 +55,59 @@ fun CategoryLazyColumn(
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         itemsIndexed(items = categories, key = { _, category -> category.id }) { index, category ->
             CategoryItem(
-                categoryItemClick,
-                category,
-                category.quizzes.size,
-                owner?.profileUrl,
-                owner?.name ?: stringResource(R.string.txt_detail_study_no_category_owner),
-                studyGroupId,
+                category = category,
+                profileUrl = owner?.profileUrl,
+                author = owner?.name ?: stringResource(R.string.txt_detail_study_no_category_owner),
+                currentGroupId = studyGroupId,
+                onCategoryItemClick = categoryItemClick,
             )
             if (index < categories.size) {
                 HorizontalDivider()
             }
         }
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+fun CategoryListScreenPreview() {
+    WeQuizTheme {
+        CategoryListScreen(
+            owner = User(
+                id = "id",
+                email = "WeQuiz@gmail.com",
+                name = "Ivy",
+                profileUrl = null,
+                studyGroups = listOf("id"),
+            ),
+            currentGroup = StudyGroup(
+                id = "id",
+                name = "그룹이름",
+                studyGroupImageUrl = null,
+                description = null,
+                maxUserNum = 10,
+                ownerId = "id",
+                users = listOf("test1", "test2"),
+                categories = listOf(),
+            ),
+            categories = listOf(
+                Category(
+                    id = "id",
+                    name = "카테고리 테스트1",
+                    quizzes = listOf(),
+                    description = null,
+                    categoryImageUrl = null,
+                ),
+                Category(
+                    id = "id2",
+                    name = "카테고리 테스트2",
+                    quizzes = listOf(),
+                    description = null,
+                    categoryImageUrl = null,
+                ),
+            ),
+            createCategoryClick = { _, _ -> },
+            categoryItemClick = { _, _ -> },
+        )
     }
 }

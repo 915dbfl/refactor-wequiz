@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.study.presentation
 
-import WeQuizPhotoPickerAsyncImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -23,12 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 import kr.boostcamp_2024.course.study.CreateStudyViewModel
 import kr.boostcamp_2024.course.study.R
@@ -36,11 +36,12 @@ import kr.boostcamp_2024.course.study.component.CreateStudyTopAppBar
 import kr.boostcamp_2024.course.study.component.StudySubmitButton
 
 @Composable
-fun CreateStudyScreen(
-    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
+internal fun CreateStudyScreen(
     onNavigationButtonClick: () -> Unit,
     onSubmitStudySuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
+    viewmodel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
 ) {
     val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
 
@@ -52,7 +53,6 @@ fun CreateStudyScreen(
         descriptionText = uiState.description,
         groupMemberNumber = uiState.maxUserNum,
         canSubmitStudy = uiState.canSubmitStudy && !uiState.isLoading,
-        snackBarHostState = snackBarHostState,
         onNavigationButtonClick = onNavigationButtonClick,
         onTitleTextChange = viewmodel::onNameChanged,
         onDescriptionTextChange = viewmodel::onDescriptionChanged,
@@ -60,6 +60,7 @@ fun CreateStudyScreen(
         onStudyEditButtonClick = viewmodel::updateStudyGroup,
         onCreationButtonClick = viewmodel::createStudyGroupClick,
         onCurrentStudyImageChanged = viewmodel::onImageByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isLoading) {
@@ -74,7 +75,7 @@ fun CreateStudyScreen(
 
     uiState.snackBarMessage?.let { message ->
         LaunchedEffect(message) {
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewmodel.onSnackBarShown()
         }
     }
@@ -82,7 +83,7 @@ fun CreateStudyScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateStudyScreen(
+private fun CreateStudyScreen(
     isEditMode: Boolean,
     defaultStudyImageUri: String?,
     currentStudyImage: ByteArray?,
@@ -90,7 +91,6 @@ fun CreateStudyScreen(
     descriptionText: String,
     groupMemberNumber: String,
     canSubmitStudy: Boolean,
-    snackBarHostState: SnackbarHostState,
     onNavigationButtonClick: () -> Unit,
     onTitleTextChange: (String) -> Unit,
     onDescriptionTextChange: (String) -> Unit,
@@ -98,6 +98,7 @@ fun CreateStudyScreen(
     onStudyEditButtonClick: () -> Unit,
     onCreationButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollState = rememberScrollState()
 
@@ -108,7 +109,7 @@ fun CreateStudyScreen(
                 onNavigationButtonClick = onNavigationButtonClick,
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -169,15 +170,15 @@ fun CreateStudyScreen(
     }
 }
 
-fun isValidateNumber(inputNumber: String): Boolean {
+private fun isValidateNumber(inputNumber: String): Boolean {
     if (inputNumber.isBlank()) return true
     val isValid = inputNumber.matches(Regex("^-?\\d+\$"))
     return isValid && inputNumber.toIntOrNull()?.let { it in 2..50 } == true
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CreateStudyScreenPreview() {
+private fun CreateStudyScreenPreview() {
     WeQuizTheme {
         CreateStudyScreen(
             isEditMode = false,
@@ -187,7 +188,6 @@ fun CreateStudyScreenPreview() {
             descriptionText = "",
             groupMemberNumber = "",
             canSubmitStudy = false,
-            snackBarHostState = remember { SnackbarHostState() },
             onNavigationButtonClick = {},
             onTitleTextChange = {},
             onDescriptionTextChange = {},

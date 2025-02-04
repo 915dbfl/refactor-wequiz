@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -37,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLeftChatBubble
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
@@ -47,13 +47,14 @@ import java.security.MessageDigest
 import java.util.UUID
 
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginUiState by loginViewModel.loginUiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(loginUiState) {
@@ -61,7 +62,7 @@ fun LoginScreen(
             onLoginSuccess()
         }
         loginUiState.snackBarMessage?.let { messageId ->
-            snackBarHostState.showSnackbar(context.getString(messageId))
+            onShowErrorSnackbar(Exception(context.getString(messageId)))
             loginViewModel.setNewSnackBarMessage(null)
         }
         if (loginUiState.isNewUser) {
@@ -72,22 +73,22 @@ fun LoginScreen(
     }
 
     LoginScreen(
-        snackBarHostState,
         loginViewModel::loginForExperience,
         handleSignIn = loginViewModel::handleSignIn,
+        snackbarHostState = snackbarHostState,
         setNewSnackBarMessage = loginViewModel::setNewSnackBarMessage,
     )
 }
 
 @Composable
 private fun LoginScreen(
-    snackBarHostState: SnackbarHostState,
     onLoginSuccess: () -> Unit,
     handleSignIn: (GetCredentialResponse, Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     setNewSnackBarMessage: (Int?) -> Unit,
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -112,7 +113,7 @@ private fun LoginScreen(
 }
 
 @Composable
-fun LoginGuideImageAndText() {
+private fun LoginGuideImageAndText() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -145,7 +146,7 @@ fun LoginGuideImageAndText() {
 }
 
 @Composable
-fun LoginButtons(
+private fun LoginButtons(
     onLoginSuccess: () -> Unit,
     handleSignIn: (GetCredentialResponse, Int) -> Unit,
     setNewSnackBarMessage: (Int?) -> Unit,
@@ -218,12 +219,11 @@ fun LoginButtons(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     WeQuizTheme {
         LoginScreen(
-            snackBarHostState = SnackbarHostState(),
             onLoginSuccess = {},
             handleSignIn = { _, _ -> },
             setNewSnackBarMessage = {},

@@ -31,7 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,15 +46,17 @@ import kr.boostcamp_2024.course.quiz.component.QuestionTopBar
 import kr.boostcamp_2024.course.quiz.component.QuizContent
 import kr.boostcamp_2024.course.quiz.component.QuizOwnerDialog
 import kr.boostcamp_2024.course.quiz.component.RealTimeQuizGuideContent
+import kr.boostcamp_2024.course.quiz.utils.QuizParameterProvider
 import kr.boostcamp_2024.course.quiz.viewmodel.OwnerQuestionViewModel
 
 @Composable
-fun OwnerQuestionScreen(
+internal fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     currentUserId: String?,
     onQuizFinished: (String?, String?) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     questionViewModel: OwnerQuestionViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState by questionViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -67,7 +70,6 @@ fun OwnerQuestionScreen(
         currentPage = uiState.currentPage,
         choiceQuestions = uiState.questions,
         ownerName = uiState.ownerName ?: "",
-        snackbarHostState = snackbarHostState,
         onNextButtonClick = questionViewModel::nextPage,
         onPreviousButtonClick = questionViewModel::previousPage,
         onQuizFinishButtonClick = questionViewModel::setQuizFinished,
@@ -77,6 +79,7 @@ fun OwnerQuestionScreen(
         removeBlankWord = questionViewModel.blankQuestionManager::removeBlankContent,
         addBlankWord = questionViewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = questionViewModel.blankQuestionManager::getAnswer,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.isQuizFinished) {
@@ -86,20 +89,19 @@ fun OwnerQuestionScreen(
     uiState.errorMessageId?.let { errorMessageId ->
         val errorMessage = stringResource(errorMessageId)
         LaunchedEffect(errorMessageId) {
-            snackbarHostState.showSnackbar(errorMessage)
+            onShowErrorSnackbar(Exception(errorMessage))
             questionViewModel.shownErrorMessage()
         }
     }
 }
 
 @Composable
-fun OwnerQuestionScreen(
+private fun OwnerQuestionScreen(
     quiz: RealTimeQuiz?,
     isNextButtonEnabled: Boolean,
     currentPage: Int,
     choiceQuestions: List<Question?>,
     ownerName: String,
-    snackbarHostState: SnackbarHostState,
     onNextButtonClick: () -> Unit,
     onPreviousButtonClick: () -> Unit,
     onQuizFinishButtonClick: () -> Unit,
@@ -109,6 +111,7 @@ fun OwnerQuestionScreen(
     removeBlankWord: (Int) -> Unit,
     addBlankWord: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showQuitQuizDialog by rememberSaveable { mutableStateOf(false) }
     var showFinishQuizDialog by rememberSaveable { mutableStateOf(false) }
@@ -129,9 +132,7 @@ fun OwnerQuestionScreen(
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -266,14 +267,27 @@ fun RealTimeQuizWithOwnerButtons(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
-fun OwnerQuestionScreenPreview() {
+private fun OwnerQuestionScreenPreview(
+    @PreviewParameter(QuizParameterProvider::class, 1) quiz: RealTimeQuiz,
+) {
     WeQuizTheme {
         OwnerQuestionScreen(
-            quiz = null,
-            currentUserId = null,
-            onQuizFinished = { _, _ -> },
+            quiz = quiz,
+            isNextButtonEnabled = true,
+            currentPage = 0,
+            choiceQuestions = emptyList(),
+            ownerName = "Owner",
+            onNextButtonClick = {},
+            onPreviousButtonClick = {},
+            onQuizFinishButtonClick = {},
+            showErrorMessage = {},
+            blankQuestionContents = emptyList(),
+            blankWords = emptyList(),
+            removeBlankWord = {},
+            addBlankWord = {},
+            getBlankQuestionAnswer = { emptyMap() },
         )
     }
 }

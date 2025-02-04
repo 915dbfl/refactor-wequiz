@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kr.boostcamp_2024.course.designsystem.R
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
 fun WeQuizValidateTextField(
@@ -64,5 +66,20 @@ fun WeQuizValidateTextField(
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp),
             )
         }
+    }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun WeQuizValidateTextFieldPreview() {
+    WeQuizTheme {
+        WeQuizValidateTextField(
+            label = "Label",
+            text = "Text",
+            onTextChanged = {},
+            placeholder = "Placeholder",
+            errorMessage = "Error Message",
+            validFun = { it.isNotEmpty() },
+        )
     }
 }

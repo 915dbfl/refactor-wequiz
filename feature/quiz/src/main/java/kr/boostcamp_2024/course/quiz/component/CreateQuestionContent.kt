@@ -11,11 +11,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 import kr.boostcamp_2024.course.quiz.R
 
 @Composable
-fun CreateQuestionContent(
+internal fun CreateQuestionContent(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester,
     keyboardOptions: KeyboardOptions,
@@ -71,4 +73,24 @@ fun CreateQuestionContent(
             validFun = { it.length <= 200 },
         )
     }
+}
+
+@PreviewKoLightDark
+@Composable
+private fun CreateQuestionContentPreview() {
+    WeQuizTheme {
+        CreateQuestionContent(
+            focusRequester = FocusRequester(),
+            keyboardOptions = KeyboardOptions.Default,
+            keyboardActions = KeyboardActions.Default,
+            title = "제목",
+            description = "내용",
+            solution = "해설",
+            onTitleChanged = {},
+            onDescriptionChanged = {},
+            onSolutionChanged = {},
+            isBlankQuestion = false,
+        )
+    }
+
 }

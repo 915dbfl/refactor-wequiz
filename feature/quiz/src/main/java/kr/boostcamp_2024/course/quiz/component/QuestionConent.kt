@@ -4,13 +4,17 @@ import android.util.Log
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.quiz.R
+import kr.boostcamp_2024.course.quiz.utils.QuizContentPreviewParameterProvider
 
 @Composable
-fun QuizContent(
+internal fun QuizContent(
     isOwner: Boolean = false,
     isRealTime: Boolean = false,
     currentPage: Int,
@@ -69,4 +73,37 @@ fun QuizContent(
             }
         }
     }
+}
+
+@PreviewKoLightDarkBackground
+@Composable
+private fun QuizContentPreview(
+    @PreviewParameter(QuizContentPreviewParameterProvider::class) question: Question,
+) {
+    WeQuizTheme {
+        QuizContent(
+            isOwner = true,
+            isRealTime = true,
+            currentPage = 0,
+            selectedIndexList = listOf(0, 1, 2),
+            onOptionSelected = { _, _ -> },
+            onBlanksSelected = { _, _ -> },
+            questions = listOf(question),
+            showErrorMessage = { },
+            blankQuestionContents = listOf(
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+            ),
+            blankWords = listOf(
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+                mapOf("1" to "1", "2" to "2", "3" to "3"),
+            ),
+            removeBlankContent = { },
+            addBlankContent = { },
+            getBlankQuestionAnswer = { mapOf("1" to "1", "2" to "2", "3" to "3") },
+        )
+    }
+
 }

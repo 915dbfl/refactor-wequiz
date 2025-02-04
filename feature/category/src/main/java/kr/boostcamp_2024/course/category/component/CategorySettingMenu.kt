@@ -1,6 +1,7 @@
 package kr.boostcamp_2024.course.category.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -18,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import kr.boostcamp_2024.course.category.R
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
+import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 
 @Composable
-fun CategorySettingMenu(
+internal fun CategorySettingMenu(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
@@ -36,23 +39,61 @@ fun CategorySettingMenu(
                 contentDescription = stringResource(R.string.des_btn_settings),
             )
         }
-        DropdownMenu(
+        CategoryDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
+            onDropDownMenuDismiss = { expanded = false },
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
+        )
+    }
+}
+
+@Composable
+internal fun CategoryDropdownMenu(
+    expanded: Boolean,
+    onDropDownMenuDismiss: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { onDropDownMenuDismiss() },
+    ) {
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.txt_category_fix)) },
+            onClick = {
+                onDropDownMenuDismiss()
+                onEditClick()
+            },
+        )
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.txt_category_delete)) },
+            onClick = {
+                onDropDownMenuDismiss()
+                onDeleteClick()
+            },
+        )
+    }
+}
+
+@Composable
+@PreviewKoLightDark
+private fun CategorySettingMenuPreview() {
+    WeQuizTheme {
+        var expanded by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.TopStart),
         ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.txt_category_fix)) },
-                onClick = {
-                    expanded = false
-                    onEditClick()
-                },
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.txt_category_delete)) },
-                onClick = {
-                    expanded = false
-                    onDeleteClick()
-                },
+            IconButton(onClick = { expanded = true }) {
+                Icon(Icons.Default.Settings, contentDescription = "")
+            }
+            CategoryDropdownMenu(
+                expanded = expanded,
+                onDropDownMenuDismiss = { expanded = false },
+                onEditClick = {},
+                onDeleteClick = {},
             )
         }
     }

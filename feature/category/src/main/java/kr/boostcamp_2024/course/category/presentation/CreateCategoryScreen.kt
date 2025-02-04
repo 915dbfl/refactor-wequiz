@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.category.presentation
 
-import WeQuizPhotoPickerAsyncImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -29,24 +28,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.boostcamp_2024.course.category.R
 import kr.boostcamp_2024.course.category.viewModel.CreateCategoryViewModel
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 
 @Composable
-fun CreateCategoryScreen(
+internal fun CreateCategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateCategorySuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateCategoryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createCategoryUiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.fetchCategoryInfo()
@@ -57,7 +58,7 @@ fun CreateCategoryScreen(
             onCreateCategorySuccess()
         }
         uiState.errorMessage?.let { message ->
-            snackbarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.setErrorMessage(null)
         }
     }
@@ -79,7 +80,6 @@ fun CreateCategoryScreen(
         currentCategoryImage = uiState.currentImage,
         defaultCategoryImageUri = uiState.defaultImageUri,
         isCategoryCreationValid = uiState.isCategoryCreationValid,
-        snackbarHostState = snackbarHostState,
         onNameChanged = viewModel::onNameChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         onNavigationButtonClick = onNavigationButtonClick,
@@ -87,18 +87,18 @@ fun CreateCategoryScreen(
         isLoading = uiState.isLoading,
         guideText = stringResource(guideText),
         onCurrentCategoryImageChanged = viewModel::onImageByteArrayChanged,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateCategoryScreen(
+internal fun CreateCategoryScreen(
     name: String,
     description: String,
     currentCategoryImage: ByteArray?,
     defaultCategoryImageUri: String?,
     isCategoryCreationValid: Boolean,
-    snackbarHostState: SnackbarHostState,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onNavigationButtonClick: () -> Unit,
@@ -106,6 +106,7 @@ fun CreateCategoryScreen(
     isLoading: Boolean,
     guideText: String,
     onCurrentCategoryImageChanged: (ByteArray) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
@@ -123,9 +124,7 @@ fun CreateCategoryScreen(
                 },
             )
         },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -180,13 +179,23 @@ fun CreateCategoryScreen(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CreateCategoryScreenPreview() {
+private fun CreateCategoryScreenPreview() {
     WeQuizTheme {
         CreateCategoryScreen(
+            name = "Category Name",
+            description = "Category Description",
+            currentCategoryImage = null,
+            defaultCategoryImageUri = null,
+            isCategoryCreationValid = true,
+            onNameChanged = {},
+            onDescriptionChanged = {},
             onNavigationButtonClick = {},
-            onCreateCategorySuccess = {},
+            onCreateCategoryButtonClick = {},
+            isLoading = false,
+            guideText = "Create Category",
+            onCurrentCategoryImageChanged = {},
         )
     }
 }

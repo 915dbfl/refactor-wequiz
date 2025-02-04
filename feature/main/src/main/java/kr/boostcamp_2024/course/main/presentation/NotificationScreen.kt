@@ -17,9 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.Notification
 import kr.boostcamp_2024.course.domain.model.NotificationWithGroupInfo
@@ -29,16 +29,17 @@ import kr.boostcamp_2024.course.main.component.NotificationTopAppBar
 import kr.boostcamp_2024.course.main.viewmodel.NotificationViewModel
 
 @Composable
-fun NotificationScreen(
+internal fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel<NotificationViewModel>(),
     onNavigationButtonClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationInfos = uiState.notificationWithGroupInfoList
-    val snackBarHostState = remember { SnackbarHostState() }
     LaunchedEffect(uiState) {
         uiState.snackBarMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
+            onShowErrorSnackbar(Exception(message))
             viewModel.onSnackBarShown()
         }
     }
@@ -48,24 +49,24 @@ fun NotificationScreen(
         onRejectClick = viewModel::deleteInvitation,
         onAcceptClick = viewModel::acceptInvitation,
         onNavigationButtonClick = onNavigationButtonClick,
-        snackBarHostState = snackBarHostState,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationScreen(
+private fun NotificationScreen(
     notificationInfos: List<NotificationWithGroupInfo>,
     onRejectClick: (String) -> Unit,
     onAcceptClick: (Notification) -> Unit,
     onNavigationButtonClick: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             NotificationTopAppBar(onNavigationButtonClick = onNavigationButtonClick)
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         if (notificationInfos.isEmpty()) {
             Box(
@@ -98,7 +99,7 @@ fun NotificationScreen(
     }
 }
 
-@Preview
+@PreviewKoLightDark
 @Composable
 private fun NotificationScreenPreview() {
     WeQuizTheme {
@@ -108,7 +109,7 @@ private fun NotificationScreenPreview() {
                     notification = Notification(
                         id = "1",
                         groupId = "1",
-                        userid = "1",
+                        userId = "1",
                     ),
                     studyGroupName = "스터디 이름",
                     studyGroupImgUrl = "null",
@@ -117,7 +118,6 @@ private fun NotificationScreenPreview() {
             onRejectClick = {},
             onAcceptClick = {},
             onNavigationButtonClick = {},
-            snackBarHostState = SnackbarHostState(),
         )
     }
 }

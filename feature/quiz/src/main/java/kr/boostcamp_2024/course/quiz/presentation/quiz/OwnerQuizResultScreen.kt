@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.quiz.presentation.quiz
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +34,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
@@ -46,7 +45,7 @@ import kr.boostcamp_2024.course.quiz.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OwnerQuizResultScreen(
+internal fun OwnerQuizResultScreen(
     questions: List<Question>? = null,
     quizTitle: String?,
     onQuestionClick: (String) -> Unit,
@@ -74,7 +73,7 @@ fun OwnerQuizResultScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
 
         Column(
@@ -95,7 +94,7 @@ fun OwnerQuizResultScreen(
 }
 
 @Composable
-fun OwnerQuizResultContent() {
+private fun OwnerQuizResultContent() {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -119,7 +118,7 @@ fun OwnerQuizResultContent() {
 }
 
 @Composable
-fun OwnerQuestionResultListContent(
+private fun OwnerQuestionResultListContent(
     questions: List<Question>,
     onQuestionClick: (String) -> Unit,
 ) {
@@ -142,7 +141,7 @@ fun OwnerQuestionResultListContent(
 }
 
 @Composable
-fun OwnerQuestionResultItem(
+private fun OwnerQuestionResultItem(
     question: Question,
     onQuestionClick: (String) -> Unit,
 ) {
@@ -186,20 +185,15 @@ fun OwnerQuestionResultItem(
     }
 }
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun OwnerQuizResultScreenPreview() {
+private fun OwnerQuizResultScreenPreview() {
     WeQuizTheme {
         OwnerQuizResultScreen(
             onNavigationButtonClick = {},
             onQuestionClick = {},
-            questions = emptyList(),
-            quizTitle = "",
-            snackbarHostState = remember { SnackbarHostState() },
+            questions = quizResultPreviewQuestions,
+            quizTitle = "퀴즈 결과 프리뷰",
         )
     }
 }

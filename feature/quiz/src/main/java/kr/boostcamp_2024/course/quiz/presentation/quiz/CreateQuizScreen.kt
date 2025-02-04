@@ -1,6 +1,5 @@
 package kr.boostcamp_2024.course.quiz.presentation.quiz
 
-import WeQuizPhotoPickerAsyncImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,12 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.QuizDatePickerTextField
@@ -43,12 +43,13 @@ import kr.boostcamp_2024.course.quiz.component.QuizSolveTimeSlider
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuizViewModel
 
 @Composable
-fun CreateQuizScreen(
+internal fun CreateQuizScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateQuizSuccess: () -> Unit,
     onEditQuizSuccess: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     viewModel: CreateQuizViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -60,7 +61,6 @@ fun CreateQuizScreen(
         createQuizButtonEnabled = uiState.value.isCreateQuizButtonEnabled && !uiState.value.isLoading,
         isEditing = uiState.value.isEditing,
         selectedQuizTypeIndex = uiState.value.selectedQuizTypeIndex,
-        snackBarHostState = snackBarHostState,
         defaultImageUrl = uiState.value.defaultImageUrl,
         onQuizTitleChange = viewModel::setQuizTitle,
         onQuizDescriptionChange = viewModel::setQuizDescription,
@@ -73,6 +73,7 @@ fun CreateQuizScreen(
         onCurrentStudyImageChanged = viewModel::changeCurrentStudyImage,
         isRealtimeQuiz = uiState.value.isRealtimeQuiz,
         onQuizTypeIndexChange = viewModel::setSelectedQuizTypeIndex,
+        snackbarHostState = snackbarHostState,
     )
 
     if (uiState.value.isCreateQuizSuccess) {
@@ -93,7 +94,7 @@ fun CreateQuizScreen(
 
     LaunchedEffect(uiState.value.snackBarMessage) {
         uiState.value.snackBarMessage?.let { snackBarMessage ->
-            snackBarHostState.showSnackbar(snackBarMessage)
+            onShowErrorSnackbar(Exception(snackBarMessage))
             viewModel.shownErrorMessage()
         }
     }
@@ -101,7 +102,7 @@ fun CreateQuizScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateQuizScreen(
+private fun CreateQuizScreen(
     quizTitle: String,
     quizDescription: String,
     quizDate: String,
@@ -111,7 +112,6 @@ fun CreateQuizScreen(
     selectedQuizTypeIndex: Int,
     isRealtimeQuiz: Boolean,
     currentImage: ByteArray?,
-    snackBarHostState: SnackbarHostState,
     defaultImageUrl: String?,
     onQuizTitleChange: (String) -> Unit,
     onQuizDescriptionChange: (String) -> Unit,
@@ -122,6 +122,7 @@ fun CreateQuizScreen(
     onEditButtonClick: () -> Unit,
     onCurrentStudyImageChanged: (ByteArray) -> Unit,
     onQuizTypeIndexChange: (Int) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val options = listOf(stringResource(R.string.txt_create_quiz_general), stringResource(R.string.txt_create_quiz_realtime))
 
@@ -145,9 +146,7 @@ fun CreateQuizScreen(
                 },
             )
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -248,9 +247,9 @@ fun CreateQuizScreen(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewKoLightDark
 @Composable
-fun CreateQuizScreenPreview() {
+private fun CreateQuizScreenPreview() {
     WeQuizTheme {
         CreateQuizScreen(
             quizTitle = "",
@@ -261,7 +260,6 @@ fun CreateQuizScreenPreview() {
             isEditing = false,
             isRealtimeQuiz = false,
             currentImage = null,
-            snackBarHostState = remember { SnackbarHostState() },
             defaultImageUrl = null,
             onQuizTitleChange = {},
             onQuizDescriptionChange = {},
