@@ -273,7 +273,6 @@ private fun GeneralQuestionScreenPreview() {
             onNextButtonClick = {},
             onPreviousButtonClick = {},
             onSubmitButtonClick = {},
-            showErrorMessage = {},
             onBlanksSelected = { _, _ -> },
             blankQuestionContents = emptyList(),
             blankWords = emptyList(),
