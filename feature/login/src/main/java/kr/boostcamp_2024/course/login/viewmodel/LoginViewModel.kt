@@ -62,7 +62,7 @@ class LoginViewModel @Inject constructor(
                     currentState.copy(isLoginSuccess = true)
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                // no-op
             }
         }
     }
