@@ -23,7 +23,6 @@ import javax.inject.Inject
 data class NotificationUiState(
     val isLoading: Boolean = false,
     val notificationWithGroupInfoList: List<NotificationWithGroupInfo> = emptyList(),
-    val snackBarMessage: String? = null,
 )
 
 @HiltViewModel
@@ -101,9 +100,5 @@ class NotificationViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
-    }
-
-    fun onSnackBarShown() {
-        _uiState.update { it.copy(snackBarMessage = null) }
     }
 }

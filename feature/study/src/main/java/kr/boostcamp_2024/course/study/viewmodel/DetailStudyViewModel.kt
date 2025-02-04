@@ -186,10 +186,6 @@ class DetailStudyViewModel @Inject constructor(
         }
     }
 
-    fun shownErrorMessage() {
-        _uiState.update { it.copy(errorMessageId = null) }
-    }
-
     fun onEmailChange(email: String) {
         _uiState.update { it.copy(email = email, isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()) }
     }

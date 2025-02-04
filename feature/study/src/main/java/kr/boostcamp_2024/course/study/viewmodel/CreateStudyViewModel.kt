@@ -32,7 +32,6 @@ data class CreateStudyUiState(
     val maxUserNum: String = "",
     val currentUserId: String? = null,
     val isSubmitStudySuccess: Boolean = false,
-    val snackBarMessage: String? = null,
     val loadedMaxUserNum: String = "",
 ) {
     val canSubmitStudy: Boolean = (name.length in 1..20 && description.length in 0..100 && maxUserNum.isNotBlank() && maxUserNum.toInt() in 2..50)
@@ -181,9 +180,5 @@ class CreateStudyViewModel @Inject constructor(
 
     fun onImageByteArrayChanged(imageByteArray: ByteArray) {
         _uiState.update { it.copy(currentImage = imageByteArray) }
-    }
-
-    fun onSnackBarShown() {
-        _uiState.update { it.copy(snackBarMessage = null) }
     }
 }

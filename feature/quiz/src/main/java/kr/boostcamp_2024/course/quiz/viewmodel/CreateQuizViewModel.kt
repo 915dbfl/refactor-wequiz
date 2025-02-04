@@ -33,7 +33,6 @@ data class CreateQuizUiState(
     val currentImage: ByteArray? = null,
     val isCreateQuizSuccess: Boolean = false,
     val isLoading: Boolean = false,
-    val snackBarMessage: String? = null,
     val isEditing: Boolean = false,
     val isEditQuizSuccess: Boolean = false,
     val selectedQuizTypeIndex: Int = 0,
@@ -241,10 +240,6 @@ class CreateQuizViewModel @Inject constructor(
                 setLoadingState(false)
             }
         }
-    }
-
-    fun shownErrorMessage() {
-        _uiState.update { it.copy(snackBarMessage = null) }
     }
 
     fun changeCurrentStudyImage(bytes: ByteArray) {

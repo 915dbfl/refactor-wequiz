@@ -317,7 +317,6 @@ private fun CreateQuestionScreenPreview() {
     val previewCreateQuestionUiState = CreateQuestionUiState(
         isLoading = false,
         showDialog = false,
-        snackBarMessage = null,
         creationSuccess = false,
         selectedQuestionTypeIndex = 0,
     )

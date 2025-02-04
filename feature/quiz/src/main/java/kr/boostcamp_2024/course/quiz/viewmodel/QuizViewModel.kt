@@ -29,7 +29,6 @@ data class QuizUiState(
     val category: Category? = null,
     val quiz: BaseQuiz? = null,
     val currentUserId: String? = null,
-    val errorMessage: String? = null,
     val isDeleteQuizSuccess: Boolean = false,
     val isCancelWaitingRealTimeQuizSuccess: Boolean = false,
 )

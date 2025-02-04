@@ -40,7 +40,6 @@ data class CreateQuestionUiState(
         answer = 0,
         choices = List(4) { "" },
     ),
-    val snackBarMessage: String? = null,
     val creationSuccess: Boolean = false,
     val selectedQuestionTypeIndex: Int = 0,
     val items: List<BlankQuestionItem> = listOf(
@@ -166,14 +165,6 @@ class CreateQuestionViewModel @Inject constructor(
         _createQuestionUiState.update { currentState ->
             currentState.copy(
                 isLoading = isLoading,
-            )
-        }
-    }
-
-    fun setNewSnackBarMessage(message: String?) {
-        _createQuestionUiState.update { currentState ->
-            currentState.copy(
-                snackBarMessage = message,
             )
         }
     }

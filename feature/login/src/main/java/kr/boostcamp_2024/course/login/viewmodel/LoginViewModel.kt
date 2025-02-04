@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 data class LoginUiState(
     val isLoginSuccess: Boolean = false,
-    val snackBarMessage: Int? = null,
     val userInfo: UserUiModel? = null,
     val isNewUser: Boolean = false,
 )
@@ -67,29 +66,28 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun handleSignIn(
-        result: GetCredentialResponse,
-        errorMessage: Int,
-    ) {
-        when (val credential = result.credential) {
-            is CustomCredential -> {
-                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    try {
-                        val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                        checkUser(googleIdTokenCredential)
-                    } catch (e: GoogleIdTokenParsingException) {
-                        Log.e("LoginScreen", "Received an invalid google id token response", e)
-                        setNewSnackBarMessage(errorMessage)
+    fun handleSignIn(result: GetCredentialResponse) {
+        viewModelScope.launch {
+            when (val credential = result.credential) {
+                is CustomCredential -> {
+                    if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                        try {
+                            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                            checkUser(googleIdTokenCredential)
+                        } catch (e: GoogleIdTokenParsingException) {
+                            Log.e("LoginScreen", "Received an invalid google id token response", e)
+                            _errorFlow.emit(e)
+                        }
+                    } else {
+                        Log.e("LoginScreen", "Unexpected type of credential")
+                        _errorFlow.emit(Exception("Unexpected type of credential"))
                     }
-                } else {
-                    Log.e("LoginScreen", "Unexpected type of credential")
-                    setNewSnackBarMessage(errorMessage)
                 }
-            }
 
-            else -> {
-                Log.e("LoginScreen", "Unexpected type of credential")
-                setNewSnackBarMessage(errorMessage)
+                else -> {
+                    Log.e("LoginScreen", "Unexpected type of credential")
+                    _errorFlow.emit(Exception("Unexpected type of credential"))
+                }
             }
         }
     }
@@ -121,12 +119,6 @@ class LoginViewModel @Inject constructor(
         authRepository.storeUserKey(userKey)
         _loginUiState.update { currentState ->
             currentState.copy(isLoginSuccess = true)
-        }
-    }
-
-    fun setNewSnackBarMessage(message: Int?) {
-        _loginUiState.update { currentState ->
-            currentState.copy(snackBarMessage = message)
         }
     }
 

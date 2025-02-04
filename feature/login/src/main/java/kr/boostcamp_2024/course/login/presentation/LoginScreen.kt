@@ -79,16 +79,16 @@ internal fun LoginScreen(
         onLoginForExperienceButtonClick = viewModel::loginForExperience,
         handleSignIn = viewModel::handleSignIn,
         snackbarHostState = snackbarHostState,
-        setNewSnackBarMessage = viewModel::setNewSnackBarMessage,
+        onShowErrorSnackbar = onShowErrorSnackbar,
     )
 }
 
 @Composable
 private fun LoginScreen(
     onLoginForExperienceButtonClick: () -> Unit,
-    handleSignIn: (GetCredentialResponse, Int) -> Unit,
+    handleSignIn: (GetCredentialResponse) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    setNewSnackBarMessage: (Int?) -> Unit,
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -109,7 +109,7 @@ private fun LoginScreen(
             LoginButtons(
                 onLoginForExperienceButtonClick = onLoginForExperienceButtonClick,
                 handleSignIn = handleSignIn,
-                setNewSnackBarMessage = setNewSnackBarMessage,
+                onShowErrorSnackbar = onShowErrorSnackbar,
             )
         }
     }
@@ -151,8 +151,8 @@ private fun LoginGuideImageAndText() {
 @Composable
 private fun LoginButtons(
     onLoginForExperienceButtonClick: () -> Unit,
-    handleSignIn: (GetCredentialResponse, Int) -> Unit,
-    setNewSnackBarMessage: (Int?) -> Unit,
+    handleSignIn: (GetCredentialResponse) -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     val webClientId = stringResource(R.string.web_client_id)
     val context = LocalContext.current
@@ -183,13 +183,10 @@ private fun LoginButtons(
                     request = request,
                     context = context,
                 )
-                handleSignIn(
-                    result,
-                    R.string.error_login,
-                )
+                handleSignIn(result)
             } catch (e: Exception) {
                 Log.e("LoginScreen", "Error: ${e.message}")
-                setNewSnackBarMessage(R.string.error_login)
+                onShowErrorSnackbar(e)
             }
         }
     }
@@ -228,8 +225,8 @@ private fun LoginScreenPreview() {
     WeQuizTheme {
         LoginScreen(
             onLoginForExperienceButtonClick = {},
-            handleSignIn = { _, _ -> },
-            setNewSnackBarMessage = {},
+            handleSignIn = { _ -> },
+            onShowErrorSnackbar = {},
         )
     }
 }

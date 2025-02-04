@@ -28,7 +28,6 @@ data class MainUiState(
     val isLoading: Boolean = false,
     val currentUser: User? = null,
     val studyGroups: List<StudyGroup> = emptyList(),
-    val errorMessage: String? = null,
     val isLogout: Boolean = false,
     val notificationNumber: Int = 0,
     val isGuideShown: Boolean = true,
@@ -157,9 +156,5 @@ class MainViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
-    }
-
-    fun shownErrorMessage() {
-        _uiState.update { it.copy(errorMessage = null) }
     }
 }

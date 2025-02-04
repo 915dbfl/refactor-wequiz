@@ -23,7 +23,6 @@ data class CreateCategoryUiState(
     val categoryName: String = "",
     val categoryDescription: String = "",
     val creationSuccess: Boolean = false,
-    val errorMessage: String? = null,
     val currentImage: ByteArray? = null,
     val defaultImageUri: String? = null,
 ) {
@@ -120,12 +119,6 @@ class CreateCategoryViewModel @Inject constructor(
                 isLoading = false,
                 creationSuccess = true,
             )
-        }
-    }
-
-    fun setErrorMessage(message: String?) {
-        _createCategoryUiState.update { currentState ->
-            currentState.copy(errorMessage = message)
         }
     }
 

@@ -23,7 +23,6 @@ import javax.inject.Inject
 data class CategoryUiState(
     val category: Category? = null,
     val quizList: List<BaseQuiz>? = null,
-    val snackBarMessage: String? = null,
     val isDeleteCategorySuccess: Boolean = false,
 )
 
@@ -67,12 +66,6 @@ class CategoryViewModel @Inject constructor(
             } catch (e: Exception) {
                 _errorFlow.emit(e)
             }
-        }
-    }
-
-    fun setNewSnackBarMessage(message: String?) {
-        _categoryUiState.update {
-            it.copy(snackBarMessage = message)
         }
     }
 

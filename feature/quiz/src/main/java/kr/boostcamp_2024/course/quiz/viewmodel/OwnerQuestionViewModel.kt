@@ -25,7 +25,6 @@ data class RealTimeWithOwnerQuestionUiState(
     val ownerName: String? = null,
     val currentPage: Int = 0,
     val isLoading: Boolean = false,
-    val errorMessageId: Int? = null,
     val currentUserId: String? = null,
     val isQuizFinished: Boolean = false,
     val blankQuestionContents: List<Map<String, Any>?> = emptyList(),
@@ -102,14 +101,6 @@ class OwnerQuestionViewModel @Inject constructor(
                 _errorFlow.emit(e)
                 setLoadingState(false)
             }
-        }
-    }
-
-    fun showErrorMessage(errorMessageId: Int?) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                errorMessageId = errorMessageId,
-            )
         }
     }
 

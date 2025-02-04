@@ -165,7 +165,7 @@ class UserQuestionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updatePageAndSubmitByOwner() {
+    private fun updatePageAndSubmitByOwner() {
         viewModelScope.launch {
             quizRepository.observeRealTimeQuiz(quizId).collect { quiz ->
                 _uiState.update {

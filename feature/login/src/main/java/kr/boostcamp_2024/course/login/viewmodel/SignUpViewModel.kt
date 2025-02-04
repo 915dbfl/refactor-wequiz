@@ -35,7 +35,6 @@ data class SignUpUiState(
     val profileImageByteArray: ByteArray? = null,
     val isEditMode: Boolean = false,
     val isSubmitSuccess: Boolean = false,
-    val snackBarMessage: Int? = null,
 ) {
     val isSignUpButtonEnabled: Boolean = userSubmitInfo.email.isNotBlank() && userSubmitInfo.name.length in 1..20
 }
