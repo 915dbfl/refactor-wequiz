@@ -71,9 +71,9 @@ class CreateQuizViewModel @Inject constructor(
     private fun loadQuiz() {
         viewModelScope.launch {
             try {
-                setLoadingState(true)
-
                 quizId?.let {
+                    setLoadingState(true)
+
                     when (val quiz = quizRepository.getQuiz(it)) {
                         is Quiz -> {
                             _uiState.update { state ->
