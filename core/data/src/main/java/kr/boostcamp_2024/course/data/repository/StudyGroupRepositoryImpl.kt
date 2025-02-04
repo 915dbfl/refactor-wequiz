@@ -38,13 +38,12 @@ class StudyGroupRepositoryImpl @Inject constructor(
         return requireNotNull(response).toVO(studyGroupId)
     }
 
-    override suspend fun getStudyGroups(studyGroupIds: List<String>): List<StudyGroup> {
-        return studyGroupIds.map { studyGroupId ->
+    override suspend fun getStudyGroups(studyGroupIds: List<String>): List<StudyGroup> =
+        studyGroupIds.map { studyGroupId ->
             val document = studyGroupCollectionRef.document(studyGroupId).get().await()
             val response = document.toObject(StudyGroupDTO::class.java)
             requireNotNull(response).toVO(studyGroupId)
         }
-    }
 
     override suspend fun deleteUser(studyGroupId: String, userId: String) {
         val document = studyGroupCollectionRef.document(studyGroupId)

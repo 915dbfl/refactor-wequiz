@@ -22,8 +22,8 @@ class QuestionRepositoryImpl @Inject constructor(
 ) : QuestionRepository {
     private val questionCollectionRef = firestore.collection("Question")
 
-    override suspend fun getQuestions(questionIds: List<String>): List<Question> {
-        return questionIds.map { questionId ->
+    override suspend fun getQuestions(questionIds: List<String>): List<Question> =
+        questionIds.map { questionId ->
             val document = questionCollectionRef.document(questionId).get().await()
             val questionType = document.getString("type")?.toQuestionType()
             val response = when (questionType) {
@@ -33,7 +33,6 @@ class QuestionRepositoryImpl @Inject constructor(
             }
             requireNotNull(response).toVO(questionId)
         }
-    }
 
     override suspend fun getQuestion(questionId: String): Question {
         val document = questionCollectionRef.document(questionId).get().await()
@@ -68,11 +67,10 @@ class QuestionRepositoryImpl @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    override suspend fun getRealTimeQuestions(questionIds: List<String>): List<Flow<Question>> {
-        return questionIds.map { questionId ->
+    override suspend fun getRealTimeQuestions(questionIds: List<String>): List<Flow<Question>> =
+        questionIds.map { questionId ->
             observeQuestion(questionId)
         }
-    }
 
     override suspend fun createQuestion(choiceQuestionCreationInfo: ChoiceQuestionCreationInfo): String {
         val document = questionCollectionRef.add(choiceQuestionCreationInfo.toDTO()).await()

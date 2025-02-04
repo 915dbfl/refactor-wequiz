@@ -72,8 +72,8 @@ class QuizRepositoryImpl @Inject constructor(
         return requireNotNull(response)
     }
 
-    override suspend fun getQuizList(quizIdList: List<String>): List<BaseQuiz> {
-        return quizIdList.map { quizId ->
+    override suspend fun getQuizList(quizIdList: List<String>): List<BaseQuiz> =
+        quizIdList.map { quizId ->
             val document = quizCollectionRef.document(quizId).get().await()
             val quizType = document.get("type").toString()
             val response = when (getQuizTypeFromValue(quizType)) {
@@ -82,7 +82,6 @@ class QuizRepositoryImpl @Inject constructor(
             }
             requireNotNull(response)
         }
-    }
 
     override suspend fun addUserOmrToQuiz(quizId: String, userOmrId: String) {
         quizCollectionRef.document(quizId)

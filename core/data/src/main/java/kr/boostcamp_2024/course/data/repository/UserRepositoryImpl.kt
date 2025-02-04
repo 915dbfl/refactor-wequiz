@@ -39,13 +39,12 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getUsers(userIds: List<String>): List<User> {
-        return userIds.map { userId ->
+    override suspend fun getUsers(userIds: List<String>): List<User> =
+        userIds.map { userId ->
             val document = userCollectionRef.document(userId).get().await()
             val response = document.toObject(UserDTO::class.java)
             requireNotNull(response).toVO(userId)
         }
-    }
 
     override suspend fun deleteStudyGroupUser(userId: String, studyGroupId: String) {
         val document = userCollectionRef.document(userId)
