@@ -46,6 +46,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.quiz.R
@@ -71,23 +72,15 @@ internal fun CreateQuestionScreen(
         stringResource(R.string.txt_create_general_question),
         stringResource(R.string.txt_blank_question),
     )
-    LaunchedEffect(uiState) {
+
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    }
+
+    LaunchedEffect(uiState.creationSuccess) {
         if (uiState.creationSuccess) {
             onCreateQuestionSuccess()
         }
-        uiState.snackBarMessage?.let { message ->
-            onShowErrorSnackbar(Exception(message))
-            viewModel.setNewSnackBarMessage(null)
-        }
-    }
-    if (uiState.showDialog) {
-        QuizAiDialog(
-            onDismissButtonClick = { viewModel.closeDialog() },
-            onConfirmButtonClick = { category ->
-                viewModel.getAiRecommendedQuestion(category)
-                viewModel.closeDialog()
-            },
-        )
     }
 
     CreateQuestionScreen(
@@ -115,6 +108,16 @@ internal fun CreateQuestionScreen(
         onShowDialog = viewModel::showDialog,
         snackbarHostState = snackbarHostState,
     )
+
+    if (uiState.showDialog) {
+        QuizAiDialog(
+            onDismissButtonClick = { viewModel.closeDialog() },
+            onConfirmButtonClick = { category ->
+                viewModel.getAiRecommendedQuestion(category)
+                viewModel.closeDialog()
+            },
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
