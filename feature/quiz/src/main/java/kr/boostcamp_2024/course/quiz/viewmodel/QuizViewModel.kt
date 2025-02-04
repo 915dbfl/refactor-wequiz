@@ -76,7 +76,7 @@ class QuizViewModel @Inject constructor(
                 }
 
                 quizFlow.catch {
-                    _errorFlow.emit(it)
+                    if (it.message != "Quiz not found") _errorFlow.emit(it)
                 }.collect { quiz ->
                     _uiState.update { it.copy(quiz = quiz) }
                 }
@@ -147,7 +147,7 @@ class QuizViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "퀴즈 이미지 삭제에 실패하였습니다.",
+                        isDeleteQuizSuccess = true,
                     )
                 }
             } catch (e: Exception) {
