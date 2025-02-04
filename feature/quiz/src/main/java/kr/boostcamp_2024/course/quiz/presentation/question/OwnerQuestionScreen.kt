@@ -70,7 +70,9 @@ internal fun OwnerQuestionScreen(
     }
 
     LaunchedEffect(uiState.isQuizFinished) {
-        onQuizFinished(null, requireNotNull(uiState.quiz?.id))
+        if (uiState.isQuizFinished) {
+            onQuizFinished(null, requireNotNull(uiState.quiz?.id))
+        }
     }
 
     OwnerQuestionScreen(
