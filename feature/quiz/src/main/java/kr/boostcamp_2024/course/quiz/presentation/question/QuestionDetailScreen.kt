@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
@@ -52,19 +53,16 @@ internal fun QuestionDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    }
+
     QuestionDetailScreen(
         question = uiState.question,
         userAnswer = uiState.userAnswer,
         onNavigationButtonClick = onNavigationButtonClick,
         snackbarHostState = snackbarHostState,
     )
-
-    uiState.errorMessage?.let { message ->
-        LaunchedEffect(message) {
-            onShowErrorSnackbar(Exception(message))
-            viewModel.shownErrorMessage()
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
