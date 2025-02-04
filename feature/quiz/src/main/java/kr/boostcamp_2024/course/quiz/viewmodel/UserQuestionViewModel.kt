@@ -129,15 +129,17 @@ class UserQuestionViewModel @Inject constructor(
         val questionList = questionRepository.getRealTimeQuestions(questionIds)
 
         questionList.forEachIndexed { index, questionFlow ->
-            questionFlow.catch {
-                _errorFlow.emit(it)
-            }.collect { question ->
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        questions = currentState.questions.toMutableList().apply {
-                            this[index] = question
-                        },
-                    )
+            viewModelScope.launch {
+                questionFlow.catch {
+                    _errorFlow.emit(it)
+                }.collect { question ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            questions = currentState.questions.toMutableList().apply {
+                                this[index] = question
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -164,14 +166,16 @@ class UserQuestionViewModel @Inject constructor(
     }
 
     private suspend fun updatePageAndSubmitByOwner() {
-        quizRepository.observeRealTimeQuiz(quizId).collect { quiz ->
-            _uiState.update {
-                setNewBlankQuestionManager(quiz.currentQuestion)
-                it.copy(
-                    currentPage = quiz.currentQuestion,
-                    isSubmitted = false,
-                    isQuizFinished = quiz.isFinished,
-                )
+        viewModelScope.launch {
+            quizRepository.observeRealTimeQuiz(quizId).collect { quiz ->
+                _uiState.update {
+                    setNewBlankQuestionManager(quiz.currentQuestion)
+                    it.copy(
+                        currentPage = quiz.currentQuestion,
+                        isSubmitted = false,
+                        isQuizFinished = quiz.isFinished,
+                    )
+                }
             }
         }
     }
