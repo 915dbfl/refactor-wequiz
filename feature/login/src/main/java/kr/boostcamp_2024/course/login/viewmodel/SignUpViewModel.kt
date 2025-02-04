@@ -126,7 +126,7 @@ class SignUpViewModel @Inject constructor(
                     val userCreationInfo = UserSubmitInfo(
                         email = signUpUiState.value.userSubmitInfo.email,
                         name = signUpUiState.value.userSubmitInfo.name,
-                        profileImageUrl = downloadUrl,
+                        profileImageUrl = downloadUrl ?: signUpUiState.value.userSubmitInfo.profileImageUrl,
                     )
                     userRepository.updateUser(userId, userCreationInfo)
                     _signUpUiState.update {
@@ -180,12 +180,6 @@ class SignUpViewModel @Inject constructor(
     private fun setLoading(isLoading: Boolean) {
         _signUpUiState.update {
             it.copy(isLoading = isLoading)
-        }
-    }
-
-    fun setNewSnackBarMessage(message: Int?) {
-        _signUpUiState.update {
-            it.copy(snackBarMessage = message)
         }
     }
 }
