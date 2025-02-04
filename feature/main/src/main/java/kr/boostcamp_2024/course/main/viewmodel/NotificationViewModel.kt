@@ -93,7 +93,7 @@ class NotificationViewModel @Inject constructor(
 
                 userRepository.addStudyGroupToUser(notification.userId, notification.groupId)
                 deleteInvitation(notification.id)
-                studyGroupRepository.addUser(notification.userId, notification.groupId)
+                studyGroupRepository.addUser(notification.groupId, notification.userId)
 
                 _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
