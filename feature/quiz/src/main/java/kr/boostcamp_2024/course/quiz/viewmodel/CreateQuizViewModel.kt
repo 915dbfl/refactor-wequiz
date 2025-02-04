@@ -150,7 +150,6 @@ class CreateQuizViewModel @Inject constructor(
     }
 
     private suspend fun createGeneralQuiz() {
-        val userId = authRepository.getUserKey()
         val quizId = quizRepository.createQuiz(
             QuizCreationInfo(
                 quizTitle = uiState.value.quizTitle,
@@ -161,7 +160,7 @@ class CreateQuizViewModel @Inject constructor(
                     storageRepository.uploadImage(imageByteArray)
                 },
             ),
-            ownerId = userId,
+            ownerId = null,
         )
 
         categoryRepository.addQuizToCategory(categoryId, quizId)
