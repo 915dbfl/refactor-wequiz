@@ -30,6 +30,7 @@ internal fun Project.configureComposeAndroid() {
         implementation(libs.findLibrary("coil.network.okhttp").get())
         implementation(libs.findLibrary("coil").get())
         androidTestImplementation(libs.findLibrary("androidx.espresso.core").get())
+        androidTestImplementation(libs.findLibrary("androidx.ui.test.junit4").get())
         debugImplementation(libs.findLibrary("androidx.ui.test.manifest").get())
         debugImplementation(libs.findLibrary("androidx.ui.tooling").get())
     }
