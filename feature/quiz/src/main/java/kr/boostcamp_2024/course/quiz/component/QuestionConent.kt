@@ -65,7 +65,7 @@ internal fun QuizContent(
                 )
             }
 
-            null -> {
+            else -> {
                 // TODO 재시도 처리(?)
                 onShowErrorSnackbar(Exception("Question is null"))
             }
