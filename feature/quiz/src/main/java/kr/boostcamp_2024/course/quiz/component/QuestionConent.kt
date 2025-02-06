@@ -25,6 +25,7 @@ internal fun QuizContent(
     removeBlankContent: (Int) -> Unit,
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
+    onShowErrorSnackbar: (Throwable) -> Unit,
 ) {
     HorizontalPager(
         state = rememberPagerState(
@@ -65,7 +66,8 @@ internal fun QuizContent(
             }
 
             null -> {
-                // 재시도 처리
+                // TODO 재시도 처리(?)
+                onShowErrorSnackbar(Exception("Question is null"))
             }
         }
     }
@@ -98,6 +100,7 @@ private fun QuizContentPreview(
             removeBlankContent = { },
             addBlankContent = { },
             getBlankQuestionAnswer = { mapOf("1" to "1", "2" to "2", "3" to "3") },
+            onShowErrorSnackbar = {},
         )
     }
 

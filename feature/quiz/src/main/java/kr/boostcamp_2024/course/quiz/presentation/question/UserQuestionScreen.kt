@@ -76,6 +76,7 @@ internal fun UserQuestionScreen(
         addBlankContent = viewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = viewModel.blankQuestionManager::getAnswer,
         onExitButtonClick = viewModel::exitRealTimeQuiz,
+        onShowErrorSnackbar = onShowErrorSnackbar,
         snackbarHostState = snackbarHostState,
     )
 
@@ -116,6 +117,7 @@ private fun UserQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     onExitButtonClick: () -> Unit,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
@@ -176,6 +178,7 @@ private fun UserQuestionScreen(
                             removeBlankContent = removeBlankContent,
                             addBlankContent = addBlankContent,
                             getBlankQuestionAnswer = getBlankQuestionAnswer,
+                            onShowErrorSnackbar = onShowErrorSnackbar,
                         )
                     }
 
@@ -266,6 +269,7 @@ private fun UserQuestionScreenPreview(
             addBlankContent = {},
             getBlankQuestionAnswer = { emptyMap() },
             onExitButtonClick = {},
+            onShowErrorSnackbar = {},
         )
     }
 }

@@ -72,6 +72,7 @@ internal fun QuestionScreen(
                 addBlankContent = viewModel.blankQuestionManager::addBlankContent,
                 getBlankQuestionAnswer = viewModel.blankQuestionManager::getAnswer,
                 isLoading = uiState.isLoading,
+                onShowErrorSnackbar = onShowErrorSnackbar,
                 snackbarHostState = snackbarHostState,
             )
         }

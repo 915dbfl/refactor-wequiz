@@ -89,6 +89,7 @@ internal fun OwnerQuestionScreen(
         removeBlankWord = viewModel.blankQuestionManager::removeBlankContent,
         addBlankWord = viewModel.blankQuestionManager::addBlankContent,
         getBlankQuestionAnswer = viewModel.blankQuestionManager::getAnswer,
+        onShowErrorSnackbar = onShowErrorSnackbar,
         snackbarHostState = snackbarHostState,
     )
 }
@@ -108,6 +109,7 @@ private fun OwnerQuestionScreen(
     removeBlankWord: (Int) -> Unit,
     addBlankWord: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showQuitQuizDialog by rememberSaveable { mutableStateOf(false) }
@@ -172,6 +174,7 @@ private fun OwnerQuestionScreen(
                             removeBlankContent = removeBlankWord,
                             addBlankContent = addBlankWord,
                             getBlankQuestionAnswer = getBlankQuestionAnswer,
+                            onShowErrorSnackbar = onShowErrorSnackbar,
                         )
                     }
                     item {
@@ -283,6 +286,7 @@ private fun OwnerQuestionScreenPreview(
             removeBlankWord = {},
             addBlankWord = {},
             getBlankQuestionAnswer = { emptyMap() },
+            onShowErrorSnackbar = {},
         )
     }
 }

@@ -66,6 +66,7 @@ internal fun GeneralQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     isLoading: Boolean,
+    onShowErrorSnackbar: (Throwable) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -115,6 +116,7 @@ internal fun GeneralQuestionScreen(
                         removeBlankContent = removeBlankContent,
                         addBlankContent = addBlankContent,
                         getBlankQuestionAnswer = getBlankQuestionAnswer,
+                        onShowErrorSnackbar = onShowErrorSnackbar,
                     )
                 }
                 item {
@@ -280,6 +282,7 @@ private fun GeneralQuestionScreenPreview() {
             addBlankContent = {},
             getBlankQuestionAnswer = { emptyMap() },
             isLoading = false,
+            onShowErrorSnackbar = {},
         )
     }
 }
