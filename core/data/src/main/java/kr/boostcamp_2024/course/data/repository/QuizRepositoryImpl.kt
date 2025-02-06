@@ -180,11 +180,16 @@ class QuizRepositoryImpl @Inject constructor(
             if (error != null) {
                 close(error)
             }
+
             if (documentSnapshot?.exists() == true) {
-                val response = documentSnapshot.toObject(RealTimeQuizDTO::class.java)?.toVO(quizId)
-                trySend(requireNotNull(response))
+                try {
+                    val response = documentSnapshot.toObject(RealTimeQuizDTO::class.java)?.toVO(quizId)
+                    trySend(requireNotNull(response))
+                } catch (exception: Exception) {
+                    close(exception)
+                }
             } else {
-                throw Exception("문서가 존재하지 않습니다")
+                close(Exception("Quiz not found"))
             }
         }
         awaitClose {
