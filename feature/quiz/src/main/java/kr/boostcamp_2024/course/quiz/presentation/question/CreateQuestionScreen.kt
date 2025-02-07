@@ -53,7 +53,6 @@ import kr.boostcamp_2024.course.quiz.component.CreateBlankQuestionContent
 import kr.boostcamp_2024.course.quiz.component.CreateChoiceItems
 import kr.boostcamp_2024.course.quiz.component.CreateQuestionContent
 import kr.boostcamp_2024.course.quiz.component.QuizAiDialog
-import kr.boostcamp_2024.course.quiz.viewmodel.BlankQuestionItem
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionUiState
 import kr.boostcamp_2024.course.quiz.viewmodel.CreateQuestionViewModel
 
@@ -67,10 +66,7 @@ internal fun CreateQuestionScreen(
 ) {
     val uiState by viewModel.createQuestionUiState.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
-    val options = listOf(
-        stringResource(R.string.txt_create_general_question),
-        stringResource(R.string.txt_blank_question),
-    )
+
     LaunchedEffect(uiState) {
         if (uiState.creationSuccess) {
             onCreateQuestionSuccess()
@@ -92,7 +88,6 @@ internal fun CreateQuestionScreen(
 
     CreateQuestionScreen(
         uiState = uiState,
-        focusRequester = focusRequester,
         onTitleChanged = viewModel::onTitleChanged,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         onSolutionChanged = viewModel::onSolutionChanged,
@@ -100,28 +95,22 @@ internal fun CreateQuestionScreen(
         onChoiceTextChanged = viewModel::onChoiceTextChanged,
         onSelectedChoiceNumChanged = viewModel::onSelectedChoiceNumChanged,
         onCreateQuestionButtonClick = viewModel::createQuestion,
-        options = options,
         onQuestionTypeIndexChange = viewModel::onQuestionTypeIndexChange,
-        selectedQuestionTypeIndex = uiState.selectedQuestionTypeIndex,
-        isBlankQuestion = uiState.isBlankQuestion,
-        blankQuestionItems = uiState.items,
         onAddBlankItemButtonClick = viewModel::addBlankItem,
         onAddTextItemButtonClick = viewModel::addTextItem,
         onBlankQuestionItemValueChanged = viewModel::onBlankQuestionItemValueChanged,
         onContentRemove = viewModel::onContentRemove,
         onCreateBlankQuestionButtonClick = viewModel::onCreateBlankQuestion,
-        isCreateBlankButtonValid = uiState.isCreateBlankButtonValid,
-        isCreateTextButtonValid = uiState.isCreateTextButtonValid,
         onShowDialog = viewModel::showDialog,
+        focusRequester = focusRequester,
         snackbarHostState = snackbarHostState,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateQuestionScreen(
+internal fun CreateQuestionScreen(
     uiState: CreateQuestionUiState,
-    focusRequester: FocusRequester,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSolutionChanged: (String) -> Unit,
@@ -130,21 +119,20 @@ private fun CreateQuestionScreen(
     onSelectedChoiceNumChanged: (Int) -> Unit,
     onCreateQuestionButtonClick: () -> Unit,
     onQuestionTypeIndexChange: (Int) -> Unit,
-    selectedQuestionTypeIndex: Int,
-    options: List<String>,
-    isBlankQuestion: Boolean,
-    blankQuestionItems: List<BlankQuestionItem>,
     onAddBlankItemButtonClick: () -> Unit,
     onAddTextItemButtonClick: () -> Unit,
     onBlankQuestionItemValueChanged: (String, Int) -> Unit,
     onContentRemove: (Int) -> Unit,
     onCreateBlankQuestionButtonClick: () -> Unit,
-    isCreateBlankButtonValid: Boolean,
-    isCreateTextButtonValid: Boolean,
     onShowDialog: () -> Unit,
+    focusRequester: FocusRequester = remember { FocusRequester() },
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val focusManager = LocalFocusManager.current
+    val options = listOf(
+        stringResource(R.string.txt_create_general_question),
+        stringResource(R.string.txt_blank_question),
+    )
 
     Scaffold(
         topBar = {
@@ -197,7 +185,7 @@ private fun CreateQuestionScreen(
                                 onClick = {
                                     onQuestionTypeIndexChange(index)
                                 },
-                                selected = index == selectedQuestionTypeIndex,
+                                selected = index == uiState.selectedQuestionTypeIndex,
                             ) {
                                 Text(
                                     text = label,
@@ -219,11 +207,11 @@ private fun CreateQuestionScreen(
                         onTitleChanged = onTitleChanged,
                         onDescriptionChanged = onDescriptionChanged,
                         onSolutionChanged = onSolutionChanged,
-                        isBlankQuestion = isBlankQuestion,
+                        isBlankQuestion = uiState.isBlankQuestion,
                     )
                 }
 
-                if (!isBlankQuestion) {
+                if (!uiState.isBlankQuestion) {
                     item {
                         CreateChoiceItems(
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -235,20 +223,20 @@ private fun CreateQuestionScreen(
                         )
                     }
                 }
-                if (isBlankQuestion) {
+                if (uiState.isBlankQuestion) {
                     item {
                         CreateBlankQuestionContent(
-                            blankQuestionItems,
+                            uiState.items,
                             onContentRemove,
                             onBlankQuestionItemValueChanged,
                             onAddTextItemButtonClick,
-                            isCreateTextButtonValid,
+                            uiState.isCreateTextButtonValid,
                             onAddBlankItemButtonClick,
-                            isCreateBlankButtonValid,
+                            uiState.isCreateBlankButtonValid,
                         )
                     }
                 }
-                if (!isBlankQuestion) {
+                if (!uiState.isBlankQuestion) {
                     item {
                         Button(
                             modifier = Modifier
@@ -288,7 +276,7 @@ private fun CreateQuestionScreen(
             if (uiState.isLoading) {
                 AiLoadingIndicator()
             }
-            if (!isBlankQuestion) {
+            if (!uiState.isBlankQuestion) {
                 FloatingActionButton(
                     onClick = { onShowDialog() },
                     modifier = Modifier
@@ -318,15 +306,10 @@ private fun CreateQuestionScreenPreview() {
         creationSuccess = false,
         selectedQuestionTypeIndex = 0,
     )
-    val previewOption = listOf(
-        stringResource(R.string.txt_create_general_question),
-        stringResource(R.string.txt_blank_question),
-    )
 
     WeQuizTheme {
         CreateQuestionScreen(
             uiState = previewCreateQuestionUiState,
-            focusRequester = remember { FocusRequester() },
             onTitleChanged = {},
             onDescriptionChanged = {},
             onSolutionChanged = {},
@@ -335,17 +318,11 @@ private fun CreateQuestionScreenPreview() {
             onSelectedChoiceNumChanged = {},
             onCreateQuestionButtonClick = {},
             onQuestionTypeIndexChange = {},
-            selectedQuestionTypeIndex = 0,
-            options = previewOption,
-            isBlankQuestion = false,
-            blankQuestionItems = listOf(),
             onAddBlankItemButtonClick = {},
             onAddTextItemButtonClick = {},
             onBlankQuestionItemValueChanged = { _, _ -> },
             onContentRemove = {},
             onCreateBlankQuestionButtonClick = {},
-            isCreateBlankButtonValid = true,
-            isCreateTextButtonValid = true,
             onShowDialog = {},
         )
     }
