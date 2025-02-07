@@ -31,6 +31,7 @@ sealed class BlankQuestionItem {
 
 data class CreateQuestionUiState(
     val isLoading: Boolean = false,
+    val isAiLoading: Boolean = false,
     val showDialog: Boolean = false,
     val choiceQuestionCreationInfo: ChoiceQuestionCreationInfo = ChoiceQuestionCreationInfo(
         title = "",
@@ -200,7 +201,7 @@ class CreateQuestionViewModel @Inject constructor(
     }
 
     fun getAiRecommendedQuestion(category: String) {
-        setLoadingState(true)
+        _createQuestionUiState.update { it.copy(isAiLoading = true) }
         viewModelScope.launch {
             aiRepository.getAiQuestion(category).onSuccess {
                 val choiceCreationInfo = if (it.choices.size != 4) {
@@ -223,13 +224,9 @@ class CreateQuestionViewModel @Inject constructor(
                 setAiRecommendedQuestion(
                     choiceCreationInfo,
                 )
-                _createQuestionUiState.update { currentState ->
-                    currentState.copy(
-                        isLoading = false,
-                    )
-                }
+                _createQuestionUiState.update { it.copy(isAiLoading = false) }
             }.onFailure {
-                _createQuestionUiState.update { it.copy(isLoading = false) }
+                _createQuestionUiState.update { it.copy(isAiLoading = false) }
                 setNewSnackBarMessage("AI 추천 문제 가져오기에 실패했습니다. 다시 시도해주세요!")
                 Log.e("CreateQuestionViewModel", "AI 추천 문제 가져오기 실패")
             }

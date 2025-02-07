@@ -48,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.CreateBlankQuestionContent
 import kr.boostcamp_2024.course.quiz.component.CreateChoiceItems
@@ -274,11 +275,14 @@ internal fun CreateQuestionScreen(
                 }
             }
             if (uiState.isLoading) {
+                WeQuizCircularProgressIndicator()
+            }
+            if (uiState.isAiLoading) {
                 AiLoadingIndicator()
             }
             if (!uiState.isBlankQuestion) {
                 FloatingActionButton(
-                    onClick = { onShowDialog() },
+                    onClick = { if (!uiState.isAiLoading) onShowDialog() },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .size(80.dp)
