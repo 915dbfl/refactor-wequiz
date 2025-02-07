@@ -172,7 +172,7 @@ class QuestionViewModel @Inject constructor(
         _uiState.value.countDownTime?.let { defaultCountDownTime ->
             viewModelScope.launch {
                 var currentCountDownTime: Int = defaultCountDownTime
-                while (currentCountDownTime > 1) {
+                while (currentCountDownTime > 0) {
                     delay(1000L)
                     _uiState.update { currentState ->
                         currentState.copy(countDownTime = --currentCountDownTime)
