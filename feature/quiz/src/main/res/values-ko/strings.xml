@@ -118,6 +118,7 @@
     <string name="des_blank_item">%s 빈칸 요소</string>
     <string name="des_text_item">%s 텍스트 요소</string>
     <string name="des_ai_loading">ai 로딩</string>
+    <string name="des_choice_item">객관식 요소</string>
     <!-- error  -->
     <string name="err_load_quiz">퀴즈 로드에 실패했습니다.</string>
     <string name="err_update_current_question">퀴즈 문제 현황 업데이트에 실패했습니다.</string>
