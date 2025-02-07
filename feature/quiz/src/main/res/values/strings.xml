@@ -129,4 +129,5 @@
     <string name="txt_question_solution_error_message">Please enter 200 characters or less.</string>
     <string name="des_blank_item">%s blank item</string>
     <string name="des_text_item">%s text item</string>
+    <string name="des_ai_loading">ai loading</string>
 </resources>
