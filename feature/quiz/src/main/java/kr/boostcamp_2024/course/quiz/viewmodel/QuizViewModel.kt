@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.Category
+import kr.boostcamp_2024.course.domain.model.QuizNotFoundException
 import kr.boostcamp_2024.course.domain.repository.AuthRepository
 import kr.boostcamp_2024.course.domain.repository.CategoryRepository
 import kr.boostcamp_2024.course.domain.repository.QuestionRepository
@@ -75,7 +76,7 @@ class QuizViewModel @Inject constructor(
                 }
 
                 quizFlow.catch {
-                    if (it.message != "Quiz not found") _errorFlow.emit(it)
+                    if (it !is QuizNotFoundException) _errorFlow.emit(it)
                 }.collect { quiz ->
                     _uiState.update { it.copy(quiz = quiz) }
                 }

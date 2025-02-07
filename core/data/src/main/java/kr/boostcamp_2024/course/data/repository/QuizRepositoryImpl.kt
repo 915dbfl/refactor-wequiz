@@ -13,6 +13,7 @@ import kr.boostcamp_2024.course.domain.enum.QuizType.General
 import kr.boostcamp_2024.course.domain.enum.QuizType.RealTime
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.QuizCreationInfo
+import kr.boostcamp_2024.course.domain.model.QuizNotFoundException
 import kr.boostcamp_2024.course.domain.model.RealTimeQuiz
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import javax.inject.Inject
@@ -166,7 +167,7 @@ class QuizRepositoryImpl @Inject constructor(
                         close(exception)
                     }
                 } else {
-                    close(Exception("Quiz not found"))
+                    close(QuizNotFoundException())
                 }
             }
         awaitClose {
@@ -189,7 +190,7 @@ class QuizRepositoryImpl @Inject constructor(
                     close(exception)
                 }
             } else {
-                close(Exception("Quiz not found"))
+                close(QuizNotFoundException())
             }
         }
         awaitClose {
