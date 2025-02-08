@@ -212,8 +212,8 @@ internal fun CreateQuestionScreen(
                     )
                 }
 
-                if (!uiState.isBlankQuestion) {
-                    item {
+                item {
+                    if (!uiState.isBlankQuestion) {
                         CreateChoiceItems(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             focusManager = focusManager,
@@ -222,10 +222,7 @@ internal fun CreateQuestionScreen(
                             updateChoiceText = onChoiceTextChanged,
                             updateSelectedChoiceNum = onSelectedChoiceNumChanged,
                         )
-                    }
-                }
-                if (uiState.isBlankQuestion) {
-                    item {
+                    } else {
                         CreateBlankQuestionContent(
                             uiState.items,
                             onContentRemove,
@@ -237,43 +234,42 @@ internal fun CreateQuestionScreen(
                         )
                     }
                 }
-                if (!uiState.isBlankQuestion) {
-                    item {
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            enabled = uiState.isCreateQuestionValid && !uiState.isLoading,
-                            onClick = onCreateQuestionButtonClick,
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.btn_create_question),
-                            )
-                        }
-                    }
-                } else {
-                    item {
+
+                item {
+                    if (uiState.isBlankQuestion) {
                         HorizontalDivider(
                             modifier = Modifier.padding(
                                 horizontal = 16.dp,
                                 vertical = 10.dp,
                             ),
                         )
+                    }
 
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            enabled = uiState.isCreateBlankQuestionValid && !uiState.isLoading,
-                            onClick = onCreateBlankQuestionButtonClick,
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.btn_create_question),
-                            )
-                        }
+                    val createButtonEnabled = if (uiState.isBlankQuestion) {
+                        uiState.isCreateBlankQuestionValid && !uiState.isLoading
+                    } else {
+                        uiState.isCreateQuestionValid && !uiState.isLoading
+                    }
+                    val onCreateButtonClick = if (uiState.isBlankQuestion) {
+                        onCreateBlankQuestionButtonClick
+                    } else {
+                        onCreateQuestionButtonClick
+                    }
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        enabled = createButtonEnabled,
+                        onClick = onCreateButtonClick,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.btn_create_question),
+                        )
                     }
                 }
             }
+
             if (uiState.isLoading) {
                 WeQuizCircularProgressIndicator()
             }
@@ -303,13 +299,7 @@ internal fun CreateQuestionScreen(
 @PreviewKoLightDark
 @Composable
 private fun CreateQuestionScreenPreview() {
-    val previewCreateQuestionUiState = CreateQuestionUiState(
-        isLoading = false,
-        showDialog = false,
-        snackBarMessage = null,
-        creationSuccess = false,
-        selectedQuestionTypeIndex = 0,
-    )
+    val previewCreateQuestionUiState = CreateQuestionUiState()
 
     WeQuizTheme {
         CreateQuestionScreen(
