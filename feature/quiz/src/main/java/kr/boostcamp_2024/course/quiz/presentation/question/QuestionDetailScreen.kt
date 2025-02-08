@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
+import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
@@ -57,6 +58,10 @@ internal fun QuestionDetailScreen(
         onNavigationButtonClick = onNavigationButtonClick,
         snackbarHostState = snackbarHostState,
     )
+
+    if (uiState.isLoading) {
+        WeQuizCircularProgressIndicator()
+    }
 
     uiState.errorMessage?.let { message ->
         LaunchedEffect(message) {
