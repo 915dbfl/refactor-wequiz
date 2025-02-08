@@ -54,7 +54,6 @@ internal fun QuestionDetailScreen(
 
     QuestionDetailScreen(
         question = uiState.question,
-        userAnswer = uiState.userAnswer,
         onNavigationButtonClick = onNavigationButtonClick,
         snackbarHostState = snackbarHostState,
     )
@@ -69,9 +68,8 @@ internal fun QuestionDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun QuestionDetailScreen(
+internal fun QuestionDetailScreen(
     question: Question?,
-    userAnswer: List<Int>,
     onNavigationButtonClick: () -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -131,7 +129,7 @@ private fun QuestionDetailScreen(
                 QuizStatisticsDialog(
                     onConfirmButtonClick = { showDialog = false },
                     onDismissRequest = { showDialog = false },
-                    userAnswer = userAnswer,
+                    userAnswer = (question as ChoiceQuestion).userAnswers,
                 )
             }
         }
@@ -147,7 +145,6 @@ private fun QuestionDetailScreenPreview(
         QuestionDetailScreen(
             onNavigationButtonClick = {},
             question = question,
-            userAnswer = listOf(0, 0, 0, 0),
         )
     }
 }
