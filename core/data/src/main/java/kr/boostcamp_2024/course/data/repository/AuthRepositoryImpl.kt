@@ -12,23 +12,20 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val weQuizDataStore: DataStore<Preferences>,
 ) : AuthRepository {
-    override suspend fun storeUserKey(userKey: String): Result<Unit> {
-        return runCatching {
-            weQuizDataStore.edit { settings ->
-                settings[USER_KEY] = userKey
-            }
+    override suspend fun storeUserKey(userKey: String) {
+        weQuizDataStore.edit { settings ->
+            settings[USER_KEY] = userKey
         }
     }
 
-    override suspend fun getUserKey(): Result<String> =
-        runCatching {
-            val userKey = weQuizDataStore.data.map { preferences ->
-                preferences[USER_KEY] ?: throw IllegalStateException("User key is not stored")
-            }.firstOrNull()
-            requireNotNull(userKey)
-        }
+    override suspend fun getUserKey(): String {
+        val userKey = weQuizDataStore.data.map { preferences ->
+            preferences[USER_KEY] ?: throw IllegalStateException("User key is not stored")
+        }.firstOrNull()
+        return requireNotNull(userKey)
+    }
 
-    override suspend fun removeUserKey(): Result<Unit> = runCatching {
+    override suspend fun removeUserKey() {
         weQuizDataStore.edit { setting ->
             setting.remove(USER_KEY)
         }
