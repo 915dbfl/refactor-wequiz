@@ -113,7 +113,9 @@ class CreateQuestionScreenTest {
             selectedQuestionTypeIndex = generalQuestionIndex,
         )
         setCreateQuestionScreen(newCreateQuestionUiState)
-
+        // 문제 생성 버튼이 보일 때까지 스크롤
+        scrollUntilCreateQuestionButtonVisible()
+        // 객관식 문항이 4개 생성되었는지 확인
         composeTestRule.onAllNodesWithContentDescription(
             context.resources.getString(R.string.des_choice_item),
         ).assertCountEquals(4)
@@ -129,7 +131,7 @@ class CreateQuestionScreenTest {
             ),
         )
         setCreateQuestionScreen(newCreateQuestionUiState)
-        // 문제 생성 버튼이 보일 떄까지 스크롤
+        // 문제 생성 버튼이 보일 때까지 스크롤
         scrollUntilCreateQuestionButtonVisible()
         // 문제 생성 버튼이 비활성화 되어있는지 확인
         assertCreateQuestionButtonEnableValue(false)
@@ -146,7 +148,7 @@ class CreateQuestionScreenTest {
         )
 
         setCreateQuestionScreen(newCreateQuestionUiState)
-        // 문제 생성 버튼이 보일 떄까지 스크롤
+        // 문제 생성 버튼이 보일 때까지 스크롤
         scrollUntilCreateQuestionButtonVisible()
         // 문제 생성 버튼이 비활성화 되어있는지 확인
         assertCreateQuestionButtonEnableValue(false)
@@ -163,7 +165,7 @@ class CreateQuestionScreenTest {
         )
 
         setCreateQuestionScreen(newCreateQuestionUiState)
-        // 문제 생성 버튼이 보일 떄까지 스크롤
+        // 문제 생성 버튼이 보일 때까지 스크롤
         scrollUntilCreateQuestionButtonVisible()
         // 문제 생성 버튼이 비활성화 되어있는지 확인
         assertCreateQuestionButtonEnableValue(false)
@@ -180,7 +182,7 @@ class CreateQuestionScreenTest {
         )
 
         setCreateQuestionScreen(newCreateQuestionUiState)
-        // 문제 생성 버튼이 보일 떄까지 스크롤
+        // 문제 생성 버튼이 보일 때까지 스크롤
         scrollUntilCreateQuestionButtonVisible()
         // 문제 생성 버튼이 비활성화 되어있는지 확인
         assertCreateQuestionButtonEnableValue(false)
@@ -194,7 +196,6 @@ class CreateQuestionScreenTest {
             selectedQuestionTypeIndex = blankQuestionIndex,
         )
         setCreateQuestionScreen(newCreateQuestionUiState)
-
         composeTestRule.onNode(
             hasText(context.resources.getString(R.string.btn_create_text)),
         ).assertExists()
@@ -234,8 +235,11 @@ class CreateQuestionScreenTest {
         )
 
         setCreateQuestionScreen(newCreateQuestionUiState)
-
+        // blank 요소 생성 버튼이 보일 때까지 스크롤
         val buttonText = context.resources.getString(R.string.btn_create_blank)
+        composeTestRule.onNode(hasScrollAction())
+            .performScrollToNode(hasText(buttonText))
+        // blank 요소 생성 버튼이 비활성화 되어있는지 확인
         composeTestRule.onNodeWithText(buttonText).assertIsNotEnabled()
     }
 
@@ -257,6 +261,10 @@ class CreateQuestionScreenTest {
         setCreateQuestionScreen(newCreateQuestionUiState)
 
         val buttonText = context.resources.getString(R.string.btn_create_text)
+        // text 요소 생성 버튼이 보일 때까지 스크롤
+        composeTestRule.onNode(hasScrollAction())
+            .performScrollToNode(hasText(buttonText))
+        // text 요소 생성 버튼이 비활성화 되어있는지 확인
         composeTestRule.onNodeWithText(buttonText).assertIsNotEnabled()
     }
 
@@ -314,7 +322,12 @@ class CreateQuestionScreenTest {
             ),
         )
         setCreateQuestionScreen(newCreateQuestionUiState)
+        // text 요소 생성 버튼이 보일 때까지 스크롤
+        val buttonText = context.resources.getString(R.string.btn_create_text)
+        composeTestRule.onNode(hasScrollAction())
+            .performScrollToNode(hasText(buttonText))
 
+        // text 및 blank 아이템들 확인
         textItemsTextList.forEach { textItemText ->
             val textItemContentDes = context.resources.getString(R.string.des_text_item, textItemText)
             composeTestRule.onNodeWithContentDescription(textItemContentDes)
