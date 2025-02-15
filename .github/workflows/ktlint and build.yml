@@ -82,6 +82,38 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Gradle Caching
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Decode Google Services JSON
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+      - name: Configure local.properties
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          POST_URL: ${{ secrets.POST_URL }}
+          X_NCP_CLOVASTUDIO_API_KEY: ${{ secrets.X_NCP_CLOVASTUDIO_API_KEY }}
+          X_NCP_APIGW_API_KEY: ${{ secrets.X_NCP_APIGW_API_KEY }}
+          X_NCP_CLOVASTUDIO_REQUEST_ID: ${{ secrets.X_NCP_CLOVASTUDIO_REQUEST_ID }}
+
+        run: |
+          echo "base_url=${BASE_URL}" >> local.properties
+          echo "post_url=${POST_URL}" >> local.properties
+          echo "X-NCP-CLOVASTUDIO-API-KEY=${X_NCP_CLOVASTUDIO_API_KEY}" >> local.properties
+          echo "X-NCP-APIGW-API-KEY=${X_NCP_APIGW_API_KEY}" >> local.properties
+          echo "X-NCP-CLOVASTUDIO-REQUEST-ID=${X_NCP_CLOVASTUDIO_REQUEST_ID}" >> local.properties
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
