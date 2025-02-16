@@ -48,8 +48,10 @@ class LoginViewModel @Inject constructor(
 
     fun loginForExperience() {
         viewModelScope.launch {
-            val defaultUserKey = "M2PzD8bxVaDAwNrLhr6E"
-            saveUserKey(defaultUserKey)
+            authRepository.loginExperience()
+            _loginUiState.update { currentState ->
+                currentState.copy(isLoginSuccess = true)
+            }
         }
     }
 
@@ -97,7 +99,10 @@ class LoginViewModel @Inject constructor(
             try {
                 val user = userRepository.findUserByEmail(googleIdTokenCredential.id)
                 // 이미 회원가입된 유저
-                saveUserKey(user.id)
+                authRepository.login(googleIdTokenCredential.idToken)
+                _loginUiState.update { currentState ->
+                    currentState.copy(isLoginSuccess = true)
+                }
             } catch (e: Exception) {
                 // 회원 가입 필요
                 _loginUiState.update { currentState ->
@@ -112,13 +117,6 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    private suspend fun saveUserKey(userKey: String) {
-        authRepository.storeUserKey(userKey)
-        _loginUiState.update { currentState ->
-            currentState.copy(isLoginSuccess = true)
         }
     }
 

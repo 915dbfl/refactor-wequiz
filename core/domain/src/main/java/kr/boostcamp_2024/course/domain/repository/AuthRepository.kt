@@ -1,9 +1,12 @@
 package kr.boostcamp_2024.course.domain.repository
 
 interface AuthRepository {
-    suspend fun storeUserKey(userKey: String)
+    suspend fun login(idToken: String)
 
-    suspend fun getUserKey(): String
+    suspend fun loginExperience()
 
-    suspend fun removeUserKey()
+    fun getUserKey(): String
+
+    fun logout()
+
 }
