@@ -18,9 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.signInWithEmailAndPassword("wequiz1206@gmail.com", "wequiz1206@gmail.com").await()
     }
 
-    override fun getUserKey(): String {
-        return firebaseAuth.uid ?: throw Exception("User key not found")
-    }
+    override fun getUserKey() = firebaseAuth.uid ?: throw Exception("User key not found")
 
     override fun logout() {
         firebaseAuth.signOut()
