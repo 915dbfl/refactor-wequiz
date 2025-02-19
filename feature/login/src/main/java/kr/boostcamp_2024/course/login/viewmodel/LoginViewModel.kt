@@ -97,7 +97,7 @@ class LoginViewModel @Inject constructor(
     private fun checkUser(googleIdTokenCredential: GoogleIdTokenCredential) {
         viewModelScope.launch {
             try {
-                val user = userRepository.findUserByEmail(googleIdTokenCredential.id)
+                userRepository.findUserByEmail(googleIdTokenCredential.id)
                 // 이미 회원가입된 유저
                 authRepository.login(googleIdTokenCredential.idToken)
                 _loginUiState.update { currentState ->
