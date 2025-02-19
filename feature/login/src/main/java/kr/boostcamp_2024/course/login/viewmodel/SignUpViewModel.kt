@@ -71,8 +71,8 @@ class SignUpViewModel @Inject constructor(
             it.copy(
                 userSubmitInfo = UserSubmitInfo(
                     email = requireNotNull(userUiModel?.email),
-                    name = requireNotNull(userUiModel.name),
-                    profileImageUrl = userUiModel.profileImageUrl,
+                    name = requireNotNull(userUiModel?.name),
+                    profileImageUrl = userUiModel?.profileImageUrl,
                 ),
             )
         }
@@ -151,7 +151,7 @@ class SignUpViewModel @Inject constructor(
                 val userCreationInfo = UserSubmitInfo(
                     email = signUpUiState.value.userSubmitInfo.email,
                     name = signUpUiState.value.userSubmitInfo.name,
-                    profileImageUrl = downloadUrl,
+                    profileImageUrl = downloadUrl ?: signUpUiState.value.userSubmitInfo.profileImageUrl,
                 )
                 userRepository.addUser(authRepository.getUserKey(), userCreationInfo)
 
