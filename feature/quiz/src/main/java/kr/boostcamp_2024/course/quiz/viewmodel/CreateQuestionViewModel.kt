@@ -32,6 +32,7 @@ sealed class BlankQuestionItem {
 
 data class CreateQuestionUiState(
     val isLoading: Boolean = false,
+    val isAiLoading: Boolean = false,
     val showDialog: Boolean = false,
     val choiceQuestionCreationInfo: ChoiceQuestionCreationInfo = ChoiceQuestionCreationInfo(
         title = "",
@@ -188,7 +189,7 @@ class CreateQuestionViewModel @Inject constructor(
     fun getAiRecommendedQuestion(category: String) {
         viewModelScope.launch {
             try {
-                setLoadingState(true)
+                _createQuestionUiState.update { it.copy(isAiLoading = true) }
 
                 val aiQuestion = aiRepository.getAiQuestion(category)
                 val choiceCreationInfo = if (aiQuestion.choices.size != 4) {
@@ -210,11 +211,12 @@ class CreateQuestionViewModel @Inject constructor(
                 }
                 _createQuestionUiState.update { currentState ->
                     currentState.copy(
-                        isLoading = false,
+                        isAiLoading = false,
                         choiceQuestionCreationInfo = choiceCreationInfo,
                     )
                 }
             } catch (e: Exception) {
+                _createQuestionUiState.update { it.copy(isAiLoading = false) }
                 _errorFlow.emit(e)
                 setLoadingState(false)
             }
