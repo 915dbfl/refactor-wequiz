@@ -73,9 +73,9 @@ class CreateStudyViewModel @Inject constructor(
     private fun loadStudyGroup() {
         viewModelScope.launch {
             try {
-                _uiState.update { it.copy(isLoading = true) }
-
                 studyGroupId?.let {
+                    _uiState.update { it.copy(isLoading = true) }
+
                     val studyGroup = studyGroupRepository.getStudyGroup(it)
                     _uiState.update {
                         it.copy(

@@ -145,28 +145,26 @@ class SignUpViewModel @Inject constructor(
     fun signUp() {
         viewModelScope.launch {
             try {
+                authRepository.login(requireNotNull(userUiModel?.id))
+
                 val downloadUrl = uploadImage(_signUpUiState.value.profileImageByteArray)
                 val userCreationInfo = UserSubmitInfo(
                     email = signUpUiState.value.userSubmitInfo.email,
                     name = signUpUiState.value.userSubmitInfo.name,
-                    profileImageUrl = downloadUrl,
+                    profileImageUrl = downloadUrl ?: signUpUiState.value.userSubmitInfo.profileImageUrl,
                 )
-                userRepository.addUser(requireNotNull(userUiModel?.id), userCreationInfo)
-                saveUserKey(requireNotNull(userUiModel?.id))
+                userRepository.addUser(authRepository.getUserKey(), userCreationInfo)
+
+                _signUpUiState.update {
+                    it.copy(
+                        isSubmitSuccess = true,
+                        isLoading = false,
+                    )
+                }
             } catch (e: Exception) {
                 _errorFlow.emit(e)
                 setLoading(true)
             }
-        }
-    }
-
-    private suspend fun saveUserKey(userKey: String) {
-        authRepository.storeUserKey(userKey)
-        _signUpUiState.update {
-            it.copy(
-                isSubmitSuccess = true,
-                isLoading = false,
-            )
         }
     }
 

@@ -149,7 +149,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
-                authRepository.removeUserKey()
+                authRepository.logout()
                 _uiState.update { it.copy(isLoading = false, isLogout = true) }
             } catch (e: Exception) {
                 _errorFlow.emit(e)
