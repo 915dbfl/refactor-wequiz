@@ -1,18 +1,17 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.BlankQuestionManager
@@ -23,6 +22,7 @@ import kr.boostcamp_2024.course.domain.repository.AuthRepository
 import kr.boostcamp_2024.course.domain.repository.QuestionRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import kr.boostcamp_2024.course.domain.repository.UserOmrRepository
+import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.navigation.QuestionRoute
 import javax.inject.Inject
 
@@ -47,14 +47,11 @@ class QuestionViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
     private val userOmrRepository: UserOmrRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val quizId = savedStateHandle.toRoute<QuestionRoute>().quizId
 
     private val _uiState: MutableStateFlow<QuestionUiState> = MutableStateFlow(QuestionUiState())
     val uiState: StateFlow<QuestionUiState> = _uiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     val blankQuestionManager = BlankQuestionManager(::setNewBlankContents)
 
@@ -81,7 +78,9 @@ class QuestionViewModel @Inject constructor(
                 loadQuestions(quiz.questions)
                 updateTimer()
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuestionViewModel", "initial: ${e.message}", e)
+                val messageId = R.string.err_load_quiz
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -215,7 +214,9 @@ class QuestionViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuestionViewModel", "submitAnswers: ${e.message}", e)
+                val messageId = R.string.err_submit_response
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

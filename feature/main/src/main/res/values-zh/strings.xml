@@ -29,6 +29,13 @@
         <item>参与小组</item>
         <item>档案</item>
     </string-array>
+    <!--  error  -->
+    <string name="error_load_notification">加载通知失败。</string>
+    <string name="error_reject_invitation">未能拒绝邀请。</string>
+    <string name="error_accept_invitation">接受邀请失败。</string>
+    <string name="error_delete_study_group">未能删除研究小组。</string>
+    <string name="error_leave_from_group">退出学习小组失败。</string>
+    <string name="error_logout">注销失败。</string>
     <!-- guideUrl -->
     <string name="guide_url">https://trite-ice-00b.notion.site/WeQuiz-1505bfe2c24f80b1ae39dc15026da991?pvs=4</string>
 </resources>

@@ -29,11 +29,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
+import kr.boostcamp_2024.course.domain.WeQuizException
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.Quiz
@@ -51,13 +55,16 @@ internal fun QuizScreen(
     onSettingMenuClick: (String, String) -> Unit,
     onQuizDeleteSuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
     viewModel: QuizViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val localLifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    LaunchedEffect(viewModel.errorFlow, localLifecycleOwner) {
+        localLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collectLatest { exception -> onShowErrorSnackbar(exception) }
+        }
     }
 
     LaunchedEffect(uiState.isDeleteQuizSuccess) {

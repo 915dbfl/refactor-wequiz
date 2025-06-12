@@ -35,6 +35,7 @@
     <string name="error_sign_up">注册会员失败。</string>
     <string name="error_photo_picker">加载照片失败。</string>
     <string name="error_upload_image">上传照片失败。</string>
+    <string name="error_update_user">未能更新用户信息。</string>
     <!-- Web Client ID -->
     <string name="web_client_id">735245765717-mdpc20cc8rs37lmfh8qfnqn0h814ldf2.apps.googleusercontent.com</string>
 </resources>

@@ -1,18 +1,17 @@
 package kr.boostcamp_2024.course.study.viewmodel
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.StudyGroup
 import kr.boostcamp_2024.course.domain.model.User
@@ -25,6 +24,7 @@ import kr.boostcamp_2024.course.domain.repository.StorageRepository
 import kr.boostcamp_2024.course.domain.repository.StudyGroupRepository
 import kr.boostcamp_2024.course.domain.repository.UserOmrRepository
 import kr.boostcamp_2024.course.domain.repository.UserRepository
+import kr.boostcamp_2024.course.study.R
 import kr.boostcamp_2024.course.study.navigation.StudyRoute
 import javax.inject.Inject
 
@@ -54,14 +54,11 @@ class DetailStudyViewModel @Inject constructor(
     private val userOmrRepository: UserOmrRepository,
     private val storageRepository: StorageRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val studyGroupId: String = savedStateHandle.toRoute<StudyRoute>().studyGroupId
 
     private val _uiState: MutableStateFlow<DetailStudyUiState> = MutableStateFlow(DetailStudyUiState())
     val uiState: StateFlow<DetailStudyUiState> = _uiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     fun initViewmodel() {
         viewModelScope.launch {
@@ -85,7 +82,8 @@ class DetailStudyViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("DetailStudyViewModel", "initViewmodel: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -105,7 +103,8 @@ class DetailStudyViewModel @Inject constructor(
 
                 _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("DetailStudyViewModel", "addNotification: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -133,7 +132,9 @@ class DetailStudyViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("DetailStudyViewModel", "deleteStudyGroupMember: ${e.message}", e)
+                val messageId = R.string.error_message_delete_study_group_member
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -160,7 +161,9 @@ class DetailStudyViewModel @Inject constructor(
 
                     _uiState.update { it.copy(isLoading = false, isDeleteStudyGroupSuccess = true) }
                 } catch (e: Exception) {
-                    _errorFlow.emit(e)
+                    Log.e("DetailStudyViewModel", "deleteStudyGroup: ${e.message}", e)
+                    val messageId = R.string.error_message_delete_study_group
+                    handleError(messageId, e)
                     _uiState.update { it.copy(isLoading = false) }
                 }
             }
@@ -180,7 +183,9 @@ class DetailStudyViewModel @Inject constructor(
 
                 _uiState.update { it.copy(isLoading = false, isLeaveStudyGroupSuccess = true) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("DetailStudyViewModel", "deleteUserFromStudyGroup: ${e.message}", e)
+                val messageId = R.string.error_message_leave_group
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

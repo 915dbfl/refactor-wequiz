@@ -33,7 +33,10 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,6 +44,7 @@ import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLeftChatBubble
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
+import kr.boostcamp_2024.course.domain.WeQuizException
 import kr.boostcamp_2024.course.login.R
 import kr.boostcamp_2024.course.login.model.UserUiModel
 import kr.boostcamp_2024.course.login.viewmodel.LoginViewModel
@@ -52,15 +56,17 @@ internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
+    val localLifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    LaunchedEffect(viewModel.errorFlow, localLifecycleOwner) {
+        localLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collectLatest { exception -> onShowErrorSnackbar(exception) }
+        }
     }
-
     LaunchedEffect(loginUiState.isLoginSuccess) {
         if (loginUiState.isLoginSuccess) {
             onLoginSuccess()
@@ -87,7 +93,7 @@ internal fun LoginScreen(
 private fun LoginScreen(
     onLoginForExperienceButtonClick: () -> Unit,
     handleSignIn: (GetCredentialResponse) -> Unit,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
@@ -152,7 +158,7 @@ private fun LoginGuideImageAndText() {
 private fun LoginButtons(
     onLoginForExperienceButtonClick: () -> Unit,
     handleSignIn: (GetCredentialResponse) -> Unit,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
 ) {
     val webClientId = stringResource(R.string.web_client_id)
     val context = LocalContext.current
@@ -185,8 +191,8 @@ private fun LoginButtons(
                 )
                 handleSignIn(result)
             } catch (e: Exception) {
-                Log.e("LoginScreen", "Error: ${e.message}")
-                onShowErrorSnackbar(e)
+                Log.e("LoginScreen", "LoginButtons: ${e.message}")
+                onShowErrorSnackbar(WeQuizException.UnknownException(null, e))
             }
         }
     }

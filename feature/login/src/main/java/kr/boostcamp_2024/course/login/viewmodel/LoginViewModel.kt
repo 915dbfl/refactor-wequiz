@@ -3,22 +3,21 @@ package kr.boostcamp_2024.course.login.viewmodel
 import android.util.Log
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.repository.AuthRepository
 import kr.boostcamp_2024.course.domain.repository.UserRepository
+import kr.boostcamp_2024.course.login.R
 import kr.boostcamp_2024.course.login.model.UserUiModel
 import javax.inject.Inject
 
@@ -32,7 +31,7 @@ data class LoginUiState(
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val _loginUiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
     val loginUiState: StateFlow<LoginUiState> = _loginUiState
         .onStart {
@@ -42,9 +41,6 @@ class LoginViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000L),
             LoginUiState(),
         )
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     fun loginForExperience() {
         viewModelScope.launch {
@@ -69,6 +65,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun handleSignIn(result: GetCredentialResponse) {
+        val messageId = R.string.error_login
         viewModelScope.launch {
             when (val credential = result.credential) {
                 is CustomCredential -> {
@@ -77,18 +74,18 @@ class LoginViewModel @Inject constructor(
                             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                             checkUser(googleIdTokenCredential)
                         } catch (e: GoogleIdTokenParsingException) {
-                            Log.e("LoginScreen", "Received an invalid google id token response", e)
-                            _errorFlow.emit(e)
+                            Log.e("LoginScreen", "handleSignIn: ${e.message}", e)
+                            handleError(messageId, e)
                         }
                     } else {
-                        Log.e("LoginScreen", "Unexpected type of credential")
-                        _errorFlow.emit(Exception("Unexpected type of credential"))
+                        Log.e("LoginScreen", "Unexpected type of credential: ${credential.type}")
+                        handleError(messageId, null)
                     }
                 }
 
                 else -> {
-                    Log.e("LoginScreen", "Unexpected type of credential")
-                    _errorFlow.emit(Exception("Unexpected type of credential"))
+                    Log.e("LoginScreen", "credential is not CustomCredential: $credential")
+                    handleError(messageId, null)
                 }
             }
         }

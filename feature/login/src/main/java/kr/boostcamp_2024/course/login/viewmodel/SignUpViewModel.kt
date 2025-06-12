@@ -1,23 +1,23 @@
 package kr.boostcamp_2024.course.login.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.UserSubmitInfo
 import kr.boostcamp_2024.course.domain.repository.AuthRepository
 import kr.boostcamp_2024.course.domain.repository.StorageRepository
 import kr.boostcamp_2024.course.domain.repository.UserRepository
+import kr.boostcamp_2024.course.login.R
 import kr.boostcamp_2024.course.login.model.UserUiModel
 import kr.boostcamp_2024.course.login.navigation.CustomNavType.UserUiModelType
 import kr.boostcamp_2024.course.login.navigation.SignUpRoute
@@ -45,7 +45,7 @@ class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val storageRepository: StorageRepository,
     private val userRepository: UserRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val userUiModel = savedStateHandle.toRoute<SignUpRoute>(mapOf(typeOf<UserUiModel?>() to UserUiModelType)).userUiModel
     private val userId = savedStateHandle.toRoute<SignUpRoute>(mapOf(typeOf<UserUiModel?>() to UserUiModelType)).userId
 
@@ -62,9 +62,6 @@ class SignUpViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000L),
             SignUpUiState(),
         )
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     private fun setUserUiModel() {
         _signUpUiState.update {
@@ -95,7 +92,8 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("SignUpViewModel", "loadUser: ${e.message}", e)
+                handleError(null, e)
             }
         }
     }
@@ -119,8 +117,8 @@ class SignUpViewModel @Inject constructor(
     fun updateUser() {
         viewModelScope.launch {
             try {
+                setLoading(true)
                 userId?.let {
-                    setLoading(true)
                     val downloadUrl = uploadImage(_signUpUiState.value.profileImageByteArray)
                     val userCreationInfo = UserSubmitInfo(
                         email = signUpUiState.value.userSubmitInfo.email,
@@ -136,7 +134,9 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("SignUpViewModel", "updateUser: ${e.message}", e)
+                val messageId = R.string.error_update_user
+                handleError(messageId, e)
                 setLoading(false)
             }
         }
@@ -162,7 +162,9 @@ class SignUpViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("SignUpViewModel", "signUp: ${e.message}", e)
+                val messageId = R.string.error_sign_up
+                handleError(messageId, e)
                 setLoading(true)
             }
         }

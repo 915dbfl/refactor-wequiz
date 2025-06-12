@@ -29,6 +29,13 @@
         <item>참여 스터디</item>
         <item>보관함</item>
     </string-array>
+    <!--  error  -->
+    <string name="error_load_notification">알림을 불러오는 데 실패했습니다.</string>
+    <string name="error_reject_invitation">초대 거절하는 데 실패했습니다.</string>
+    <string name="error_accept_invitation">초대 수락에 실패했습니다.</string>
+    <string name="error_delete_study_group">스터디 그룹 삭제에 실패했습니다.</string>
+    <string name="error_leave_from_group">스터디 그룹 탈퇴에 실패했습니다.</string>
+    <string name="error_logout">로그아웃에 실패했습니다.</string>
     <!-- guideUrl -->
     <string name="guide_url">https://trite-ice-00b.notion.site/WeQuiz-1505bfe2c24f80b1ae39dc15026da991?pvs=4</string>
 </resources>

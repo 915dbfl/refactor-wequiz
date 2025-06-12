@@ -18,10 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
+import kr.boostcamp_2024.course.domain.WeQuizException
 import kr.boostcamp_2024.course.domain.model.Notification
 import kr.boostcamp_2024.course.domain.model.NotificationWithGroupInfo
 import kr.boostcamp_2024.course.main.R
@@ -34,12 +38,15 @@ internal fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel<NotificationViewModel>(),
     onNavigationButtonClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    val localLifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel.errorFlow, localLifecycleOwner) {
+        localLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collectLatest { exception -> onShowErrorSnackbar(exception) }
+        }
     }
 
     NotificationScreen(

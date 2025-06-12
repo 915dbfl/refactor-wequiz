@@ -120,16 +120,20 @@
     <string name="des_ai_loading">ai加载</string>
     <string name="des_choice_item">多种选择要素</string>
     <!-- error  -->
+    <string name="err_create_question">未能创建问题。</string>
+    <string name="err_create_quiz">生成问题失败 。</string>
     <string name="err_load_quiz">加载测验失败。</string>
     <string name="err_update_current_question">更新测验问题状态失败。</string>
-    <string name="error_quiz_finished">结束测验失败。</string>
+    <string name="err_edit_quiz">未能编辑测验。</string>
+    <string name="err_quiz_finished">结束测验失败。</string>
     <string name="err_load_questions">加载问题失败。</string>
-    <string name="err_answer_add">添加测验回答失败。</string>
-    <string name="err_answer_add_quiz">提交回答失败。</string>
+    <string name="err_submit_response">提交回答失败。</string>
     <string name="err_load_current_user">没有登录用户。</string>
     <string name="err_load_current_page">加载页面失败。</string>
     <string name="err_load_owner_name">获取管理员姓名失败。</string>
+    <string name="err_load_quiz_result">竞猜结果加载失败。</string>
     <string name="err_submit_quetion">提交测验失败。</string>
+    <string name="err_delete_quiz">未能删除测验。</string>
     <string name="des_remove_blank">删除字词</string>
     <string name="des_remove_text">删除文本</string>
     <string name="err_add_user_answers">添加问题统计数据失败。</string>

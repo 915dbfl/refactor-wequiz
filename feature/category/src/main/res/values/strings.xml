@@ -21,4 +21,8 @@
     <string name="des_category_image">Category Image</string>
     <string name="txt_category_delete">Delete Category</string>
     <string name="txt_category_fix">Edit</string>
+    <!--  error  -->
+    <string name="error_delete_category">Failed to delete category.</string>
+    <string name="error_create_category">Failed to create category.</string>
+    <string name="error_update_category">Failed to update category.</string>
 </resources>

@@ -1,18 +1,17 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.Category
 import kr.boostcamp_2024.course.domain.model.QuizNotFoundException
@@ -22,6 +21,7 @@ import kr.boostcamp_2024.course.domain.repository.QuestionRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import kr.boostcamp_2024.course.domain.repository.StorageRepository
 import kr.boostcamp_2024.course.domain.repository.UserOmrRepository
+import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.navigation.QuizRoute
 import javax.inject.Inject
 
@@ -43,16 +43,13 @@ class QuizViewModel @Inject constructor(
     private val questionRepository: QuestionRepository,
     private val storageRepository: StorageRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val quizRoute = savedStateHandle.toRoute<QuizRoute>()
     private val categoryId = quizRoute.categoryId
     private val quizId = quizRoute.quizId
 
     private val _uiState = MutableStateFlow(QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     init {
         initViewModel()
@@ -76,13 +73,20 @@ class QuizViewModel @Inject constructor(
                 }
 
                 quizFlow.catch {
-                    if (it !is QuizNotFoundException) _errorFlow.emit(it)
+                    if (it !is QuizNotFoundException) {
+                        Log.e("QuizViewModel", "initViewModel: ${it.message}", it)
+                        val messageId = R.string.err_load_quiz
+                        handleError(messageId, it)
+                        _uiState.update { it.copy(isLoading = false) }
+                    }
                 }.collect { quiz ->
                     _uiState.update { it.copy(quiz = quiz) }
                 }
 
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuizViewModel", "initViewModel: ${e.message}", e)
+                val messageId = R.string.err_load_quiz
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -106,7 +110,8 @@ class QuizViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuizViewModel", "waitingRealTimeQuiz: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -123,7 +128,8 @@ class QuizViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false) }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuizViewModel", "startRealTimeQuiz: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -151,7 +157,9 @@ class QuizViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuizViewModel", "deleteQuiz: ${e.message}", e)
+                val messageId = R.string.err_delete_quiz
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

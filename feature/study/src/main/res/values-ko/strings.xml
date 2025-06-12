@@ -41,14 +41,15 @@
     <string name="txt_study_group_menu_edit">수정</string>
     <string name="txt_study_group_menu_delete">스터디 제거</string>
     <string name="txt_study_group_menu_leave">나가기</string>
+    <string name="error_message_create_study_group">스터디 그룹 생성에 실패했습니다.</string>
+    <string name="error_message_update_study_group">스터디 그룹 수정에 실패했습니다.</string>
     <string name="error_message_load_study_group">스터디 그룹 로드에 실패했습니다.</string>
     <string name="error_message_load_categories">카테고리 로드에 실패했습니다.</string>
     <string name="error_message_load_users">유저 로드에 실패했습니다.</string>
     <string name="error_message_load_owner">카테고리 생성자 로드에 실패했습니다.</string>
     <string name="btn_setting_snack_bar_message">추후 제공될 기능입니다.</string>
-    <string name="error_message_delete_users_group">유저의 그룹 삭제가 실패했습니다.</string>
+    <string name="error_message_leave_group">스터디 그룹 탈퇴에 실패했습니다.</string>
     <string name="error_message_delete_study_group_member">스터디 그룹의 멤버 삭제가 실패했습니다.</string>
-    <string name="error_message_add_notification">알림 추가가 실패했습니다.</string>
     <string name="error_message_find_user">유저 조회에 실패했습니다.</string>
     <string name="error_message_delete_study_group">스터디 그룹에서 나가지 못했습니다.</string>
     <string name="txt_create_study_group_member_number_label">인원</string>

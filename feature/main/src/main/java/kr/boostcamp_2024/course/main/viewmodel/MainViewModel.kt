@@ -1,15 +1,14 @@
 package kr.boostcamp_2024.course.main.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.StudyGroup
 import kr.boostcamp_2024.course.domain.model.User
 import kr.boostcamp_2024.course.domain.repository.AuthRepository
@@ -22,6 +21,7 @@ import kr.boostcamp_2024.course.domain.repository.StorageRepository
 import kr.boostcamp_2024.course.domain.repository.StudyGroupRepository
 import kr.boostcamp_2024.course.domain.repository.UserOmrRepository
 import kr.boostcamp_2024.course.domain.repository.UserRepository
+import kr.boostcamp_2024.course.main.R
 import javax.inject.Inject
 
 data class MainUiState(
@@ -45,12 +45,9 @@ class MainViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
     private val storageRepository: StorageRepository,
     private val guideRepository: GuideRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val _uiState: MutableStateFlow<MainUiState> = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     init {
         checkGuideStatus()
@@ -75,7 +72,8 @@ class MainViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("MainViewModel", "loadCurrentUser: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -87,7 +85,8 @@ class MainViewModel @Inject constructor(
                 val isGuideShown = guideRepository.getGuideStatus()
                 _uiState.update { it.copy(isGuideShown = isGuideShown) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("MainViewModel", "checkGuideStatus: ${e.message}", e)
+                handleError(null, e)
             }
         }
     }
@@ -120,7 +119,9 @@ class MainViewModel @Inject constructor(
                 loadCurrentUser()
                 _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("MainViewModel", "deleteStudyGroup: ${e.message}", e)
+                val messageId = R.string.error_delete_study_group
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -138,7 +139,9 @@ class MainViewModel @Inject constructor(
                     loadCurrentUser()
                     _uiState.update { it.copy(isLoading = false) }
                 } catch (e: Exception) {
-                    _errorFlow.emit(e)
+                    Log.e("MainViewModel", "deleteUserFromStudyGroup: ${e.message}", e)
+                    val messageId = R.string.error_leave_from_group
+                    handleError(messageId, e)
                     _uiState.update { it.copy(isLoading = false) }
                 }
             }
@@ -152,7 +155,9 @@ class MainViewModel @Inject constructor(
                 authRepository.logout()
                 _uiState.update { it.copy(isLoading = false, isLogout = true) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("MainViewModel", "logout: ${e.message}", e)
+                val messageId = R.string.error_logout
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

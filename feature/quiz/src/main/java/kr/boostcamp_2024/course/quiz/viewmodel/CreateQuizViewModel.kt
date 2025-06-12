@@ -1,19 +1,18 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.Quiz
 import kr.boostcamp_2024.course.domain.model.QuizCreationInfo
 import kr.boostcamp_2024.course.domain.model.RealTimeQuiz
@@ -21,6 +20,7 @@ import kr.boostcamp_2024.course.domain.repository.AuthRepository
 import kr.boostcamp_2024.course.domain.repository.CategoryRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import kr.boostcamp_2024.course.domain.repository.StorageRepository
+import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.navigation.CreateQuizRoute
 import javax.inject.Inject
 
@@ -50,7 +50,7 @@ class CreateQuizViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val storageRepository: StorageRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val categoryId: String = savedStateHandle.toRoute<CreateQuizRoute>().categoryId
     private val quizId: String? = savedStateHandle.toRoute<CreateQuizRoute>().quizId
 
@@ -63,9 +63,6 @@ class CreateQuizViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000L),
             CreateQuizUiState(),
         )
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     private fun loadQuiz() {
         viewModelScope.launch {
@@ -104,7 +101,9 @@ class CreateQuizViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateQuizViewModel", "loadQuiz: ${e.message}", e)
+                val messageId = R.string.err_load_quiz
+                handleError(messageId, e)
                 setLoadingState(false)
             }
         }
@@ -142,7 +141,9 @@ class CreateQuizViewModel @Inject constructor(
                     createGeneralQuiz()
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateQuizViewModel", "createQuiz: ${e.message}", e)
+                val messageId = R.string.err_create_quiz
+                handleError(messageId, e)
                 setLoadingState(false)
             }
         }
@@ -236,7 +237,9 @@ class CreateQuizViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateQuizViewModel", "editQuiz: ${e.message}", e)
+                val messageId = R.string.err_edit_quiz
+                handleError(messageId, e)
                 setLoadingState(false)
             }
         }

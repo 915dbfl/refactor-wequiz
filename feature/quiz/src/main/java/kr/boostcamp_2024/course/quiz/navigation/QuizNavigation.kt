@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
+import kr.boostcamp_2024.course.domain.WeQuizException
 import kr.boostcamp_2024.course.quiz.presentation.question.CreateQuestionScreen
 import kr.boostcamp_2024.course.quiz.presentation.question.QuestionDetailScreen
 import kr.boostcamp_2024.course.quiz.presentation.question.QuestionScreen
@@ -82,7 +83,7 @@ fun NavGraphBuilder.quizNavGraph(
     onEditQuizSuccess: () -> Unit,
     onQuizDeleteSuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
 ) {
     composable<CreateQuestionRoute> {
         CreateQuestionScreen(

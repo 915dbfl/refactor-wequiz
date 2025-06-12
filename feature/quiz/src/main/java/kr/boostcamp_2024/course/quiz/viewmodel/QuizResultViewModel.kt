@@ -1,25 +1,25 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.domain.model.QuizResult
 import kr.boostcamp_2024.course.domain.repository.QuestionRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import kr.boostcamp_2024.course.domain.repository.UserOmrRepository
+import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.navigation.QuizResultRoute
 import javax.inject.Inject
 
@@ -44,15 +44,11 @@ class QuizResultViewModel @Inject constructor(
     private val questionRepository: QuestionRepository,
     private val userOmrRepository: UserOmrRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val userOmrId: String? = savedStateHandle.toRoute<QuizResultRoute>().userOmrId
     private val quizId: String? = savedStateHandle.toRoute<QuizResultRoute>().quizId
 
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
-
     private val _uiState: MutableStateFlow<QuizResultUiState> = MutableStateFlow(QuizResultUiState())
-
     val uiState: StateFlow<QuizResultUiState> = _uiState.asStateFlow()
         .onStart {
             initViewModel()
@@ -75,7 +71,9 @@ class QuizResultViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("QuizResultViewModel", "initViewModel: ${e.message}", e)
+                val messageId = R.string.err_load_quiz_result
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
