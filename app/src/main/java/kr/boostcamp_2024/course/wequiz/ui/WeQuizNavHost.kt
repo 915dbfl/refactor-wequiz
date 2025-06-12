@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import kr.boostcamp_2024.course.category.navigation.categoryNavGraph
 import kr.boostcamp_2024.course.category.navigation.navigateCategory
 import kr.boostcamp_2024.course.category.navigation.navigateCreateCategory
+import kr.boostcamp_2024.course.domain.WeQuizException
 import kr.boostcamp_2024.course.login.navigation.LoginRoute
 import kr.boostcamp_2024.course.login.navigation.loginNavGraph
 import kr.boostcamp_2024.course.login.navigation.navigationLogin
@@ -34,7 +35,7 @@ fun WeQuizNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: KClass<*> = LoginRoute::class,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
 ) {
     NavHost(
         modifier = modifier,

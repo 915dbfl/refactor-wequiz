@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import kr.boostcamp_2024.course.category.presentation.CategoryScreen
 import kr.boostcamp_2024.course.category.presentation.CreateCategoryScreen
+import kr.boostcamp_2024.course.domain.WeQuizException
 
 @Serializable
 data class CategoryRoute(
@@ -38,7 +39,7 @@ fun NavGraphBuilder.categoryNavGraph(
     onCreateCategorySuccess: () -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizException) -> Unit,
 ) {
     composable<CategoryRoute> {
         CategoryScreen(
