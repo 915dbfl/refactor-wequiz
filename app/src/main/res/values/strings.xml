@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">wequiz</string>
     <string name="default_error_message">An Error occured.\nPlease try again.</string>
-    <string name="permission_denied_error_message">Please sign up to use this feature.</string>
+    <string name="network_error_message">Please check the network.</string>
 </resources>
