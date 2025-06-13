@@ -24,11 +24,13 @@ fun WeQuizApp() {
                     localContextResource.getString(it)
                 } ?: run {
                     when (exception) {
-                        is WeQuizException.NetworkException -> localContextResource.getString(R.string.network_error_message)
-                        is WeQuizException.UnknownException -> localContextResource.getString(R.string.default_error_message)
-                        else -> localContextResource.getString(R.string.default_error_message)
+                        is WeQuizException.NetworkException -> localContextResource.getString(R.string.err_network_message)
+                        is WeQuizException.TooManyRequestsException -> localContextResource.getString(R.string.err_too_many_requests_message)
+                        is WeQuizException.AuthenticationException -> localContextResource.getString(R.string.error_auth_message)
+                        is WeQuizException.UnknownException -> localContextResource.getString(R.string.err_default_message)
+                        else -> localContextResource.getString(R.string.err_default_message)
                     }
-                }
+                },
             )
         }
     }

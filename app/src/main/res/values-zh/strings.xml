@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_error_message">发生错误\n请重试。</string>
-    <string name="network_error_message">请检查网络。</string>
+    <string name="err_network_message">请检查网络。</string>
+    <string name="err_too_many_requests_message">请求太多。 请稍后再试。</string>
+    <string name="error_auth_message">认证错误。 请重新登录。</string>
+    <string name="err_default_message">发生错误\n请重试。</string>
 </resources>
