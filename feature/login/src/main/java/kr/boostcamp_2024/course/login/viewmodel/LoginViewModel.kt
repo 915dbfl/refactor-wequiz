@@ -44,9 +44,15 @@ class LoginViewModel @Inject constructor(
 
     fun loginForExperience() {
         viewModelScope.launch {
-            authRepository.loginExperience()
-            _loginUiState.update { currentState ->
-                currentState.copy(isLoginSuccess = true)
+            try {
+                authRepository.loginExperience()
+                _loginUiState.update { currentState ->
+                    currentState.copy(isLoginSuccess = true)
+                }
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "loginForExperience: ${e.message}", e)
+                val messageId = R.string.error_exp_login
+                handleError(messageId, e)
             }
         }
     }

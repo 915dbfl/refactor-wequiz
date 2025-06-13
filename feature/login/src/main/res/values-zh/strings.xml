@@ -31,6 +31,7 @@
     <string name="des_google_login">使用谷歌登录</string>
     <!-- Error -->
     <string name="error_login">登录失败。</string>
+    <string name="error_exp_login">体验时发生了错误。 请再试一次。</string>
     <string name="error_google_oauth">谷歌账户关联失败。</string>
     <string name="error_sign_up">注册会员失败。</string>
     <string name="error_photo_picker">加载照片失败。</string>
