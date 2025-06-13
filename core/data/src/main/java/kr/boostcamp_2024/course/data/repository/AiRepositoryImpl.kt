@@ -13,7 +13,7 @@ import javax.inject.Inject
 class AiRepositoryImpl @Inject constructor(
     private val aiService: AiService,
 ) : AiRepository {
-    override suspend fun getAiQuestion(question: String): AiQuestion {
+    override suspend fun getAiQuestion(question: String): AiQuestion = runCatchingWeQuiz {
         val language = when (Locale.getDefault().language) {
             "ko" -> "ko"
             "zh" -> "zh"
@@ -23,6 +23,6 @@ class AiRepositoryImpl @Inject constructor(
         val response =
             aiService.getAiQuestion(AiQuestionRequest(messages = Message.defaultMessage + newMessage, maxTokens = 512))
         val content: ContentDTO = Json.decodeFromString(response.result.message.content)
-        return content.toVO()
+        return@runCatchingWeQuiz content.toVO()
     }
 }

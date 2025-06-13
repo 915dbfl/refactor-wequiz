@@ -22,8 +22,8 @@ class QuestionRepositoryImpl @Inject constructor(
 ) : QuestionRepository {
     private val questionCollectionRef = firestore.collection("Question")
 
-    override suspend fun getQuestions(questionIds: List<String>): List<Question> =
-        questionIds.map { questionId ->
+    override suspend fun getQuestions(questionIds: List<String>): List<Question> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz questionIds.map { questionId ->
             val document = questionCollectionRef.document(questionId).get().await()
             val questionType = document.getString("type")?.toQuestionType()
             val response = when (questionType) {
@@ -33,8 +33,9 @@ class QuestionRepositoryImpl @Inject constructor(
             }
             requireNotNull(response).toVO(questionId)
         }
+    }
 
-    override suspend fun getQuestion(questionId: String): Question {
+    override suspend fun getQuestion(questionId: String): Question = runCatchingWeQuiz {
         val document = questionCollectionRef.document(questionId).get().await()
         val questionType = document.getString("type")?.toQuestionType()
         val response = when (questionType) {
@@ -42,7 +43,7 @@ class QuestionRepositoryImpl @Inject constructor(
             is QuestionType.Blank -> document.toObject(BlankQuestionDTO::class.java)
             else -> throw Exception("잘못된 문제 타입입니다.")
         }
-        return requireNotNull(response).toVO(questionId)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(questionId)
     }
 
     override fun observeQuestion(questionId: String): Flow<Question> = callbackFlow {
@@ -67,23 +68,24 @@ class QuestionRepositoryImpl @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    override suspend fun getRealTimeQuestions(questionIds: List<String>): List<Flow<Question>> =
-        questionIds.map { questionId ->
+    override suspend fun getRealTimeQuestions(questionIds: List<String>): List<Flow<Question>> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz questionIds.map { questionId ->
             observeQuestion(questionId)
         }
-
-    override suspend fun createQuestion(choiceQuestionCreationInfo: ChoiceQuestionCreationInfo): String {
-        val document = questionCollectionRef.add(choiceQuestionCreationInfo.toDTO()).await()
-        return document.id
     }
 
-    override suspend fun deleteQuestions(questionIds: List<String>) {
+    override suspend fun createQuestion(choiceQuestionCreationInfo: ChoiceQuestionCreationInfo): String = runCatchingWeQuiz {
+        val document = questionCollectionRef.add(choiceQuestionCreationInfo.toDTO()).await()
+        return@runCatchingWeQuiz document.id
+    }
+
+    override suspend fun deleteQuestions(questionIds: List<String>): Unit = runCatchingWeQuiz {
         questionIds.forEach { questionId ->
             questionCollectionRef.document(questionId).delete().await()
         }
     }
 
-    override suspend fun updateCurrentSubmit(userId: String?, questionId: String, userAnswer: Any?) {
+    override suspend fun updateCurrentSubmit(userId: String?, questionId: String, userAnswer: Any?): Unit = runCatchingWeQuiz {
         val document = questionCollectionRef.document(questionId)
         firestore.runTransaction { transaction ->
             val snapshot = transaction.get(document)
@@ -112,8 +114,8 @@ class QuestionRepositoryImpl @Inject constructor(
         }.await()
     }
 
-    override suspend fun createBlankQuestion(blankQuestionCreationInfo: BlankQuestionCreationInfo): String {
+    override suspend fun createBlankQuestion(blankQuestionCreationInfo: BlankQuestionCreationInfo): String = runCatchingWeQuiz {
         val document = questionCollectionRef.add(blankQuestionCreationInfo.toDTO()).await()
-        return document.id
+        return@runCatchingWeQuiz document.id
     }
 }

@@ -14,7 +14,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     private val userCollectionRef = firestore.collection("User")
 
-    override suspend fun addUser(userId: String, userSubmitInfo: UserSubmitInfo) {
+    override suspend fun addUser(userId: String, userSubmitInfo: UserSubmitInfo): Unit = runCatchingWeQuiz {
         userCollectionRef.document(userId).set(
             UserDTO(
                 email = userSubmitInfo.email,
@@ -25,44 +25,44 @@ class UserRepositoryImpl @Inject constructor(
         ).await()
     }
 
-    override suspend fun getUser(userId: String): User {
+    override suspend fun getUser(userId: String): User = runCatchingWeQuiz {
         val document = userCollectionRef.document(userId).get().await()
         val response = document.toObject(UserDTO::class.java)
-        return requireNotNull(response).toVO(userId)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(userId)
     }
 
-    override suspend fun addStudyGroupToUser(userId: String, studyId: String) {
+    override suspend fun addStudyGroupToUser(userId: String, studyId: String): Unit = runCatchingWeQuiz {
         val userDocRef = userCollectionRef.document(userId)
         userDocRef.update("study_groups", FieldValue.arrayUnion(studyId)).await()
-
     }
 
-    override suspend fun getUsers(userIds: List<String>): List<User> =
-        userIds.map { userId ->
+    override suspend fun getUsers(userIds: List<String>): List<User> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz userIds.map { userId ->
             val document = userCollectionRef.document(userId).get().await()
             val response = document.toObject(UserDTO::class.java)
             requireNotNull(response).toVO(userId)
         }
+    }
 
-    override suspend fun deleteStudyGroupUser(userId: String, studyGroupId: String) {
+    override suspend fun deleteStudyGroupUser(userId: String, studyGroupId: String): Unit = runCatchingWeQuiz {
         val document = userCollectionRef.document(userId)
         document.update("study_groups", FieldValue.arrayRemove(studyGroupId)).await()
     }
 
-    override suspend fun deleteStudyGroupUsers(userIds: List<String>, studyGroupId: String) {
+    override suspend fun deleteStudyGroupUsers(userIds: List<String>, studyGroupId: String): Unit = runCatchingWeQuiz {
         userIds.forEach { userId ->
             val document = userCollectionRef.document(userId)
             document.update("study_groups", FieldValue.arrayRemove(studyGroupId)).await()
         }
     }
 
-    override suspend fun findUserByEmail(email: String): User {
+    override suspend fun findUserByEmail(email: String): User = runCatchingWeQuiz {
         val querySnapshot = userCollectionRef.whereEqualTo("email", email).get().await()
         val response = querySnapshot.documents.firstOrNull()?.toObject(UserDTO::class.java)
-        return requireNotNull(response).toVO(querySnapshot.documents.first().id)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(querySnapshot.documents.first().id)
     }
 
-    override suspend fun updateUser(userId: String, userSubmitInfo: UserSubmitInfo) {
+    override suspend fun updateUser(userId: String, userSubmitInfo: UserSubmitInfo): Unit = runCatchingWeQuiz {
         val userDocRef = userCollectionRef.document(userId)
         val userMap = mapOf(
             "email" to userSubmitInfo.email,

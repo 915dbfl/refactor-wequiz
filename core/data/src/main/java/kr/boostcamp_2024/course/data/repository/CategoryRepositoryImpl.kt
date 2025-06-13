@@ -13,24 +13,26 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
     private val categoryCollectionRef = firestore.collection("Category")
 
-    override suspend fun getCategories(categoryIds: List<String>): List<Category> =
-        categoryIds.map { categoryId ->
+    override suspend fun getCategories(categoryIds: List<String>): List<Category> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz categoryIds.map { categoryId ->
             val document = categoryCollectionRef.document(categoryId).get().await()
             val response = document.toObject(CategoryDTO::class.java)
             requireNotNull(response).toVO(categoryId)
         }
+    }
 
-    override suspend fun getCategory(categoryId: String): Category {
+
+    override suspend fun getCategory(categoryId: String): Category = runCatchingWeQuiz {
         val document = categoryCollectionRef.document(categoryId).get().await()
         val response = document.toObject(CategoryDTO::class.java)
-        return requireNotNull(response).toVO(categoryId)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(categoryId)
     }
 
     override suspend fun createCategory(
         categoryName: String,
         categoryDescription: String?,
         categoryImageUrl: String?,
-    ): String {
+    ): String = runCatchingWeQuiz {
         val newCategory = CategoryDTO(
             name = categoryName,
             description = categoryDescription,
@@ -39,30 +41,26 @@ class CategoryRepositoryImpl @Inject constructor(
         )
 
         val document = categoryCollectionRef.add(newCategory).await()
-        return document.id
+        return@runCatchingWeQuiz document.id
     }
 
-    override suspend fun addQuiz(categoryId: String, quizId: String) {
-        categoryCollectionRef.document(categoryId).update("quizzes", FieldValue.arrayUnion(quizId)).await()
-    }
-
-    override suspend fun addQuizToCategory(categoryId: String, quizId: String) {
+    override suspend fun addQuizToCategory(categoryId: String, quizId: String): Unit = runCatchingWeQuiz {
         val document = categoryCollectionRef.document(categoryId)
         document.update("quizzes", FieldValue.arrayUnion(quizId)).await()
     }
 
-    override suspend fun deleteQuizFromCategory(categoryId: String, quizId: String) {
+    override suspend fun deleteQuizFromCategory(categoryId: String, quizId: String): Unit = runCatchingWeQuiz {
         val document = categoryCollectionRef.document(categoryId)
         document.update("quizzes", FieldValue.arrayRemove(quizId)).await()
     }
 
-    override suspend fun deleteCategories(categoryIds: List<String>) {
+    override suspend fun deleteCategories(categoryIds: List<String>): Unit = runCatchingWeQuiz {
         categoryIds.forEach { categoryId ->
             categoryCollectionRef.document(categoryId).delete().await()
         }
     }
 
-    override suspend fun deleteCategory(categoryId: String) {
+    override suspend fun deleteCategory(categoryId: String): Unit = runCatchingWeQuiz {
         categoryCollectionRef.document(categoryId).delete().await()
     }
 
@@ -71,7 +69,7 @@ class CategoryRepositoryImpl @Inject constructor(
         categoryName: String,
         categoryDescription: String?,
         categoryImageUrl: String?,
-    ) {
+    ): Unit = runCatchingWeQuiz {
         categoryCollectionRef.document(categoryId).update(
             mapOf(
                 "name" to categoryName,

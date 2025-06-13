@@ -23,12 +23,12 @@ class QuizRepositoryImpl @Inject constructor(
 ) : QuizRepository {
     private val quizCollectionRef = firestore.collection("Quiz")
 
-    override suspend fun addQuestionToQuiz(quizId: String, questionId: String) {
+    override suspend fun addQuestionToQuiz(quizId: String, questionId: String): Unit = runCatchingWeQuiz {
         val document = quizCollectionRef.document(quizId)
         document.update("questions", FieldValue.arrayUnion(questionId)).await()
     }
 
-    override suspend fun createQuiz(quizCreateInfo: QuizCreationInfo, ownerId: String?): String {
+    override suspend fun createQuiz(quizCreateInfo: QuizCreationInfo, ownerId: String?): String = runCatchingWeQuiz {
         when (ownerId) {
             null -> {
                 val newQuiz = QuizDTO(
@@ -41,7 +41,7 @@ class QuizRepositoryImpl @Inject constructor(
                     quizImageUrl = quizCreateInfo.quizImageUrl,
                     type = GENERAL_QUIZ,
                 )
-                return quizCollectionRef.add(newQuiz).await().id
+                return@runCatchingWeQuiz quizCollectionRef.add(newQuiz).await().id
             }
 
             else -> {
@@ -58,23 +58,23 @@ class QuizRepositoryImpl @Inject constructor(
                     quizImageUrl = quizCreateInfo.quizImageUrl,
                     type = REAL_TIME_QUIZ,
                 )
-                return quizCollectionRef.add(newRealTimeQuiz).await().id
+                return@runCatchingWeQuiz quizCollectionRef.add(newRealTimeQuiz).await().id
             }
         }
     }
 
-    override suspend fun getQuiz(quizId: String): BaseQuiz {
+    override suspend fun getQuiz(quizId: String): BaseQuiz = runCatchingWeQuiz {
         val document = quizCollectionRef.document(quizId).get().await()
         val quizType = document.get("type").toString()
         val response = when (getQuizTypeFromValue(quizType)) {
             RealTime -> document.toObject(RealTimeQuizDTO::class.java)?.toVO(quizId)
             General -> document.toObject(QuizDTO::class.java)?.toVO(quizId)
         }
-        return requireNotNull(response)
+        return@runCatchingWeQuiz requireNotNull(response)
     }
 
-    override suspend fun getQuizList(quizIdList: List<String>): List<BaseQuiz> =
-        quizIdList.map { quizId ->
+    override suspend fun getQuizList(quizIdList: List<String>): List<BaseQuiz> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz quizIdList.map { quizId ->
             val document = quizCollectionRef.document(quizId).get().await()
             val quizType = document.get("type").toString()
             val response = when (getQuizTypeFromValue(quizType)) {
@@ -83,14 +83,15 @@ class QuizRepositoryImpl @Inject constructor(
             }
             requireNotNull(response)
         }
+    }
 
-    override suspend fun addUserOmrToQuiz(quizId: String, userOmrId: String) {
+    override suspend fun addUserOmrToQuiz(quizId: String, userOmrId: String): Unit = runCatchingWeQuiz {
         quizCollectionRef.document(quizId)
             .update("user_omrs", FieldValue.arrayUnion(userOmrId))
             .await()
     }
 
-    override suspend fun editQuiz(quizId: String, quizCreateInfo: QuizCreationInfo, selectedQuizTypeIndex: Int) {
+    override suspend fun editQuiz(quizId: String, quizCreateInfo: QuizCreationInfo, selectedQuizTypeIndex: Int): Unit = runCatchingWeQuiz {
         if (selectedQuizTypeIndex == 0) {
             val updatedData = mapOf(
                 "title" to quizCreateInfo.quizTitle,
@@ -114,23 +115,23 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteQuiz(quizId: String) {
+    override suspend fun deleteQuiz(quizId: String): Unit = runCatchingWeQuiz {
         quizCollectionRef.document(quizId).delete().await()
     }
 
-    override suspend fun deleteQuizzes(quizzes: List<String>) {
+    override suspend fun deleteQuizzes(quizzes: List<String>) = runCatchingWeQuiz {
         quizzes.forEach { quizId ->
             quizCollectionRef.document(quizId).delete().await()
         }
     }
 
-    override suspend fun startRealTimeQuiz(quizId: String) {
+    override suspend fun startRealTimeQuiz(quizId: String): Unit = runCatchingWeQuiz {
         quizCollectionRef.document(quizId)
             .update("is_started", true)
             .await()
     }
 
-    override suspend fun waitingRealTimeQuiz(quizId: String, waiting: Boolean, userId: String) {
+    override suspend fun waitingRealTimeQuiz(quizId: String, waiting: Boolean, userId: String): Unit = runCatchingWeQuiz {
         when (waiting) {
             true -> {
                 quizCollectionRef.document(quizId)
@@ -146,7 +147,7 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun observeQuiz(quizId: String): Flow<BaseQuiz> = callbackFlow<BaseQuiz> {
+    override fun observeQuiz(quizId: String): Flow<BaseQuiz> = callbackFlow {
         val listener = quizCollectionRef.document(quizId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -198,13 +199,13 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setQuizFinished(quizId: String) {
+    override suspend fun setQuizFinished(quizId: String): Unit = runCatchingWeQuiz {
         quizCollectionRef.document(quizId)
             .update("is_finished", true)
             .await()
     }
 
-    override suspend fun updateQuizCurrentQuestion(quizId: String, currentQuestion: Int) {
+    override suspend fun updateQuizCurrentQuestion(quizId: String, currentQuestion: Int): Unit = runCatchingWeQuiz {
         quizCollectionRef.document(quizId)
             .update("current_question", currentQuestion)
             .await()

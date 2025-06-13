@@ -12,14 +12,14 @@ import javax.inject.Inject
 class GuideRepositoryImpl @Inject constructor(
     private val weQuizDataStore: DataStore<Preferences>,
 ) : GuideRepository {
-    override suspend fun getGuideStatus(): Boolean {
+    override suspend fun getGuideStatus(): Boolean = runCatchingWeQuiz {
         val guideStatus = weQuizDataStore.data.map { preferences ->
             preferences[GUIDE_STATUS_KEY] ?: false
         }.firstOrNull()
-        return requireNotNull(guideStatus)
+        return@runCatchingWeQuiz requireNotNull(guideStatus)
     }
 
-    override suspend fun setGuideStatus(status: Boolean) {
+    override suspend fun setGuideStatus(status: Boolean): Unit = runCatchingWeQuiz {
         weQuizDataStore.edit { settings ->
             settings[GUIDE_STATUS_KEY] = status
         }

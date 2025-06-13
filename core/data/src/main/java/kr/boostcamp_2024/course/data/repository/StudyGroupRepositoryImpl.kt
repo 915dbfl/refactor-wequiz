@@ -15,7 +15,7 @@ class StudyGroupRepositoryImpl @Inject constructor(
 ) : StudyGroupRepository {
     private val studyGroupCollectionRef = firestore.collection("StudyGroup")
 
-    override suspend fun addStudyGroup(studyGroupCreationInfo: StudyGroupCreationInfo): String {
+    override suspend fun addStudyGroup(studyGroupCreationInfo: StudyGroupCreationInfo): String = runCatchingWeQuiz {
         val request = StudyGroupDTO(
             studyGroupImageUrl = studyGroupCreationInfo.studyGroupImageUrl,
             name = studyGroupCreationInfo.name,
@@ -29,49 +29,43 @@ class StudyGroupRepositoryImpl @Inject constructor(
         document.set(request).await()
 
         val result = document.id
-        return result
+        return@runCatchingWeQuiz result
     }
 
-    override suspend fun getStudyGroup(studyGroupId: String): StudyGroup {
+    override suspend fun getStudyGroup(studyGroupId: String): StudyGroup = runCatchingWeQuiz {
         val document = studyGroupCollectionRef.document(studyGroupId).get().await()
         val response = document.toObject(StudyGroupDTO::class.java)
-        return requireNotNull(response).toVO(studyGroupId)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(studyGroupId)
     }
 
-    override suspend fun getStudyGroups(studyGroupIds: List<String>): List<StudyGroup> =
-        studyGroupIds.map { studyGroupId ->
+    override suspend fun getStudyGroups(studyGroupIds: List<String>): List<StudyGroup> = runCatchingWeQuiz {
+        return@runCatchingWeQuiz studyGroupIds.map { studyGroupId ->
             val document = studyGroupCollectionRef.document(studyGroupId).get().await()
             val response = document.toObject(StudyGroupDTO::class.java)
             requireNotNull(response).toVO(studyGroupId)
         }
+    }
 
-    override suspend fun deleteUser(studyGroupId: String, userId: String) {
+    override suspend fun deleteUser(studyGroupId: String, userId: String): Unit = runCatchingWeQuiz {
         val document = studyGroupCollectionRef.document(studyGroupId)
         document.update("users", FieldValue.arrayRemove(userId)).await()
     }
 
-    override suspend fun deleteStudyGroup(studyGroupId: String) {
+    override suspend fun deleteStudyGroup(studyGroupId: String): Unit = runCatchingWeQuiz {
         studyGroupCollectionRef.document(studyGroupId).delete().await()
     }
 
-    override suspend fun deleteCategory(studyGroupId: String, categoryId: String) {
+    override suspend fun deleteCategory(studyGroupId: String, categoryId: String): Unit = runCatchingWeQuiz {
         val document = studyGroupCollectionRef.document(studyGroupId)
         document.update("categories", FieldValue.arrayRemove(categoryId)).await()
     }
 
-    override suspend fun addCategoryToStudyGroup(studyGroupId: String, categoryId: String) {
+    override suspend fun addCategoryToStudyGroup(studyGroupId: String, categoryId: String): Unit = runCatchingWeQuiz {
         val document = studyGroupCollectionRef.document(studyGroupId)
         document.update("categories", FieldValue.arrayUnion(categoryId)).await()
     }
 
-    override suspend fun getStudyGroupName(studyGroupId: String): String {
-        val document = studyGroupCollectionRef.document(studyGroupId).get().await()
-        val response = document.toObject(StudyGroupDTO::class.java)
-        val studyGroupName = requireNotNull(response?.name)
-        return studyGroupName
-    }
-
-    override suspend fun updateStudyGroup(studyGroupId: String, updateInfo: StudyGroupUpdatedInfo) {
+    override suspend fun updateStudyGroup(studyGroupId: String, updateInfo: StudyGroupUpdatedInfo): Unit = runCatchingWeQuiz {
         val updatedInfoMap = hashMapOf<String, Any?>(
             "study_group_image_url" to updateInfo.studyGroupImageUrl,
             "name" to updateInfo.name,
@@ -81,7 +75,7 @@ class StudyGroupRepositoryImpl @Inject constructor(
         studyGroupCollectionRef.document(studyGroupId).update(updatedInfoMap).await()
     }
 
-    override suspend fun addUser(studyGroupId: String, userId: String) {
+    override suspend fun addUser(studyGroupId: String, userId: String): Unit = runCatchingWeQuiz {
         val document = studyGroupCollectionRef.document(studyGroupId)
         document.update("users", FieldValue.arrayUnion(userId)).await()
     }

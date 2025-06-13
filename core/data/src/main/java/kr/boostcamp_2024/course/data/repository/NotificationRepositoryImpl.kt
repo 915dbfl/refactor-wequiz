@@ -12,32 +12,25 @@ class NotificationRepositoryImpl @Inject constructor(
 ) : NotificationRepository {
     private val notificationCollectionRef = firestore.collection("Notification")
 
-    override suspend fun getNotifications(userId: String): List<Notification> {
+    override suspend fun getNotifications(userId: String): List<Notification> = runCatchingWeQuiz {
         val notifications = mutableListOf<Notification>()
         val snapshot = notificationCollectionRef.whereEqualTo("user_id", userId).get().await()
         for (document in snapshot.documents) {
             val notification = document.toObject(NotificationDTO::class.java)
             notifications.add(requireNotNull(notification).toVO(document.id))
         }
-        return notifications
+        return@runCatchingWeQuiz notifications
     }
 
-    override suspend fun deleteNotification(notificationId: String) {
+    override suspend fun deleteNotification(notificationId: String): Unit = runCatchingWeQuiz {
         notificationCollectionRef.document(notificationId).delete().await()
     }
 
-    override suspend fun addNotification(groupId: String, userId: String) {
+    override suspend fun addNotification(groupId: String, userId: String): Unit = runCatchingWeQuiz {
         val notification = mapOf(
             "group_id" to groupId,
             "user_id" to userId,
         )
         notificationCollectionRef.add(notification).await()
-    }
-
-    override suspend fun deleteNotificationByStudyGroupId(studyGroupId: String) {
-        notificationCollectionRef.whereEqualTo("group_id", studyGroupId).get().await()
-            .forEach { document ->
-                document.reference.delete().await()
-            }
     }
 }
