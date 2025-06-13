@@ -56,15 +56,9 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    private fun loadQuizList(quizIdList: List<String>) {
-        viewModelScope.launch {
-            try {
-                val quizList = quizRepository.getQuizList(quizIdList)
-                _categoryUiState.update { it.copy(quizList = quizList) }
-            } catch (e: Exception) {
-                Log.e("CategoryViewModel", "loadQuizList: ${e.message}", e)
-            }
-        }
+    suspend private fun loadQuizList(quizIdList: List<String>) {
+        val quizList = quizRepository.getQuizList(quizIdList)
+        _categoryUiState.update { it.copy(quizList = quizList) }
     }
 
     fun onCategoryDeleteClick() {
