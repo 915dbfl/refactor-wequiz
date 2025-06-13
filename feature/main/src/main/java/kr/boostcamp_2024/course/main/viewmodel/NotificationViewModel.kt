@@ -86,7 +86,7 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    fun deleteInvitation(studyId: String, onErrorAction: (() -> Unit)? = this::onRejectInvitationError) {
+    fun deleteInvitation(studyId: String, onErrorAction: (suspend () -> Unit)? = this::onRejectInvitationError) {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
@@ -102,7 +102,7 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    fun onRejectInvitationError() {
+    suspend fun onRejectInvitationError() {
         Log.e("NotificationViewModel", "deleteInvitation")
         val messageId = R.string.error_reject_invitation
         handleError(messageId, null)
