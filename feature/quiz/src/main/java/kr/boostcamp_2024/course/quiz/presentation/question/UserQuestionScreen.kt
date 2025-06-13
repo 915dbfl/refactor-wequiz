@@ -34,7 +34,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.domain.model.BaseQuiz
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
@@ -51,7 +51,7 @@ internal fun UserQuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: UserQuestionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -124,7 +124,7 @@ private fun UserQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     onExitButtonClick: () -> Unit,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showExitDialog by rememberSaveable { mutableStateOf(false) }

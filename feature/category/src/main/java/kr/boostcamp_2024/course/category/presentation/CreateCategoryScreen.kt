@@ -42,14 +42,14 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 
 @Composable
 internal fun CreateCategoryScreen(
     onNavigationButtonClick: () -> Unit,
     onCreateCategorySuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: CreateCategoryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.createCategoryUiState.collectAsStateWithLifecycle()

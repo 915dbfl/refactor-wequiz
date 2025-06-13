@@ -9,7 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.wequiz.R
 
 @Composable
@@ -17,13 +18,13 @@ fun WeQuizApp() {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val localContextResource = LocalContext.current.resources
-    val onShowErrorSnackbar: (exception: WeQuizException) -> Unit = { exception ->
+    val onShowErrorSnackbar: (exception: WeQuizUIException) -> Unit = { exception ->
         coroutineScope.launch {
             snackbarHostState.showSnackbar(
                 message = exception.messageId?.let {
                     localContextResource.getString(it)
                 } ?: run {
-                    when (exception) {
+                    when (exception.cause) {
                         is WeQuizException.NetworkException -> localContextResource.getString(R.string.err_network_message)
                         is WeQuizException.TooManyRequestsException -> localContextResource.getString(R.string.err_too_many_requests_message)
                         is WeQuizException.AuthenticationException -> localContextResource.getString(R.string.error_auth_message)

@@ -44,7 +44,7 @@ import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLeftChatBubble
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.login.R
 import kr.boostcamp_2024.course.login.model.UserUiModel
 import kr.boostcamp_2024.course.login.viewmodel.LoginViewModel
@@ -56,7 +56,7 @@ internal fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignUp: (UserUiModel) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
@@ -93,7 +93,7 @@ internal fun LoginScreen(
 private fun LoginScreen(
     onLoginForExperienceButtonClick: () -> Unit,
     handleSignIn: (GetCredentialResponse) -> Unit,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
@@ -158,7 +158,7 @@ private fun LoginGuideImageAndText() {
 private fun LoginButtons(
     onLoginForExperienceButtonClick: () -> Unit,
     handleSignIn: (GetCredentialResponse) -> Unit,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
 ) {
     val webClientId = stringResource(R.string.web_client_id)
     val context = LocalContext.current
@@ -192,7 +192,7 @@ private fun LoginButtons(
                 handleSignIn(result)
             } catch (e: Exception) {
                 Log.e("LoginScreen", "LoginButtons: ${e.message}")
-                onShowErrorSnackbar(WeQuizException.UnknownException(null, e))
+                onShowErrorSnackbar(WeQuizUIException.UnknownUIException(null, e))
             }
         }
     }

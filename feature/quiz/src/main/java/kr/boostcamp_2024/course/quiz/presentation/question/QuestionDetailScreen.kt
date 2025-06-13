@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
@@ -53,7 +53,7 @@ import kr.boostcamp_2024.course.quiz.viewmodel.QuestionDetailViewModel
 internal fun QuestionDetailScreen(
     onNavigationButtonClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: QuestionDetailViewModel = hiltViewModel<QuestionDetailViewModel>(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

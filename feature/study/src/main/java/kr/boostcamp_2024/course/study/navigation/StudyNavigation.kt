@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.study.presentation.CreateStudyScreen
 import kr.boostcamp_2024.course.study.presentation.DetailStudyScreen
 
@@ -36,7 +36,7 @@ fun NavGraphBuilder.studyNavGraph(
     onCategoryClick: (String, String) -> Unit,
     onCreateCategoryButtonClick: (String?, String?) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
 ) {
     composable<CreateStudyRoute> {
         CreateStudyScreen(

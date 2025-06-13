@@ -34,7 +34,7 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.study.CreateStudyViewModel
 import kr.boostcamp_2024.course.study.R
 import kr.boostcamp_2024.course.study.component.CreateStudyTopAppBar
@@ -45,7 +45,7 @@ internal fun CreateStudyScreen(
     onNavigationButtonClick: () -> Unit,
     onSubmitStudySuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: CreateStudyViewModel = hiltViewModel<CreateStudyViewModel>(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

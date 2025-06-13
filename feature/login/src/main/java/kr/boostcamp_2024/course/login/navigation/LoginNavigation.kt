@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
-import kr.boostcamp_2024.course.domain.WeQuizException
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.login.model.UserUiModel
 import kr.boostcamp_2024.course.login.navigation.CustomNavType.UserUiModelType
 import kr.boostcamp_2024.course.login.presentation.LoginScreen
@@ -46,7 +46,7 @@ fun NavGraphBuilder.loginNavGraph(
     onSignUp: (UserUiModel) -> Unit,
     onSignUpSuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (WeQuizException) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
 ) {
     composable<LoginRoute> {
         LoginScreen(
