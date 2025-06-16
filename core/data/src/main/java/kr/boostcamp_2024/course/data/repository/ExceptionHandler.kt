@@ -15,12 +15,14 @@ suspend fun <T> runCatchingWeQuiz(block: suspend () -> T): T {
     }
 }
 
-private fun Throwable.toWeQuizException(): WeQuizException {
-    return when (this) {
-        is FirebaseNetworkException, is UnknownHostException -> WeQuizException.NetworkException(this)
+private fun Throwable.toWeQuizException(): WeQuizException =
+    when (this) {
+        is FirebaseNetworkException,
+        is UnknownHostException,
+        -> WeQuizException.NetworkException(this)
+
         is FirebaseTooManyRequestsException -> WeQuizException.TooManyRequestsException(this)
         is FirebaseAuthException -> WeQuizException.AuthenticationException(this)
         is CancellationException -> WeQuizException.CancellationException
         else -> WeQuizException.UnknownException(this)
     }
-}

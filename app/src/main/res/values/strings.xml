@@ -3,5 +3,5 @@
     <string name="err_network_message">Please check the network.</string>
     <string name="err_too_many_requests_message">Too many requests.\nPlease try again later.</string>
     <string name="error_auth_message">Authentication error.\nPlease log in again.</string>
-    <string name="err_default_message">An Error occured.\nPlease try again.</string>
+    <string name="err_default_message">An Error occurred.\nPlease try again.</string>
 </resources>
