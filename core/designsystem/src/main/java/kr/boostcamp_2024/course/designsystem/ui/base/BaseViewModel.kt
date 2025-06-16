@@ -8,15 +8,14 @@ import kr.boostcamp_2024.course.domain.exception.WeQuizException
 import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 
 open class BaseViewModel : ViewModel() {
-    private val _errorChannel = Channel<WeQuizUIException>()
-    val errorFlow = _errorChannel.receiveAsFlow()
+    private val _errorFlow = Channel<WeQuizUIException>()
+    val errorFlow = _errorFlow.receiveAsFlow()
 
-    protected suspend fun handleError(messageId: Int? = null, throwable: Throwable? = null) {
+    protected suspend fun handleError(messageId: Int? = null, throwable: Throwable? = null) =
         when (throwable) {
             is WeQuizException.CancellationException, is CancellationException -> {
-                /* no-op */
+                // no-op
             }
-            else -> _errorChannel.send(WeQuizUIException.fromThrowable(messageId, throwable))
+            else -> _errorFlow.send(WeQuizUIException.fromThrowable(messageId, throwable))
         }
-    }
 }

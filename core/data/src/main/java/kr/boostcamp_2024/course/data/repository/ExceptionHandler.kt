@@ -20,7 +20,6 @@ private fun Throwable.toWeQuizException(): WeQuizException =
         is FirebaseNetworkException,
         is UnknownHostException,
         -> WeQuizException.NetworkException(this)
-
         is FirebaseTooManyRequestsException -> WeQuizException.TooManyRequestsException(this)
         is FirebaseAuthException -> WeQuizException.AuthenticationException(this)
         is CancellationException -> WeQuizException.CancellationException

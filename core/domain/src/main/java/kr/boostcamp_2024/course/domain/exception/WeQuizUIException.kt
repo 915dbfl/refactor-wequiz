@@ -4,7 +4,6 @@ sealed class WeQuizUIException(
     open val messageId: Int? = null,
     override val cause: Throwable? = null,
 ) : Exception(cause) {
-
     data class NetworkUIException(
         override val messageId: Int?,
         override val cause: Throwable? = null,
@@ -28,15 +27,22 @@ sealed class WeQuizUIException(
     ) : WeQuizUIException(messageId, cause)
 
     companion object {
-        fun fromThrowable(messageId: Int? = null, throwable: Throwable?): WeQuizUIException {
-            return when (throwable) {
+        fun fromThrowable(messageId: Int? = null, throwable: Throwable?): WeQuizUIException =
+            when (throwable) {
                 is WeQuizException.NetworkException -> NetworkUIException(messageId, throwable)
-                is WeQuizException.TooManyRequestsException -> TooManyRequestsUIException(messageId, throwable)
-                is WeQuizException.AuthenticationException -> AuthenticationUIException(messageId, throwable)
+                is WeQuizException.TooManyRequestsException -> TooManyRequestsUIException(
+                    messageId,
+                    throwable,
+                )
+
+                is WeQuizException.AuthenticationException -> AuthenticationUIException(
+                    messageId,
+                    throwable,
+                )
+
                 is WeQuizException.CancellationException -> CancellationUIException
                 is WeQuizException.UnknownException -> UnknownUIException(messageId, throwable)
                 else -> UnknownUIException(messageId, throwable)
             }
-        }
     }
 }

@@ -56,7 +56,7 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    suspend private fun loadQuizList(quizIdList: List<String>) {
+    private suspend fun loadQuizList(quizIdList: List<String>) {
         val quizList = quizRepository.getQuizList(quizIdList)
         _categoryUiState.update { it.copy(quizList = quizList) }
     }

@@ -3,7 +3,6 @@ package kr.boostcamp_2024.course.domain.exception
 sealed class WeQuizException(
     override val cause: Throwable? = null,
 ) : Exception(cause) {
-
     data class NetworkException(
         override val cause: Throwable? = null,
     ) : WeQuizException(cause)

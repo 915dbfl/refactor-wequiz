@@ -21,7 +21,6 @@ class CategoryRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun getCategory(categoryId: String): Category = runCatchingWeQuiz {
         val document = categoryCollectionRef.document(categoryId).get().await()
         val response = document.toObject(CategoryDTO::class.java)

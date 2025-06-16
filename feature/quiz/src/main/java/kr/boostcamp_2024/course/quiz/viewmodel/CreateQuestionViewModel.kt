@@ -49,20 +49,20 @@ data class CreateQuestionUiState(
     ),
 ) {
     val isCreateQuestionValid: Boolean = choiceQuestionCreationInfo.title.length in 1..50 &&
-            choiceQuestionCreationInfo.description.length in 1..100 &&
-            choiceQuestionCreationInfo.solution?.length in 0..200 &&
-            choiceQuestionCreationInfo.choices.all {
-                it.isNotBlank()
-            } &&
-            choiceQuestionCreationInfo.answer in (0..3)
+        choiceQuestionCreationInfo.description.length in 1..100 &&
+        choiceQuestionCreationInfo.solution?.length in 0..200 &&
+        choiceQuestionCreationInfo.choices.all {
+            it.isNotBlank()
+        } &&
+        choiceQuestionCreationInfo.answer in (0..3)
 
     val isCreateBlankQuestionValid: Boolean = items.any { it is BlankQuestionItem.Blank } &&
-            items.all {
-                (it is BlankQuestionItem.Text && it.text.isNotBlank()) ||
-                        (it is BlankQuestionItem.Blank && it.text.isNotBlank())
-            } &&
-            choiceQuestionCreationInfo.title.length in 1..50 &&
-            choiceQuestionCreationInfo.solution?.length in 0..200
+        items.all {
+            (it is BlankQuestionItem.Text && it.text.isNotBlank()) ||
+                (it is BlankQuestionItem.Blank && it.text.isNotBlank())
+        } &&
+        choiceQuestionCreationInfo.title.length in 1..50 &&
+        choiceQuestionCreationInfo.solution?.length in 0..200
 
     val isCreateBlankButtonValid: Boolean = items.count { it is BlankQuestionItem.Blank } < 5
 
