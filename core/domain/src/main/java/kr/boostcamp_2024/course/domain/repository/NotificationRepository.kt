@@ -8,6 +8,4 @@ interface NotificationRepository {
     suspend fun deleteNotification(notificationId: String)
 
     suspend fun addNotification(groupId: String, userId: String)
-
-    suspend fun deleteNotificationByStudyGroupId(studyGroupId: String)
 }

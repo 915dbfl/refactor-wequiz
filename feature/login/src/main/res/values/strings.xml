@@ -31,10 +31,12 @@
     <string name="des_google_login">Login with Google</string>
     <!-- Error -->
     <string name="error_login">Failed to login.</string>
+    <string name="error_exp_login">There was an error experiencing it. Please try again.</string>
     <string name="error_google_oauth">Failed to link Google account.</string>
     <string name="error_sign_up">Failed to sign up.</string>
     <string name="error_photo_picker">Failed to load photo.</string>
     <string name="error_upload_image">Failed to upload photo.</string>
+    <string name="error_update_user">Failed to update user infomation.</string>
     <!-- Web Client ID -->
     <string name="web_client_id">735245765717-mdpc20cc8rs37lmfh8qfnqn0h814ldf2.apps.googleusercontent.com</string>
 </resources>

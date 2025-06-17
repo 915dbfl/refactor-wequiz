@@ -5,8 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.domain.model.Quiz
 import kr.boostcamp_2024.course.domain.model.RealTimeQuiz
 import kr.boostcamp_2024.course.quiz.viewmodel.QuestionViewModel
@@ -16,13 +20,16 @@ internal fun QuestionScreen(
     onNavigationButtonClick: () -> Unit,
     onQuizFinished: (String?, String?) -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: QuestionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val localLifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    LaunchedEffect(viewModel.errorFlow, localLifecycleOwner) {
+        localLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collectLatest { exception -> onShowErrorSnackbar(exception) }
+        }
     }
 
     uiState.userOmrId?.let { userOmrId ->

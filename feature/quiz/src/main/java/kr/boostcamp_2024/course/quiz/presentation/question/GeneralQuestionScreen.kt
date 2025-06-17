@@ -41,6 +41,7 @@ import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizBaseDialog
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizLocalRoundedImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizRightChatBubble
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.domain.model.Question
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.QuestionTopBar
@@ -66,7 +67,7 @@ internal fun GeneralQuestionScreen(
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
     isLoading: Boolean,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }

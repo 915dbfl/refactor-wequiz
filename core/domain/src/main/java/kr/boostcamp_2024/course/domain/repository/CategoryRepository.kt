@@ -9,8 +9,6 @@ interface CategoryRepository {
 
     suspend fun createCategory(categoryName: String, categoryDescription: String?, categoryImageUrl: String?): String
 
-    suspend fun addQuiz(categoryId: String, quizId: String)
-
     suspend fun addQuizToCategory(categoryId: String, quizId: String)
 
     suspend fun deleteQuizFromCategory(categoryId: String, quizId: String)

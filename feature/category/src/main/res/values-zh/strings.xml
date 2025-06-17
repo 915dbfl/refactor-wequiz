@@ -21,4 +21,8 @@
     <string name="des_category_image">类别图片</string>
     <string name="txt_category_delete">删除类别</string>
     <string name="txt_category_fix">修正</string>
+    <!--  error  -->
+    <string name="error_delete_category">未能删除类别。</string>
+    <string name="error_create_category">未能创建类别。</string>
+    <string name="error_update_category">未能更新分类。</string>
 </resources>

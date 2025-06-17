@@ -120,16 +120,20 @@
     <string name="des_ai_loading">ai 로딩</string>
     <string name="des_choice_item">객관식 요소</string>
     <!-- error  -->
+    <string name="err_create_question">문제 생성에 실패했습니다.</string>
+    <string name="err_create_quiz">퀴즈 생성에 실패했습니다.</string>
+    <string name="err_edit_quiz">퀴즈 수정에 실패했습니다.</string>
     <string name="err_load_quiz">퀴즈 로드에 실패했습니다.</string>
     <string name="err_update_current_question">퀴즈 문제 현황 업데이트에 실패했습니다.</string>
-    <string name="error_quiz_finished">퀴즈 종료에 실패했습니다.</string>
+    <string name="err_quiz_finished">퀴즈 종료에 실패했습니다.</string>
     <string name="err_load_questions">문제 로드에 실패했습니다.</string>
-    <string name="err_answer_add">퀴즈에 응답 추가 실패했습니다.</string>
-    <string name="err_answer_add_quiz">응답 제출에 실패했습니다.</string>
+    <string name="err_submit_response">응답 제출에 실패했습니다.</string>
     <string name="err_load_current_user">로그인한 유저가 없습니다.</string>
     <string name="err_load_current_page">페이지 로드에 실패하였습니다.</string>
     <string name="err_load_owner_name">관리자 이름을 가져오는데 실패했습니다.</string>
+    <string name="err_load_quiz_result">퀴즈 결과 로드에 실패했습니다.</string>
     <string name="err_submit_quetion">퀴즈 제출에 실패하였습니다.</string>
+    <string name="err_delete_quiz">퀴즈 삭제에 실패했습니다.</string>
     <string name="des_remove_blank">낱말 제거</string>
     <string name="des_remove_text">텍스트 제거</string>
     <string name="err_add_user_answers">문제 통계 추가에 실패했습니다.</string>

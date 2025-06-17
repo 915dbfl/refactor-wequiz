@@ -1,18 +1,17 @@
 package kr.boostcamp_2024.course.study
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.StudyGroupCreationInfo
 import kr.boostcamp_2024.course.domain.model.StudyGroupUpdatedInfo
 import kr.boostcamp_2024.course.domain.repository.AuthRepository
@@ -44,7 +43,7 @@ class CreateStudyViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val storageRepository: StorageRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val studyGroupId: String? = savedStateHandle.toRoute<CreateStudyRoute>().studyGroupId
 
     private val _uiState = MutableStateFlow(CreateStudyUiState())
@@ -54,9 +53,6 @@ class CreateStudyViewModel @Inject constructor(
             loadStudyGroup()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), CreateStudyUiState())
 
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
-
     private fun loadCurrentUserId() {
         viewModelScope.launch {
             try {
@@ -64,7 +60,8 @@ class CreateStudyViewModel @Inject constructor(
                 val currentUser = authRepository.getUserKey()
                 _uiState.update { it.copy(isLoading = false, currentUserId = currentUser) }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateStudyViewModel", "loadCurrentUserid: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -73,10 +70,10 @@ class CreateStudyViewModel @Inject constructor(
     private fun loadStudyGroup() {
         viewModelScope.launch {
             try {
-                studyGroupId?.let {
+                studyGroupId?.let { groupId ->
                     _uiState.update { it.copy(isLoading = true) }
 
-                    val studyGroup = studyGroupRepository.getStudyGroup(it)
+                    val studyGroup = studyGroupRepository.getStudyGroup(groupId)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -90,7 +87,8 @@ class CreateStudyViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateStudyViewModel", "loadStudyGroup: ${e.message}", e)
+                handleError(null, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -122,7 +120,9 @@ class CreateStudyViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false, isSubmitStudySuccess = true) }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateStudyViewModel", "createStudyGroupClick: ${e.message}", e)
+                val messageId = R.string.error_message_create_study_group
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -158,7 +158,9 @@ class CreateStudyViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateStudyViewModel", "updateStudyGroup: ${e.message}", e)
+                val messageId = R.string.error_message_update_study_group
+                handleError(messageId, e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

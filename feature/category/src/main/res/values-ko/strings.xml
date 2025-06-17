@@ -21,4 +21,8 @@
     <string name="des_fab_create_quiz">퀴즈 생성</string>
     <string name="des_quiz_item_image">퀴즈 이미지</string>
     <string name="des_category_image">카테고리 이미지</string>
+    <!--  error  -->
+    <string name="error_delete_category">카테고리 삭제에 실패했습니다.</string>
+    <string name="error_create_category">카테고리 생성에 실패했습니다.</string>
+    <string name="error_update_category">카테고리 수정에 실패했습니다.</string>
 </resources>

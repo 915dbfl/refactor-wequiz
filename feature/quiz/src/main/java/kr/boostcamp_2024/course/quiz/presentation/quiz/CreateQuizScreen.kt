@@ -31,13 +31,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDark
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizCircularProgressIndicator
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizPhotoPickerAsyncImage
 import kr.boostcamp_2024.course.designsystem.ui.theme.component.WeQuizValidateTextField
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.component.QuizDatePickerTextField
 import kr.boostcamp_2024.course.quiz.component.QuizSolveTimeSlider
@@ -49,13 +53,16 @@ internal fun CreateQuizScreen(
     onCreateQuizSuccess: () -> Unit,
     onEditQuizSuccess: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
     viewModel: CreateQuizViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable -> onShowErrorSnackbar(throwable) }
+    val localLifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel.errorFlow, localLifecycleOwner) {
+        localLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collectLatest { exception -> onShowErrorSnackbar(exception) }
+        }
     }
 
     LaunchedEffect(uiState.value.isCreateQuizSuccess) {

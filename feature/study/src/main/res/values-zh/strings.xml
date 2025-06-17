@@ -41,14 +41,15 @@
     <string name="txt_study_group_menu_edit">编辑</string>
     <string name="txt_study_group_menu_delete">移除学习组</string>
     <string name="txt_study_group_menu_leave">退出</string>
+    <string name="error_message_create_study_group">未能创建学习小组。</string>
+    <string name="error_message_update_study_group">未能编辑研究小组。</string>
     <string name="error_message_load_study_group">加载学习组失败。</string>
     <string name="error_message_load_categories">加载类别失败。</string>
     <string name="error_message_load_users">加载用户失败。</string>
     <string name="error_message_load_owner">加载类别创建者失败。</string>
     <string name="btn_setting_snack_bar_message">此功能即将推出。</string>
-    <string name="error_message_delete_users_group">移除用户组失败。</string>
+    <string name="error_message_leave_group">未能离开学习小组。</string>
     <string name="error_message_delete_study_group_member">移除学习组成员失败。</string>
-    <string name="error_message_add_notification">添加通知失败。</string>
     <string name="error_message_find_user">查询用户失败。</string>
     <string name="error_message_delete_study_group">无法退出学习组。</string>
     <string name="txt_create_study_group_member_number_label">人数</string>

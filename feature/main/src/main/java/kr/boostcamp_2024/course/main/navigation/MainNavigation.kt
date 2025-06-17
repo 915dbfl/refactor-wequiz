@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.main.presentation.MainScreen
 import kr.boostcamp_2024.course.main.presentation.NotificationScreen
 
@@ -31,7 +32,7 @@ fun NavGraphBuilder.mainNavGraph(
     onEditUserClick: (String?) -> Unit,
     onLoginOutClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
 ) {
     composable<MainRoute> {
         MainScreen(

@@ -29,6 +29,13 @@
         <item>Joined Studies</item>
         <item>Archive</item>
     </string-array>
+    <!--  error  -->
+    <string name="error_load_notification">Failed to load notifications.</string>
+    <string name="error_reject_invitation">Failed to reject the invitation.</string>
+    <string name="error_accept_invitation">Failed to accept the invitation.</string>
+    <string name="error_delete_study_group">Failed to delete study group.</string>
+    <string name="error_leave_from_group">Failed to leave study group.</string>
+    <string name="error_logout">Failed to logout.</string>
     <!-- guideUrl -->
     <string name="guide_url">https://trite-ice-00b.notion.site/WeQuiz-1505bfe2c24f80b1ae39dc15026da991?pvs=4</string>
 </resources>

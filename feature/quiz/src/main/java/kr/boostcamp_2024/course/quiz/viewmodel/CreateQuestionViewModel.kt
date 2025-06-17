@@ -1,22 +1,22 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.BlankQuestionCreationInfo
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestionCreationInfo
 import kr.boostcamp_2024.course.domain.repository.AiRepository
 import kr.boostcamp_2024.course.domain.repository.QuestionRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
+import kr.boostcamp_2024.course.quiz.R
 import kr.boostcamp_2024.course.quiz.navigation.CreateQuestionRoute
 import javax.inject.Inject
 
@@ -77,14 +77,11 @@ class CreateQuestionViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
     private val aiRepository: AiRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     private val quizId: String = savedStateHandle.toRoute<CreateQuestionRoute>().quizId
 
     private val _createQuestionUiState: MutableStateFlow<CreateQuestionUiState> = MutableStateFlow(CreateQuestionUiState())
     val createQuestionUiState: StateFlow<CreateQuestionUiState> = _createQuestionUiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
 
     fun onTitleChanged(title: String) {
         _createQuestionUiState.update { currentState ->
@@ -156,7 +153,9 @@ class CreateQuestionViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateQuestionViewModel", "createQuestion: ${e.message}", e)
+                val errorMessage = R.string.err_create_question
+                handleError(errorMessage, e)
                 setLoadingState(false)
             }
         }
@@ -216,9 +215,15 @@ class CreateQuestionViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _createQuestionUiState.update { it.copy(isAiLoading = false) }
-                _errorFlow.emit(e)
-                setLoadingState(false)
+                Log.e("CreateQuestionViewModel", "getAiRecommendedQuestion: ${e.message}", e)
+                val errorMessage = R.string.txt_create_question_ai_choice_error
+                handleError(errorMessage, e)
+                _createQuestionUiState.update {
+                    it.copy(
+                        isAiLoading = false,
+                        isLoading = false,
+                    )
+                }
             }
         }
     }
@@ -308,7 +313,9 @@ class CreateQuestionViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateQuestionViewModel", "onCreateBlankQuestion: ${e.message}", e)
+                val errorMessage = R.string.err_create_question
+                handleError(errorMessage, e)
                 setLoadingState(false)
             }
         }

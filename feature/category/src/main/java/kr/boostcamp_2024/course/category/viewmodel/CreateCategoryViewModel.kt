@@ -1,18 +1,18 @@
 package kr.boostcamp_2024.course.category.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.category.R
 import kr.boostcamp_2024.course.category.navigation.CreateCategoryRoute
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.repository.CategoryRepository
 import kr.boostcamp_2024.course.domain.repository.StorageRepository
 import kr.boostcamp_2024.course.domain.repository.StudyGroupRepository
@@ -35,26 +35,32 @@ class CreateCategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val studyGroupRepository: StudyGroupRepository,
     private val storageRepository: StorageRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val studyGroupId = savedStateHandle.toRoute<CreateCategoryRoute>().studyGroupId
     val categoryId = savedStateHandle.toRoute<CreateCategoryRoute>().categoryId
 
     private val _createCategoryUiState: MutableStateFlow<CreateCategoryUiState> = MutableStateFlow(CreateCategoryUiState())
     val createCategoryUiState: StateFlow<CreateCategoryUiState> = _createCategoryUiState.asStateFlow()
 
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
-
     fun uploadCategory() {
+        setLoading(true)
+        var messageId: Int? = null
         viewModelScope.launch {
             try {
-                setLoading(true)
                 when (categoryId) {
-                    null -> createCategory()
-                    else -> updateCategory(categoryId)
+                    null -> {
+                        messageId = R.string.error_create_category
+                        createCategory()
+                    }
+
+                    else -> {
+                        messageId = R.string.error_update_category
+                        updateCategory(categoryId)
+                    }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateCategoryViewModel", "uploadCategory: ${e.message}", e)
+                handleError(messageId, e)
                 setLoading(false)
             }
         }
@@ -76,7 +82,8 @@ class CreateCategoryViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("CreateCategoryViewModel", "fetchCategoryInfo: ${e.message}", e)
+                handleError(null, e)
                 setLoading(false)
             }
         }

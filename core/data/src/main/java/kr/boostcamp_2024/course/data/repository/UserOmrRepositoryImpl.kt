@@ -13,29 +13,29 @@ class UserOmrRepositoryImpl @Inject constructor(
 ) : UserOmrRepository {
     private val userOmrCollectionRef = firestore.collection("UserOmr")
 
-    override suspend fun getUserOmr(userOmrId: String): UserOmr {
+    override suspend fun getUserOmr(userOmrId: String): UserOmr = runCatchingWeQuiz {
         val document = userOmrCollectionRef.document(userOmrId).get().await()
         val response = document.toObject(UserOmrDTO::class.java)
-        return requireNotNull(response).toVO(userOmrId)
+        return@runCatchingWeQuiz requireNotNull(response).toVO(userOmrId)
     }
 
-    override suspend fun submitQuiz(userOmrCreationInfo: UserOmrCreationInfo): String {
+    override suspend fun submitQuiz(userOmrCreationInfo: UserOmrCreationInfo): String = runCatchingWeQuiz {
         val userOmrDTO = UserOmrDTO(
             userId = userOmrCreationInfo.userId,
             quizId = userOmrCreationInfo.quizId,
             answers = userOmrCreationInfo.answers,
         )
-        return userOmrCollectionRef.add(userOmrDTO).await().id
+        return@runCatchingWeQuiz userOmrCollectionRef.add(userOmrDTO).await().id
     }
 
-    override suspend fun deleteUserOmr(quizId: String) {
+    override suspend fun deleteUserOmr(quizId: String): Unit = runCatchingWeQuiz {
         val querySnapshot = userOmrCollectionRef.whereEqualTo("quiz_id", quizId).get().await()
         querySnapshot.documents.forEach { document ->
             document.reference.delete().await()
         }
     }
 
-    override suspend fun deleteUserOmrs(userOmrIds: List<String>) {
+    override suspend fun deleteUserOmrs(userOmrIds: List<String>): Unit = runCatchingWeQuiz {
         userOmrIds.forEach { userOmrId ->
             userOmrCollectionRef.document(userOmrId).delete().await()
         }

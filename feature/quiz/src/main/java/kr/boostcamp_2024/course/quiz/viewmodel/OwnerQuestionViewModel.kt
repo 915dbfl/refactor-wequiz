@@ -1,15 +1,14 @@
 package kr.boostcamp_2024.course.quiz.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kr.boostcamp_2024.course.designsystem.ui.base.BaseViewModel
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.BlankQuestionManager
 import kr.boostcamp_2024.course.domain.model.Question
@@ -17,6 +16,7 @@ import kr.boostcamp_2024.course.domain.model.RealTimeQuiz
 import kr.boostcamp_2024.course.domain.repository.QuestionRepository
 import kr.boostcamp_2024.course.domain.repository.QuizRepository
 import kr.boostcamp_2024.course.domain.repository.UserRepository
+import kr.boostcamp_2024.course.quiz.R
 import javax.inject.Inject
 
 data class RealTimeWithOwnerQuestionUiState(
@@ -36,13 +36,9 @@ class OwnerQuestionViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
     private val questionRepository: QuestionRepository,
     private val userRepository: UserRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val _uiState: MutableStateFlow<RealTimeWithOwnerQuestionUiState> = MutableStateFlow(RealTimeWithOwnerQuestionUiState())
     val uiState: StateFlow<RealTimeWithOwnerQuestionUiState> = _uiState.asStateFlow()
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
-
     val blankQuestionManager = BlankQuestionManager(::setNewBlankContents)
 
     fun initQuizData(quiz: RealTimeQuiz?, currentUserId: String?) {
@@ -77,17 +73,17 @@ class OwnerQuestionViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("OwnerQuestionViewModel", "initQuizData: ${e.message}", e)
+                handleError(null, e)
                 setLoadingState(false)
             }
         }
     }
 
     fun setQuizFinished() {
+        setLoadingState(true)
         viewModelScope.launch {
             try {
-                setLoadingState(true)
-
                 val currentQuizId = requireNotNull(_uiState.value.quiz?.id)
                 quizRepository.setQuizFinished(currentQuizId)
 
@@ -98,7 +94,9 @@ class OwnerQuestionViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("OwnerQuestionViewModel", "setQuizFinished: ${e.message}", e)
+                val messageId = R.string.err_quiz_finished
+                handleError(messageId, e)
                 setLoadingState(false)
             }
         }
@@ -124,7 +122,9 @@ class OwnerQuestionViewModel @Inject constructor(
                 }
                 setNewBlankQuestionManager(pageIdx)
             } catch (e: Exception) {
-                _errorFlow.emit(e)
+                Log.e("OwnerQuestionViewModel", "updateCurrentPage: ${e.message}", e)
+                val messageId = R.string.err_load_questions
+                handleError(messageId, e)
             }
         }
     }

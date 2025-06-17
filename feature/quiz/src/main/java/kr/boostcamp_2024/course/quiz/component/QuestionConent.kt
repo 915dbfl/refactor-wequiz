@@ -1,11 +1,13 @@
 package kr.boostcamp_2024.course.quiz.component
 
+import android.util.Log
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import kr.boostcamp_2024.course.designsystem.ui.annotation.PreviewKoLightDarkBackground
 import kr.boostcamp_2024.course.designsystem.ui.theme.WeQuizTheme
+import kr.boostcamp_2024.course.domain.exception.WeQuizUIException
 import kr.boostcamp_2024.course.domain.model.BlankQuestion
 import kr.boostcamp_2024.course.domain.model.ChoiceQuestion
 import kr.boostcamp_2024.course.domain.model.Question
@@ -25,7 +27,7 @@ internal fun QuizContent(
     removeBlankContent: (Int) -> Unit,
     addBlankContent: (Int) -> Unit,
     getBlankQuestionAnswer: () -> Map<String, String?>,
-    onShowErrorSnackbar: (Throwable) -> Unit,
+    onShowErrorSnackbar: (WeQuizUIException) -> Unit,
 ) {
     HorizontalPager(
         state = rememberPagerState(
@@ -66,8 +68,14 @@ internal fun QuizContent(
             }
 
             else -> {
-                // TODO 재시도 처리(?)
-                onShowErrorSnackbar(Exception("Question is null"))
+                // TODO 재시도 처리
+                Log.e("QuizContent", "QuizContent: Question is null or unsupported type at page $currentPage")
+                onShowErrorSnackbar(
+                    WeQuizUIException.UnknownUIException(
+                        messageId = null,
+                        cause = Throwable("Question is null or unsupported type at page $currentPage"),
+                    ),
+                )
             }
         }
     }
